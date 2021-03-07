@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "Globals.h"
+#include "ResourceManager.h"
 
 class Engine {
 
