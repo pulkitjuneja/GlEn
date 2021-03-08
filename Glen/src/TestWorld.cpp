@@ -9,33 +9,14 @@
 #include "Vertex.h"
 
 class TestWorld : public Engine {
-	Entity* quadEntity;
+	Entity* cubeEntity;
 public:
 	TestWorld() {};
 	bool init() {
-		scene->setMainCamera(new Camera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 90.0f, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 8.0f, 1000.0f));
+		scene->setMainCamera(new Camera(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, -90.0f, 0.0f), 90.0f, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 8.0f, 1000.0f));
 		scene->createDirectionalLight(glm::vec4(0.5f, -1.0f, 0, 1.0), glm::vec4(0.2f, 0.2f, 0.2f, 1.0f), glm::vec4(3.8f, 3.8f, 3.8f, 1.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
-		vector<Vertex> quadVertices = {
-			 Vertex(glm::vec3(0.5f,  0.5f, 0.0f), glm::vec3(0,0,-1), glm::vec2(1.0f, 1.0f)),
-			 Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0,0,-1), glm::vec2(1.0f, 0.0f)),
-			 Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0,0,-1), glm::vec2(0.0f, 0.0f)),
-			 Vertex(glm::vec3(-0.5f,  0.5f, 0.0f), glm::vec3(0,0,-1), glm::vec2(0.0f, 1.0f))
-		};
-
-		vector<unsigned int> quadIndices = {
-			0, 1, 3, // first triangle
-			1, 2, 3  // second triangle
-		};
-
-		Material* quadMaterial = new Material();
-		quadMaterial->setShader(ResourceManager::getInstance()->getShader("texturedMeshShader"));
-		quadMaterial->diffuseMap = ResourceManager::getInstance()->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
-
-		vector<SubMesh> quadSubmeshes = {
-			SubMesh(quadMaterial,0,6,0)
-		};
-
-		quadEntity = scene->createEntity<Entity>("shadowMap", new Mesh(quadVertices, quadIndices, quadSubmeshes, true, true));
+		Mesh* cubeMesh = createCubeMesh();
+		cubeEntity = scene->createEntity<Entity>("cube", cubeMesh);
 
 		return true;
 	}
@@ -78,7 +59,7 @@ public:
 		};
 
 		Material* cubeMaterial = new Material();
-		cubeMaterial->setShader(ResourceManager::getInstance()->getShader("defaultShader"));
+		cubeMaterial->setShader(ResourceManager::getInstance()->getShader("texturedMeshUnlit"));
 		cubeMaterial->diffuseMap = ResourceManager::getInstance()->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
 		
 		std::vector<SubMesh> cubeSubmeshes = {
@@ -90,6 +71,7 @@ public:
 	}
 
 	void update() {
+		cubeEntity->transfrom.rotate(glm::vec3(0, 0.005, 0));
 		scene->update();
 	}
 };

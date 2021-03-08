@@ -29,7 +29,6 @@ public:
 	glm::mat4 getViewMatrix();
 	glm::mat4 getProjectionMatrix();
 	glm::vec3* getFrustumCorners();
-	void setintialRotation();
 };
 
 #endif

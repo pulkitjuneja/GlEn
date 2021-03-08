@@ -41,5 +41,6 @@ void main() {
 	vec4 homogenousVertexPosition = vec4(position.x, position.y, position.z, 1.0);
 	vsOut.vertNormal = normal;
 	vsOut.texCoords = texCoords;
-	gl_Position =  homogenousVertexPosition;
+	gl_Position =  projectionMatrix*viewMatrix*modelMatrix*homogenousVertexPosition;
 }
+	

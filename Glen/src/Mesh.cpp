@@ -32,7 +32,7 @@ Mesh::Mesh(std::vector<Vertex>& vertices,
 {
 	// TODO: make this parameterized. Handle how vertex attributes will be space when somehting is not present.
 	this->hasNormals = hasNormals;
-	this->hasTexCoords = hasTexCoords;
+	this->hasTexCoords = hasTextCoords;
 
 	this->vertices = vertices;
 	this->indices = indices;

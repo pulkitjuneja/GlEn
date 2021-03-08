@@ -47,12 +47,13 @@ void SceneRenderer::renderScene(Scene* scene, Material* overrideMaterial, bool p
 				currentShader = overrideMaterial->getShader();
 			}
 			else {
-				currentShader = submeshShader;
+				
 			}
 
+			currentShader = submeshShader;
+
 			currentShader->use();
-			currentShader->setMat4("modelMatrix", modelMatrix);
-			//currentShader->setMat4("normalMatrix", glm::transpose(glm::inverse(modelMatrix)));
+			currentShader->setMat4("modelMatrix", modelMatrix);;
 
 			unsigned int hasSpecularMap = 0;
 			unsigned int hasNormalMap = 0;
