@@ -3,13 +3,17 @@
 
 #include "Globals.h"
 #include "ResourceManager.h"
+#include "Scene.h"
+#include "ForwardRenderer.h"
 
 class Engine {
 
 protected:
     sf::Window* window;
+    Scene* scene;
     bool isEngineRunning = true;
     bool setupSFML();
+    ForwardRenderer* renderer;
 
 public:
     static sf::Time deltaTime;

@@ -31,6 +31,7 @@ private:
 
 	// Resource Maps
 	std::unordered_map <string, Shader*> loadedShaders;
+	std::unordered_map <string, Texture*> textures;
 
 	ResourceManager();
 	static ResourceManager* instance;
@@ -41,9 +42,11 @@ public:
 
 	//Resource Loaders
 	void loadShader(const string& vertexShaderPath, const string& fragmentShaderPath, const string& shaderName);
+	Texture* loadTexture(const string& texturePath, const string& directory, TextureType textureType);
 
 	//Getters
 	Shader* getShader(const string& shaderName);
+	Texture* getTexture(const string& textureName);
 };
 
 

@@ -17,6 +17,7 @@ void Engine::start() {
         isEngineRunning = false;
     }
 
+    scene = new Scene();
 
     if (!init()) {
         isEngineRunning = false;
@@ -28,6 +29,8 @@ void Engine::start() {
     //glEnable(GL_DEBUG_OUTPUT);
     //glDebugMessageCallback(MessageCallback, 0);
 
+    renderer = new ForwardRenderer();
+    
     sf::Clock clock;
     while (isEngineRunning) {
         sf::Event windowEvent;
@@ -45,6 +48,7 @@ void Engine::start() {
         timeSinceStart += deltaTime;
         update();
 
+        renderer->render(scene);
         window->display();
     }
 
@@ -71,6 +75,8 @@ bool Engine::setupSFML() {
         std::cout << "Failed to initialize GLEW" << std::endl;
         return false;
     }
+
+    std::cout << "xsxsx";
 
     std::string versionString = std::string((const char*)glGetString(GL_VERSION));
     std::cout << versionString.c_str();

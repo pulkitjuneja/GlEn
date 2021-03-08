@@ -1,7 +1,6 @@
 #pragma once
 
 #ifndef Globals_h
-
 #define Globals_h
 
 #include <cstdio>

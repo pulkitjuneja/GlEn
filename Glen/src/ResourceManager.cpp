@@ -1,6 +1,9 @@
 #include "Globals.h"
 #include "ResourceManager.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 using namespace std;
 
 ResourceManager* ResourceManager::instance;
@@ -84,7 +87,6 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 	glDeleteShader(fragmentShader);
 	Shader* newShader = new Shader(shaderProgram, shaderName, uniformCount);
 	newShader->setUniformBlockBinding("perFrameUniforms", 0);
-	newShader->setUniformBlockBinding("csmUniforms", 1);
 
 	cout << "Shader loaded : " << shaderName << " id : " << std::to_string(newShader->getShaderID()) << "\n";
 	loadedShaders.insert(make_pair(shaderName, newShader));
@@ -100,6 +102,62 @@ Shader* ResourceManager::getShader(const string& shaderName)
 	else
 	{
 		cout << "Shader " << shaderName << " is not loaded";
+		return nullptr;
+	}
+}
+
+Texture* ResourceManager::loadTexture(const string& texturePath, const string& directory, TextureType type)
+{
+
+	string filename = string(texturePath);
+	filename = directory + '/' + filename;
+
+	if (textures.find(texturePath) != textures.end())
+	{
+		return textures.find(texturePath)->second;
+	}
+
+	int width, height, nrComponents;
+	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+
+	Texture* tex;
+
+	if (data)
+	{
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+		tex = new Texture(type, 1, width, height, format, GL_UNSIGNED_BYTE, format);
+		tex->bind();
+		tex->setData(data, 0);
+		tex->generateMipMaps();
+		tex->setWrapping(GL_REPEAT, GL_REPEAT);
+		tex->setMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+		tex->Unbind();
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+	textures.emplace(make_pair(texturePath, tex));
+	std::cout << "Texture Loaded: " << texturePath << std::endl;
+	return textures.find(texturePath)->second;
+}
+
+Texture* ResourceManager::getTexture(const string& textureName)
+{
+	if (textures.find(textureName) != textures.end())
+	{
+		return textures.find(textureName)->second;
+	}
+	else
+	{
+		cout << "Shader " << textureName << " does not exist";
 		return nullptr;
 	}
 }

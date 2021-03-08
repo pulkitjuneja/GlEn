@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>;$(SolutionDir)\ext\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>;$(SolutionDir)\ext\glm;D:\Projects\RIT\Glen\ext\stbi</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>;$(SolutionDir)\ext\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>;$(SolutionDir)\ext\glm;D:\Projects\RIT\Glen\ext\stbi</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)\ext\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)\ext\glm;D:\Projects\RIT\Glen\ext\stbi</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>;$(SolutionDir)\ext\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>;$(SolutionDir)\ext\glm;D:\Projects\RIT\Glen\ext\stbi</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,26 +146,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\ForwardRenderer.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\SceneRenderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\TestWorld.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Transform.cpp" />
+    <ClCompile Include="src\UniformBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\ForwardRenderer.h" />
     <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\ResourceManager.h" />
+    <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\SceneRenderer.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Transform.h" />
+    <ClInclude Include="src\UniformBuffer.h" />
+    <ClInclude Include="src\Uniforms.h" />
     <ClInclude Include="src\Vertex.h" />
   </ItemGroup>
   <ItemGroup>

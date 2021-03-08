@@ -1,19 +1,21 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec3 vertNormal;
-in vec2 vertTexCoords;
+in VS_OUT {
+    vec3 worldPos;
+    vec3 vertNormal;
+    vec2 texCoords;
+} vsOut;
 
 struct Material {
-	int diffuseCount;
-	int specularCount;
-	sampler2D texture_diffuse[5];
-	sampler2D texture_specular[5];
+	sampler2D texture_diffuse;
+	sampler2D texture_specular;
+	int hasSpecularMap;
 };
 
 uniform Material material;
 
 void main()
 {
-	FragColor = texture(material.texture_diffuse[0],vertTexCoords);
+	FragColor = texture(material.texture_diffuse,vsOut.texCoords);
 }
