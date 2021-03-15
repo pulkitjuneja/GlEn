@@ -6,7 +6,7 @@
 #include "Texture.h"
 #include "Shader.h"
 
-class Material {
+class GLN_API Material {
 
 public:
 	string name;

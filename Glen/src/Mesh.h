@@ -4,7 +4,6 @@
 #define Mesh_h
 
 #include "Globals.h"
-#include <glm/glm.hpp>
 #include "Vertex.h"
 #include "Texture.h"
 #include "Material.h"
@@ -31,7 +30,7 @@ public:
 	}
 };
 
-class Mesh {
+class GLN_API Mesh {
 public:
 	Mesh(std::vector<Vertex>& vertices,
 		std::vector<unsigned int>& indices,

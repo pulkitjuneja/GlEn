@@ -5,14 +5,12 @@
 
 #include "Globals.h"
 #include <unordered_map>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
 static int currentShaderProgramInUse;
 
-class Shader {
+class GLN_API Shader {
     void readFromFile(const string& fileName, char*& shaderContent);
     GLuint shaderProgram;
     unordered_map<string, GLuint> uniformLocations;

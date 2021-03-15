@@ -10,7 +10,7 @@
 
 // TODO : use this class to abstract out Entt from the user of the engine
 
-class Scene {
+class GLN_API Scene {
 protected:
 	std::vector<Entity*> Entities;
 	std::vector<PointLight*> pointLights;

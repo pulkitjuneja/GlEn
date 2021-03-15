@@ -1,7 +1,6 @@
 #pragma once 
 
 #include "Globals.h"
-#include <glm/glm.hpp>
 
 #ifndef LIGHT_H
 #define LIGHT_H 
@@ -9,7 +8,7 @@
 
 struct Light {};
 
-struct DirectionalLight : public Light {
+struct GLN_API DirectionalLight : public Light {
 public:
 	ALIGNED(16) glm::vec4 direction;
 	ALIGNED(16) glm::vec4 diffuse;
@@ -17,7 +16,7 @@ public:
 	ALIGNED(16) glm::vec4 ambient;
 };
 
-struct PointLight : public Light {
+struct GLN_API PointLight : public Light {
 public:
 	ALIGNED(16) glm::vec4 position;
 	ALIGNED(16) glm::vec4 diffuse;

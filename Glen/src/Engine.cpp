@@ -3,13 +3,6 @@
 sf::Time Engine::deltaTime;
 sf::Time Engine::timeSinceStart;
 
-void Engine::loadDefaultShaders()
-{
-    ResourceManager::getInstance()->loadShader("Shaders/basic.vert", "Shaders/basic.frag", "defaultShader");
-    ResourceManager::getInstance()->loadShader("Shaders/TexturedMeshUnlit.vert", "Shaders/TexturedMeshUnlit.frag", "texturedMeshUnlit");
-    ResourceManager::getInstance()->loadShader("Shaders/TexturedMesh.vert", "Shaders/TexturedMesh.frag", "texturedMeshShader");
-}
-
 void Engine::start() {
 
     // engine specific initializations
@@ -80,8 +73,6 @@ bool Engine::setupSFML() {
     std::cout << versionString.c_str();
 
     // Load Default Shaders
-
-    loadDefaultShaders();
 
     return true;
 }

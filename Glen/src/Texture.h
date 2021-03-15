@@ -12,7 +12,7 @@ enum class TextureType {
 	DEPTH
 };
 
-class Texture {
+class GLN_API Texture {
 public:
 
 	GLuint textureId;

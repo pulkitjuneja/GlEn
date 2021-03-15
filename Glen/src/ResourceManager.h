@@ -17,6 +17,8 @@
 #include "Vertex.h"
 #include "Texture.h"
 
+using namespace std;
+
 struct EnumClassHash
 {
 	template <typename T>
@@ -26,11 +28,11 @@ struct EnumClassHash
 	}
 };
 
-class ResourceManager {
+class GLN_API ResourceManager {
 private:
 
 	// Resource Maps
-	std::unordered_map <string, Shader*> loadedShaders;
+	std::unordered_map <std::string, Shader*> loadedShaders;
 	std::unordered_map <string, Texture*> textures;
 
 	ResourceManager();

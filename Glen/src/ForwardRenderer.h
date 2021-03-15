@@ -8,7 +8,7 @@
 #include "UniformBuffer.h"
 #include "Scene.h"
 
-class ForwardRenderer {
+class GLN_API ForwardRenderer {
 	//Uniforms
 	PerFrameUniforms perFrameUniforms;
 

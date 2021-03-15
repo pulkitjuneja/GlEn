@@ -8,7 +8,7 @@
 #include "Mesh.h"
 #include "Material.h"
 
-class Entity {
+class GLN_API Entity {
 
 public:
 

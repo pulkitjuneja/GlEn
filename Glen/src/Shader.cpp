@@ -1,8 +1,6 @@
 #include "Globals.h"
 #include "Shader.h"
 
-using namespace std;
-
 Shader::Shader(const GLuint shaderProgram, const string& shaderName, int uniformCount) {
 	this->shaderProgram = shaderProgram;
 	this->shaderName = shaderName;

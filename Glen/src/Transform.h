@@ -3,13 +3,9 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#define GLM_ENABLE_EXPERIMENTAL
+#include "Globals.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
-#include <glm/gtc/quaternion.hpp>
-
-class Transform {
+class GLN_API Transform {
 	glm::vec3 position;
 	glm::vec3 scale;
 	glm::vec3 eulerAngles;
