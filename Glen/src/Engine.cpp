@@ -10,6 +10,7 @@ void Engine::start() {
         isEngineRunning = false;
     }
 
+    loadDefaultShaders();
     scene = new Scene();
 
     if (!init()) {
@@ -17,8 +18,6 @@ void Engine::start() {
     }
 
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_DEBUG_OUTPUT);
-    //glDebugMessageCallback(MessageCallback, 0);
 
     renderer = new ForwardRenderer();
     
@@ -47,6 +46,11 @@ void Engine::start() {
     window->close();
 }
 
+void Engine::loadDefaultShaders()
+{
+    ResourceManager::getInstance()->loadShader("Assets/Shaders/DepthMap.vert", "Assets/Shaders/DepthMap.frag", "depthMap");
+}
+
 bool Engine::setupSFML() {
 
     sf::ContextSettings settings;
@@ -66,8 +70,6 @@ bool Engine::setupSFML() {
         std::cout << "Failed to initialize GLEW" << std::endl;
         return false;
     }
-
-    std::cout << "xsxsx";
 
     std::string versionString = std::string((const char*)glGetString(GL_VERSION));
     std::cout << versionString.c_str();

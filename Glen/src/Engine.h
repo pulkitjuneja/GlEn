@@ -18,6 +18,7 @@
 
     public:
         static sf::Time deltaTime;
+        void loadDefaultShaders();
         static sf::Time timeSinceStart;
         virtual bool init() = 0;
         virtual void update() = 0;

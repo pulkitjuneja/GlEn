@@ -228,6 +228,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 	glDeleteShader(fragmentShader);
 	Shader* newShader = new Shader(shaderProgram, shaderName, uniformCount);
 	newShader->setUniformBlockBinding("perFrameUniforms", 0);
+	newShader->setUniformBlockBinding("csmUniforms", 1);
 
 	cout << "Shader loaded : " << shaderName << " id : " << std::to_string(newShader->getShaderID()) << "\n";
 	loadedShaders.insert(make_pair(shaderName, newShader));
@@ -288,6 +289,17 @@ Texture* ResourceManager::loadTexture(const string& texturePath, const string& d
 	textures.emplace(make_pair(texturePath, tex));
 	std::cout << "Texture Loaded: " << texturePath << std::endl;
 	return textures.find(texturePath)->second;
+}
+
+Texture* ResourceManager::generateTexture(const string& identifier, TextureType textureType, const uint32_t& w,
+	const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize) {
+	if (textures.find(identifier) != textures.end())
+	{
+		return textures.find(identifier)->second;
+	}
+	Texture* tex = new Texture(textureType, arraySize, w, h, format, dataType, internalFormat);
+	textures.emplace(make_pair(identifier, tex));
+	return tex;
 }
 
 Texture* ResourceManager::getTexture(const string& textureName)

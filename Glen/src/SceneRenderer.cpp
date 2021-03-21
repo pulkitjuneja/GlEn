@@ -19,10 +19,19 @@ void SceneRenderer::setGlobalUniforms(PerFrameUniforms& perFrameUniforms, Scene*
 	perFrameUniforms.pointLightCount = pointLights.size();
 }
 
+void SceneRenderer::bindGlobalMaps()
+{
+	Texture* depthMapTexture = ResourceManager::getInstance()->getTexture(CSM_SHADOW_MAPS);
+	if (depthMapTexture) {
+		depthMapTexture->bind(GL_TEXTURE0 + 10);
+	}
+}
+
 void SceneRenderer::renderScene(Scene* scene, Material* overrideMaterial, bool passBaseMaterialProperties)
 {
 	std::vector<Entity*> entities = scene->getEntities();
 	std::vector<Entity*>::iterator it = entities.begin();
+
 
 	for (; it != entities.end(); it++) {
 		Entity* ent = (*it);
@@ -47,10 +56,8 @@ void SceneRenderer::renderScene(Scene* scene, Material* overrideMaterial, bool p
 				currentShader = overrideMaterial->getShader();
 			}
 			else {
-				
+				currentShader = submeshShader;
 			}
-
-			currentShader = submeshShader;
 
 			currentShader->use();
 			currentShader->setMat4("modelMatrix", modelMatrix);;
@@ -76,6 +83,7 @@ void SceneRenderer::renderScene(Scene* scene, Material* overrideMaterial, bool p
 				currentShader->setInt("material.hasNormalMap", hasNormalMap);
 				currentShader->setInt("material.hasSpecularMap", hasSpecularMap);
 			}
+			currentShader->setInt("shadowMap", 10);
 			glDrawElementsBaseVertex(GL_TRIANGLES, currentSubMesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * currentSubMesh.baseIndex), currentSubMesh.baseVertex);
 
 		}

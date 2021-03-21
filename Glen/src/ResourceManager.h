@@ -61,6 +61,8 @@ public:
 	void loadShader(const string& vertexShaderPath, const string& fragmentShaderPath, const string& shaderName);
 	Texture* loadTexture(const string& texturePath, const string& directory, TextureType textureType);
 	Mesh* loadMesh(string path, int loaderFlags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	Texture* generateTexture(const string& identifier, TextureType textureType, const uint32_t& w,
+		const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize);
 
 	//Getters
 	Shader* getShader(const string& shaderName);

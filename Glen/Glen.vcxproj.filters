@@ -67,6 +67,12 @@
     <ClInclude Include="src\CameraController.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\CSM.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FrameBuffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp">
@@ -106,6 +112,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\CameraController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FrameBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSM.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
