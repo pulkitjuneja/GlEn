@@ -28,7 +28,8 @@ project "Glen"
 	libdirs 
 	{
 		"%{prj.name}/ext/SFML/lib",
-		"%{prj.name}/ext/Glew/lib"
+		"%{prj.name}/ext/Glew/lib",
+		"%{prj.name}/ext/assimp/lib"
 	}
 
 	links
@@ -37,7 +38,8 @@ project "Glen"
 		"glew32.lib",
 		"sfml-graphics.lib",
 		"sfml-window.lib",
-		"sfml-system.lib"
+		"sfml-system.lib",
+		"assimp.lib"
 	}
 
 	includedirs
@@ -45,7 +47,8 @@ project "Glen"
 		"%{prj.name}/ext/glm",
 		"%{prj.name}/ext/stbi",
 		"%{prj.name}/ext/SFML/include",
-		"%{prj.name}/ext/Glew/include"
+		"%{prj.name}/ext/Glew/include",
+		"%{prj.name}/ext/assimp/include"
 	}
 
 	filter "system:windows"
@@ -97,6 +100,7 @@ project "Sandbox"
 		"Glen/src",
 		"Glen/ext/SFML/include",
 		"Glen/ext/Glew/include",
+		"Glen/ext/assimp/include",
 		"Glen/ext/stbi"
 	}
 

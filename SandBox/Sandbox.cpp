@@ -1,66 +1,32 @@
 #include "Glen.h"
+#include "CameraController.h";
+
 
 class TestWorld : public Engine {
-	Entity* cubeEntity;
+	Entity* sponzaEntity;
+	CameraController* cameraController;
 public:
 	TestWorld() {};
 	bool init() {
 		loadShaders();
-		scene->setMainCamera(new Camera(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, -90.0f, 0.0f), 90.0f, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 8.0f, 1000.0f));
-		scene->createDirectionalLight(glm::vec4(0.5f, -1.0f, 0, 1.0), glm::vec4(0.2f, 0.2f, 0.2f, 1.0f), glm::vec4(3.8f, 3.8f, 3.8f, 1.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
-		Mesh* cubeMesh = createCubeMesh();
-		cubeEntity = scene->createEntity<Entity>("cube", cubeMesh);
+		string sponzaMeshLocation = "Assets/Meshes/Sponza/sponza.obj";
+
+		sponzaEntity = scene->createEntity<Entity>("Model", ResourceManager::getInstance()->loadMesh(sponzaMeshLocation));
+
+		sponzaEntity->transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
+
+		scene->setMainCamera(new Camera(glm::vec3(-4.31142f, 55.923f, 191.538f), glm::vec3(-16.8f, -89.1506f, 0), 90.0f, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 8.0f, 1000.0f));
+		scene->createPointLight(glm::vec4(-20, 10, 5, 1.0), glm::vec4(0.3f, 0.01, 0.01, 1.0), glm::vec4(0.8, 0, 0, 1.0), glm::vec4(1, 0, 0, 1.0));
+		scene->createPointLight(glm::vec4(20, 10, 5, 1.0), glm::vec4(0.3f, 0.01, 0.01, 1.0), glm::vec4(0, 0.8, 0, 1.0), glm::vec4(0, 1, 0, 1.0));
+		scene->createPointLight(glm::vec4(-10, 10, 80, 1.0), glm::vec4(0.01, 0.5f, 0.01, 1.0), glm::vec4(0.8, 0.8, 0.8, 1.0), glm::vec4(0.1, 0.1, 0.1, 1.0));
+		scene->createPointLight(glm::vec4(-10, 10, -80, 1.0), glm::vec4(0.01, 0.01, 0.5, 1.0), glm::vec4(0, 0.8, 0, 1.0), glm::vec4(0.1, 0.1, 0.1, 1.0));
+		scene->createPointLight(glm::vec4(300, 10, 5, 1.0), glm::vec4(0.01, 0.01, 0.3f, 1.0), glm::vec4(0, 0.8, 0, 1.0), glm::vec4(0, 1, 0, 1.0));
+		scene->createPointLight(glm::vec4(-300, 10, 5, 1.0), glm::vec4(0.01, 0.01, 0.01, 1.0), glm::vec4(0, 0, 0.8, 1.0), glm::vec4(5, 0, 1, 1.0));
+		scene->createDirectionalLight(glm::vec4(0.5f, -1.0f, 0, 1.0), glm::vec4(0.2f, 0.2f, 0.2f, 1.0f), glm::vec4(0.8f, 0.8f, 0.8f, 1.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
+		cameraController = new CameraController(scene->getMainCamera());
+
 
 		return true;
-	}
-
-	Mesh* createCubeMesh() {
-		std::vector<Vertex> vertices = {
-			Vertex(glm::vec3(0,1,0), glm::vec3(0,0,0), glm::vec2(0,0.66)),
-			Vertex(glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec2(0.25f, 0.66f)),
-			Vertex(glm::vec3(1,1,0), glm::vec3(0,0,0), glm::vec2(0.0f, 0.33f)),
-			Vertex(glm::vec3(1,0,0), glm::vec3(0,0,0), glm::vec2(0.25f, 0.66f)),
-
-			Vertex(glm::vec3(0,0,1), glm::vec3(0,0,0), glm::vec2(0.5f, 0.66f)),
-			Vertex(glm::vec3(1,0,1), glm::vec3(0,0,0), glm::vec2(0.5f, 0.33f)),
-			Vertex(glm::vec3(0,1,1), glm::vec3(0,0,0), glm::vec2(0.75f, 0.66f)),
-			Vertex(glm::vec3(1,1,1), glm::vec3(0,0,0), glm::vec2(0.75f, 0.33f)),
-
-			Vertex(glm::vec3(0,1,0), glm::vec3(0,0,0), glm::vec2(1.0f, 0.66f)),
-			Vertex(glm::vec3(1,1,0), glm::vec3(0,0,0), glm::vec2(1.0f, 0.33f)),
-
-			Vertex(glm::vec3(0,1,0), glm::vec3(0,0,0), glm::vec2(0.25f, 1.0f)),
-			Vertex(glm::vec3(0,1,1), glm::vec3(0,0,0), glm::vec2(0.5f, 1.0f)),
-
-			Vertex(glm::vec3(1,1,0), glm::vec3(0,0,0), glm::vec2(0.25f, 0.0f)),
-			Vertex(glm::vec3(1,1,1), glm::vec3(0,0,0), glm::vec2(0.5f, 0.0f)),
-		};
-
-		std::vector<unsigned int> indices = {
-			0, 2, 1, // front
-			1, 2, 3,
-			4, 5, 6, // back
-			5, 7, 6,
-			6, 7, 8, //top
-			7, 9 ,8,
-			1, 3, 4, //bottom
-			3, 5, 4,
-			1, 11,10,// left
-			1, 4, 11,
-			3, 12, 5,//right
-			5, 12, 13
-		};
-
-		Material* cubeMaterial = new Material();
-		cubeMaterial->setShader(ResourceManager::getInstance()->getShader("texturedMeshUnlit"));
-		cubeMaterial->diffuseMap = ResourceManager::getInstance()->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
-
-		std::vector<SubMesh> cubeSubmeshes = {
-			SubMesh(cubeMaterial,0,36,0)
-		};
-
-		Mesh* cubeMesh = new Mesh(vertices, indices, cubeSubmeshes, true, true);
-		return cubeMesh;
 	}
 
 	void loadShaders() {
@@ -70,7 +36,7 @@ public:
 	}
 
 	void update() {
-		cubeEntity->transfrom.rotate(glm::vec3(0, 0.005, 0));
+		cameraController->update();
 		scene->update();
 	}
 };

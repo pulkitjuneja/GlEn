@@ -58,7 +58,7 @@ bool Engine::setupSFML() {
     settings.attributeFlags = sf::ContextSettings::Core;
 
     window = new sf::Window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 64), "OpenGL SFML", sf::Style::Titlebar | sf::Style::Close, settings);
-    window->setVerticalSyncEnabled(false);
+    window->setVerticalSyncEnabled(true);
     glewExperimental = GL_TRUE;
 
     if (GLEW_OK != glewInit())
