@@ -93,7 +93,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\CameraController.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Sandbox.cpp" />
+    <ClCompile Include="src\CameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Glen\Glen.vcxproj">

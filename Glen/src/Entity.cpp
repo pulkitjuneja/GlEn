@@ -17,3 +17,16 @@ Transform* Entity::getTransform()
 	return &this->transfrom;
 }
 
+void Entity::AddScript(Script* newScript)
+{
+	newScript->attachParentEntity(this);
+	newScript->Start();
+	scripts.push_back(newScript);
+}
+
+void Entity::update(float deltaTime) {
+	for (auto script : scripts) {
+		script->Update(deltaTime);
+	}
+}
+

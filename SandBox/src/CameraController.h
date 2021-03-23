@@ -4,10 +4,9 @@
 #ifndef CAMERA_CONTROLLER_H
 #define CAMERA_CONTROLLER_H
 
-#include <Camera.h>
-#include <Globals.h>
+#include "Glen.h"
 
-class CameraController {
+class CameraController : public Script {
 
 	Camera* camera;
 	const float CAMERA_SPEED = 1.0f;
@@ -16,7 +15,7 @@ class CameraController {
 	bool firstMouseMove = true;
 public:
 	CameraController(Camera* camera);
-	void update();
+	void GLN_API Update(float deltaTimer) override;
 
 };
 

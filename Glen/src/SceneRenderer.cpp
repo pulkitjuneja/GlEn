@@ -37,7 +37,7 @@ void SceneRenderer::renderScene(Scene* scene, Material* overrideMaterial, bool p
 		Entity* ent = (*it);
 
 		if (ent->mesh == nullptr) {
-			return;
+			continue;
 		}
 
 		Mesh* currentMesh = ent->mesh;

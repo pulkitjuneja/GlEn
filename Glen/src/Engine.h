@@ -21,7 +21,7 @@
         void loadDefaultShaders();
         static sf::Time timeSinceStart;
         virtual bool init() = 0;
-        virtual void update() = 0;
+        void update(float deltaTime);
         void start();
     };
 

@@ -34,7 +34,7 @@ public:
 	DirectionalLight* getDirectionalLight();
 	Camera* getMainCamera();
 
-	virtual void update();
+	void update(float deltaTime);
 };
 
 template<class T>
@@ -43,9 +43,7 @@ inline T* Scene::createEntity(string name, Mesh* mesh, Material* overrideMat)
 	T* ent = new T(name);
 	// this is to make sure T is always an entity
 	static_cast<Entity*>(ent);
-	if (mesh != nullptr) {
-		ent->mesh = mesh;
-	}
+	ent->mesh = mesh;
 	if (overrideMat != nullptr) {
 		ent->overrideMaterial = overrideMat;
 	}

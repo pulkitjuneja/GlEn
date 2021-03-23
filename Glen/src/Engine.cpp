@@ -36,7 +36,7 @@ void Engine::start() {
         }
         deltaTime = clock.restart();
         timeSinceStart += deltaTime;
-        update();
+        update(deltaTime.asSeconds());
 
         renderer->render(scene);
         window->display();
@@ -77,4 +77,8 @@ bool Engine::setupSFML() {
     // Load Default Shaders
 
     return true;
+}
+
+void Engine::update(float deltaTime) {
+    scene->update(deltaTime);
 }

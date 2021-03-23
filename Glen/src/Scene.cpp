@@ -53,10 +53,10 @@ void  Scene::setMainCamera(Camera* camera)
 	this->mainCamera = camera;
 }
 
-void Scene::update()
+void Scene::update(float deltaTime)
 {
 	std::vector<Entity*>::iterator it = Entities.begin();
 	for (; it != Entities.end(); it++) {
-		(*it)->update();
+		(*it)->update(deltaTime);
 	}
 }

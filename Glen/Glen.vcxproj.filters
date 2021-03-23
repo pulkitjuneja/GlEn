@@ -7,7 +7,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Glen.h" />
+    <ClInclude Include="src\CSM.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Camera.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CameraController.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Constants.h">
@@ -25,7 +31,13 @@
     <ClInclude Include="src\ForwardRenderer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\FrameBuffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Globals.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Light.h">
@@ -46,6 +58,9 @@
     <ClInclude Include="src\SceneRenderer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Shader.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -64,18 +79,15 @@
     <ClInclude Include="src\Vertex.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\CameraController.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CSM.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FrameBuffer.h">
-      <Filter>src</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CSM.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraController.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine.cpp">
@@ -85,6 +97,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ForwardRenderer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FrameBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Mesh.cpp">
@@ -99,6 +117,9 @@
     <ClCompile Include="src\SceneRenderer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Shader.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -109,15 +130,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\UniformBuffer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CameraController.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FrameBuffer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CSM.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

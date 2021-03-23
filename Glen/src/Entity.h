@@ -7,6 +7,7 @@
 #include "Transform.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "Script.h"
 
 class GLN_API Entity {
 
@@ -16,11 +17,15 @@ public:
 	Transform transfrom;
 	Mesh* mesh;
 	Material* overrideMaterial;
+	std::vector<Script*> scripts;
 
 	Entity(string name);
 	Entity(string name, Mesh* mesh, Material* mat);
+
 	Transform* getTransform();
-	virtual void update() {};
+
+	void AddScript(Script* newScript);
+	void update(float deltaTime);
 };
 
 #endif // !ENTITY_H
