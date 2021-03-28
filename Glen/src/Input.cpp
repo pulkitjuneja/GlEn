@@ -3,12 +3,12 @@
 Input* Input::instance;
 
 
-bool Input::isKeyPressed(sf::Keyboard::Key key) {
-	return sf::Keyboard::isKeyPressed(key);
+bool Input::isKeyPressed(Keys key) {
+	return sf::Keyboard::isKeyPressed((sf::Keyboard::Key)key);
 }
 
-bool Input::isMouseButtonPressed(sf::Mouse::Button button) {
-	return sf::Mouse::isButtonPressed(button);
+bool Input::isMouseButtonPressed(MouseButtons button) {
+	return sf::Mouse::isButtonPressed((sf::Mouse::Button)button);
 }
 
 glm::vec2 Input::getMousePosition() {

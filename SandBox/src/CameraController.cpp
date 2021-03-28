@@ -9,13 +9,13 @@ void CameraController::Update(float deltaTime)
 {
 	Input* input = Input::getInstance();
 	handleRotation();
-	if (input->isKeyPressed(sf::Keyboard::W)) {
+	if (input->isKeyPressed(Keys::W)) {
 		camera->transform.translate(camera->front * CAMERA_SPEED);
 	}
-	if (input->isKeyPressed(sf::Keyboard::S)) {
+	if (input->isKeyPressed(Keys::S)) {
 		camera->transform.translate(-camera->front * CAMERA_SPEED);
 	}
-	if (input->isKeyPressed(sf::Keyboard::C)) {
+	if (input->isKeyPressed(Keys::C)) {
 		auto position = this->camera->transform.getPosition();
 		auto rotation = this->camera->transform.getEulerAngles();
 		std::cout << position.x << "  " << position.y << "  " << position.z << "\n";
@@ -26,7 +26,7 @@ void CameraController::Update(float deltaTime)
 void CameraController::handleRotation()
 {
 	Input* input = Input::getInstance();
-	if (input->isMouseButtonPressed(sf::Mouse::Button::Left)) {
+	if (input->isMouseButtonPressed(MouseButtons::Left)) {
 		glm::vec2 currentMousePosition = input->getMousePosition();
 		if (firstMouseMove) {
 			lastFrameMousePosition = currentMousePosition;
