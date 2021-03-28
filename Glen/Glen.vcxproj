@@ -106,11 +106,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Glen.h" />
+    <ClInclude Include="src\BoundingBox.h" />
     <ClInclude Include="src\CSM.h" />
     <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\CameraController.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Core.h" />
+    <ClInclude Include="src\DebugDraw.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\ForwardRenderer.h" />
@@ -132,9 +133,10 @@
     <ClInclude Include="src\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BoundingBox.cpp" />
     <ClCompile Include="src\CSM.cpp" />
     <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\CameraController.cpp" />
+    <ClCompile Include="src\DebugDraw.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\ForwardRenderer.cpp" />

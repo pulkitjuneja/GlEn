@@ -8,6 +8,7 @@
 #include "UniformBuffer.h"
 #include "Scene.h"
 #include "CSM.h"
+#include "DebugDraw.h"
 
 class GLN_API ForwardRenderer {
 	//Uniforms
@@ -21,6 +22,7 @@ class GLN_API ForwardRenderer {
 public:
 	ForwardRenderer();
 	SceneRenderer sceneRenderer;
+	DebugDraw debugDraw;
 	Csm* csm;
 	void render(Scene* scene);
 };

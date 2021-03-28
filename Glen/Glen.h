@@ -6,3 +6,4 @@
 #include "src/Camera.h"
 #include "src/Input.h"
 #include "src/Script.h"
+#include "src/DebugDraw.h"

@@ -37,7 +37,6 @@ void Engine::start() {
         deltaTime = clock.restart();
         timeSinceStart += deltaTime;
         update(deltaTime.asSeconds());
-
         renderer->render(scene);
         window->display();
     }

@@ -9,6 +9,8 @@ class Entity;
 
 class Script
 {
+protected:
+
 	Entity* parent;
 
 public:

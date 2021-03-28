@@ -5,9 +5,18 @@
 
 #include "Globals.h"
 #include "Transform.h"
-#include "Mesh.h"
 #include "Material.h"
 #include "Script.h"
+#include "Mesh.h"
+#include "DebugDraw.h"
+
+
+enum DebugMeshTypes {
+	CUBE,
+	SPHERE,
+	CYLINDER
+};
+
 
 class GLN_API Entity {
 
@@ -16,6 +25,7 @@ public:
 	string name;
 	Transform transfrom;
 	Mesh* mesh;
+	Mesh* DebugMesh;
 	Material* overrideMaterial;
 	std::vector<Script*> scripts;
 
@@ -24,6 +34,7 @@ public:
 
 	Transform* getTransform();
 
+	void attachDebugMesh(DebugMeshTypes debugMeshType);
 	void AddScript(Script* newScript);
 	void update(float deltaTime);
 };

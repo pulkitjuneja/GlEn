@@ -38,4 +38,7 @@ void ForwardRenderer::render(Scene* scene)
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	sceneRenderer.renderScene(scene);
+
+	// render debug Meshes
+	debugDraw.render(scene);
 }

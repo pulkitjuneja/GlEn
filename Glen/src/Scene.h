@@ -8,8 +8,6 @@
 #include "Light.h"
 #include "Camera.h"
 
-// TODO : use this class to abstract out Entt from the user of the engine
-
 class GLN_API Scene {
 protected:
 	std::vector<Entity*> Entities;
@@ -44,9 +42,7 @@ inline T* Scene::createEntity(string name, Mesh* mesh, Material* overrideMat)
 	// this is to make sure T is always an entity
 	static_cast<Entity*>(ent);
 	ent->mesh = mesh;
-	if (overrideMat != nullptr) {
-		ent->overrideMaterial = overrideMat;
-	}
+	ent->overrideMaterial = overrideMat;
 
 	Entities.push_back(ent);
 	return ent;

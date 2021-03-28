@@ -7,6 +7,7 @@
 #include "Vertex.h"
 #include "Texture.h"
 #include "Material.h"
+#include "BoundingBox.h"
 
 struct SubMesh {
 	Material* material;
@@ -43,6 +44,8 @@ public:
 	std::vector<unsigned int> indices;
 	std::vector<Vertex> vertices;
 	std::vector<SubMesh> subMeshes;
+	BoundingBox bounds;
+
 	bool hasNormals;
 	bool hasTexCoords;
 	bool hasTangents;

@@ -68,6 +68,8 @@ Mesh* ResourceManager::loadMesh(string path, int loaderFlags)
 	} meshMaterialSort;
 	std::sort(scene->mMeshes, scene->mMeshes + scene->mNumMeshes, meshMaterialSort);
 
+	BoundingBox meshBounds;
+
 	int vertexCount = 0;
 	int runningBaseIndexSum = 0;
 	std::vector<Vertex> vertices;
@@ -125,7 +127,7 @@ Mesh* ResourceManager::loadMesh(string path, int loaderFlags)
 			}
 			float handedness = glm::dot(glm::cross(tangent, biTangent), vertex.normals);
 			vertex.tangent = glm::vec4(tangent.x, tangent.y, tangent.z, handedness < 0 ? -1 : 1);
-
+			meshBounds.processVertexPoint(vertex.position);
 			vertices.push_back(vertex);
 		}
 
@@ -138,10 +140,9 @@ Mesh* ResourceManager::loadMesh(string path, int loaderFlags)
 
 		indexOffset += currentMesh->mNumFaces * 3;
 	}
-
+	meshBounds.FinalizeData();
 	Mesh* newMesh = new Mesh(vertices, indices, submeshes, hasNormals, hasTexCoords, hasTangents);
-	newMesh->hasNormals = hasNormals;
-	newMesh->hasTexCoords = hasTexCoords;
+	newMesh->bounds = meshBounds;
 	loadedMeshes.insert(make_pair(path, newMesh));
 	std::cout << "Mesh Loaded: " << path << std::endl;
 	return loadedMeshes.find(path)->second;
