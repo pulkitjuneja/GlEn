@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLN_PLATFORM_WINDOWS;GLN_BUILD_DLL;GLN_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>ext\glm;ext\stbi;ext\SFML\include;ext\Glew\include;ext\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>ext\glm;ext\stbi;ext\SFML\include;ext\Glew\include;ext\assimp\include;ext\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -82,7 +82,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLN_PLATFORM_WINDOWS;GLN_BUILD_DLL;GLN_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>ext\glm;ext\stbi;ext\SFML\include;ext\Glew\include;ext\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>ext\glm;ext\stbi;ext\SFML\include;ext\Glew\include;ext\assimp\include;ext\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -114,6 +114,7 @@
     <ClInclude Include="src\DebugDraw.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\Events\Event.h" />
     <ClInclude Include="src\ForwardRenderer.h" />
     <ClInclude Include="src\FrameBuffer.h" />
     <ClInclude Include="src\Globals.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="src\UniformBuffer.h" />
     <ClInclude Include="src\Uniforms.h" />
     <ClInclude Include="src\Vertex.h" />
+    <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BoundingBox.cpp" />
@@ -139,6 +141,7 @@
     <ClCompile Include="src\DebugDraw.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\ForwardRenderer.cpp" />
     <ClCompile Include="src\FrameBuffer.cpp" />
     <ClCompile Include="src\Input.cpp" />
@@ -151,6 +154,12 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\UniformBuffer.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="ext\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,14 +6,16 @@
 #include "Scene.h"
 #include "ForwardRenderer.h"
 #include "Core.h"
+#include "Events/Event.h"
+#include "Window.h"
 
     class GLN_API Engine {
 
     protected:
-        sf::Window* window;
+        Window* window;
         Scene* scene;
         bool isEngineRunning = true;
-        bool setupSFML();
+        bool setupWindow();
         ForwardRenderer* renderer;
 
     public:
@@ -22,6 +24,7 @@
         static sf::Time timeSinceStart;
         virtual bool init() = 0;
         void update(float deltaTime);
+        void onWindowEvent(sf::Event& event);
         void start();
     };
 

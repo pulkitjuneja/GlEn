@@ -9,6 +9,8 @@ workspace "Glen"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+include "Glen/ext/imgui"
+
 project "Glen"
 	location "Glen"
 	kind "SharedLib"
@@ -39,7 +41,8 @@ project "Glen"
 		"sfml-graphics.lib",
 		"sfml-window.lib",
 		"sfml-system.lib",
-		"assimp.lib"
+		"assimp.lib",
+		"ImGui"
 	}
 
 	includedirs
@@ -48,7 +51,8 @@ project "Glen"
 		"%{prj.name}/ext/stbi",
 		"%{prj.name}/ext/SFML/include",
 		"%{prj.name}/ext/Glew/include",
-		"%{prj.name}/ext/assimp/include"
+		"%{prj.name}/ext/assimp/include",
+		"%{prj.name}/ext/imgui"
 	}
 
 	filter "system:windows"
@@ -89,7 +93,7 @@ project "Sandbox"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
+		"%{prj.name	}/src/**.cpp",
 		"%{prj.name}/Sandbox.cpp"
 	}
 

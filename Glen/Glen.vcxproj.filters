@@ -7,6 +7,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Glen.h" />
+    <ClInclude Include="src\BoundingBox.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\CSM.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -17,6 +20,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Core.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugDraw.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine.h">
@@ -76,14 +82,20 @@
     <ClInclude Include="src\Vertex.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\BoundingBox.h" />
-    <ClInclude Include="src\DebugDraw.h" />
+    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Events\Event.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BoundingBox.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\CSM.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugDraw.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine.cpp">
@@ -128,7 +140,7 @@
     <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\BoundingBox.cpp" />
-    <ClCompile Include="src\DebugDraw.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Events\Event.cpp" />
   </ItemGroup>
 </Project>

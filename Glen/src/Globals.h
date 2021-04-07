@@ -23,6 +23,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <functional>
 #include "Constants.h"
 #include "Core.h"
 

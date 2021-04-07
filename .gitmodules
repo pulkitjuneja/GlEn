@@ -1,3 +1,6 @@
 [submodule ".\\Glen\\ext\\glm"]
 	path = .\\Glen\\ext\\glm
 	url = https://github.com/g-truc/glm.git
+[submodule ".\\Glen\\ext\\imGui"]
+	path = .\\Glen\\ext\\imGui
+	url = https://github.com/TheCherno/imgui.git

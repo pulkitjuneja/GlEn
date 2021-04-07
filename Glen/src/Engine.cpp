@@ -6,7 +6,7 @@ sf::Time Engine::timeSinceStart;
 void Engine::start() {
 
     // engine specific initializations
-    if (!setupSFML()) {
+    if (!setupWindow()) {
         isEngineRunning = false;
     }
 
@@ -23,26 +23,16 @@ void Engine::start() {
     
     sf::Clock clock;
     while (isEngineRunning) {
-        sf::Event windowEvent;
-
-        while (window->pollEvent(windowEvent))
-        {
-            switch (windowEvent.type)
-            {
-            case sf::Event::Closed:
-                isEngineRunning = false;
-                break;
-            }
-        }
+        window->processEvents();
         deltaTime = clock.restart();
         timeSinceStart += deltaTime;
         update(deltaTime.asSeconds());
         renderer->render(scene);
-        window->display();
+        window->Display();
     }
 
     // todo: perform shutdown steps
-    window->close();
+    window->shutdown();
 }
 
 void Engine::loadDefaultShaders()
@@ -50,19 +40,10 @@ void Engine::loadDefaultShaders()
     ResourceManager::getInstance()->loadShader("Assets/Shaders/DepthMap.vert", "Assets/Shaders/DepthMap.frag", "depthMap");
 }
 
-bool Engine::setupSFML() {
-
-    sf::ContextSettings settings;
-    settings.depthBits = 24;
-    settings.stencilBits = 8;
-    settings.majorVersion = 3;
-    settings.minorVersion = 3;
-
-    settings.attributeFlags = sf::ContextSettings::Core;
-
-    window = new sf::Window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 64), "OpenGL SFML", sf::Style::Titlebar | sf::Style::Close, settings);
-    window->setVerticalSyncEnabled(true);
+bool Engine::setupWindow() {
+    window = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Glen Engine");
     glewExperimental = GL_TRUE;
+    window->setEventCallback(std::bind(&Engine::onWindowEvent,this, std::placeholders::_1));
 
     if (GLEW_OK != glewInit())
     {
@@ -70,14 +51,19 @@ bool Engine::setupSFML() {
         return false;
     }
 
-    std::string versionString = std::string((const char*)glGetString(GL_VERSION));
-    std::cout << versionString.c_str();
-
-    // Load Default Shaders
-
     return true;
 }
 
 void Engine::update(float deltaTime) {
     scene->update(deltaTime);
+}
+
+void Engine::onWindowEvent(sf::Event& sfEvent)
+{
+    Event event(sfEvent);
+    event.Dispatch(sf::Event::EventType::Closed, [=](sf::Event& event)->bool {
+        cout << "closed";
+        isEngineRunning = false;
+        return true;
+    });
 }
