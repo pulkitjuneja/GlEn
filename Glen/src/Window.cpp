@@ -1,36 +1,87 @@
 #include "Window.h"
 
+Window* Window::currentWindow;
+
 Window::Window(int width, int height, char* title)
 {
-    sf::ContextSettings settings;
-    settings.depthBits = 24;
-    settings.stencilBits = 8;
-    settings.majorVersion = 3;
-    settings.minorVersion = 3;
+    data = WindowData{ title, width, height, true };
 
-    this->width = width;
-    this->height = height;
+    if (!glfwInit())
+    {
+        fprintf(stderr, "Failed to init GLFW\n");
+    }
 
-    settings.attributeFlags = sf::ContextSettings::Core;
-    window = new sf::Window(sf::VideoMode(width, height, 64), title,
-        sf::Style::Titlebar | sf::Style::Close, settings);
-    window->setVerticalSyncEnabled(true);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    printf("GLFW version: %s\n", glfwGetVersionString());
+
+    window = glfwCreateWindow(data.width, data.height, data.title, NULL, NULL);
+
+    if (window == NULL)
+    {
+        fprintf(stderr, "Failed to create GLFW window");
+    }
+
+    glfwSetWindowUserPointer(window, &data);
+
+    glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+        WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+        data->width = width;
+        data->height = height;
+        glViewport(0, 0, width, height);
+
+        printf("Resized %d, %d\n", data->width, data->height);
+        });
+
+    glfwMakeContextCurrent(window);
+    printf("OpenGL version: %s\n", glGetString(GL_VERSION));
+    SetVsync(data.vsync);
 }
 
-void Window::setVsync(bool vSync)
+void Window::SetVsync(bool vSync)
 {
-    window->setVerticalSyncEnabled(vSync);
+    data.vsync = vSync;
+    glfwSwapInterval(vSync ? 1 : 0);
 }
 
-void Window::processEvents()
+void Window::hookEvents()
 {
-    sf::Event event;
-    while (window->pollEvent(event)) {
-        eventCallback(event);
-    }   
+    glfwSetWindowCloseCallback(window, [](GLFWwindow* window)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowClosedEvent event;
+            data.eventCallback(event);
+        });
+}
+
+Window* Window::createWindow(int width, int height, char* title)
+{
+    if (currentWindow == nullptr) {
+        currentWindow = new Window(width, height, title);
+    }
+    return currentWindow;
 }
 
 void Window::setEventCallback(const EventCallback& eventCallback)
 {
-    this->eventCallback = eventCallback;
+    this->data.eventCallback = eventCallback;
+    glfwSetWindowUserPointer(window, &data);
+}
+
+void Window::Display()
+{
+    glfwPollEvents();
+    glfwSwapBuffers(window);
+}
+
+void Window::shutdown()
+{
+    glfwDestroyWindow(window);
+}
+
+GLFWwindow* Window::getNativeWindow()
+{
+    return window;
 }

@@ -12,8 +12,6 @@
 #include <random>
 #include <fstream>
 #include <vector>
-#include <GL/glew.h>
-#include <SFML/Window.hpp>
 #include <map>
 #include <algorithm>
 #include <cstring>
@@ -24,6 +22,10 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <functional>
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "Constants.h"
 #include "Core.h"
 

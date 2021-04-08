@@ -4,3 +4,6 @@
 [submodule ".\\Glen\\ext\\imGui"]
 	path = .\\Glen\\ext\\imGui
 	url = https://github.com/TheCherno/imgui.git
+[submodule ".\\Glen\\ext\\glfw\\glfw"]
+	path = .\\Glen\\ext\\glfw\\glfw
+	url = https://github.com/glfw/glfw.git

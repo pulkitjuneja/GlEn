@@ -10,6 +10,7 @@ workspace "Glen"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 include "Glen/ext/imgui"
+include "Glen/ext/glfw"
 
 project "Glen"
 	location "Glen"
@@ -29,7 +30,6 @@ project "Glen"
 
 	libdirs 
 	{
-		"%{prj.name}/ext/SFML/lib",
 		"%{prj.name}/ext/Glew/lib",
 		"%{prj.name}/ext/assimp/lib"
 	}
@@ -38,21 +38,19 @@ project "Glen"
 	{
 		"opengl32.lib",
 		"glew32.lib",
-		"sfml-graphics.lib",
-		"sfml-window.lib",
-		"sfml-system.lib",
 		"assimp.lib",
-		"ImGui"
+		"ImGui",
+		"GLFW"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/ext/glm",
 		"%{prj.name}/ext/stbi",
-		"%{prj.name}/ext/SFML/include",
 		"%{prj.name}/ext/Glew/include",
 		"%{prj.name}/ext/assimp/include",
-		"%{prj.name}/ext/imgui"
+		"%{prj.name}/ext/imgui",
+		"%{prj.name}/ext/glfw/glfw/include"
 	}
 
 	filter "system:windows"
@@ -102,10 +100,10 @@ project "Sandbox"
 		"Glen/ext/glm",
 		"Glen",
 		"Glen/src",
-		"Glen/ext/SFML/include",
 		"Glen/ext/Glew/include",
 		"Glen/ext/assimp/include",
-		"Glen/ext/stbi"
+		"Glen/ext/stbi",
+		"Glen/ext/glfw/glfw/include"
 	}
 
 	links

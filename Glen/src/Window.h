@@ -3,22 +3,37 @@
 #ifndef WINDOW_H
 
 #include "Globals.h"
+#include "Events/Event.h"
 
 // Class to abstract out information about the desktop window
 class Window {
 public:
-	using EventCallback = std::function<void(sf::Event&)>;
-	Window(int width, int height, char* title);
-	void setVsync(bool vsync);
-	void processEvents();
+	using EventCallback = std::function<void(Event&)>;
+
+	struct WindowData
+	{
+		const char* title;
+		int width;
+		int height;
+		bool vsync;
+		EventCallback eventCallback;
+	};
+
+	static Window* createWindow(int width, int height, char* title);
+	static Window* get() { return currentWindow; }
+
 	void setEventCallback(const EventCallback& eventCallback);
-	void Display() { window->display();}
-	void shutdown() { window->close(); }
+	void SetVsync(bool vsync);
+	void hookEvents();
+	void Display(); 
+	void shutdown();
+	GLFWwindow* getNativeWindow();
 private:
-	int width;
-	int height;
-	EventCallback eventCallback;
-	sf::Window* window;
+	Window(int width, int height, char* title);
+	WindowData data;
+	GLFWwindow* window;
+
+	static Window* currentWindow;
 
 };
 

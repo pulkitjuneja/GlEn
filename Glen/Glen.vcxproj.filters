@@ -4,6 +4,12 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor">
+      <UniqueIdentifier>{C3F37E0D-AFAB-C05A-18B3-99B6048A5B4B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Events">
+      <UniqueIdentifier>{7162C20E-5D1A-045C-C621-DDB7B2F89E4C}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Glen.h" />
@@ -25,11 +31,17 @@
     <ClInclude Include="src\DebugDraw.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\EditorGui.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Entity.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\Event.h">
+      <Filter>src\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\ForwardRenderer.h">
       <Filter>src</Filter>
@@ -70,6 +82,9 @@
     <ClInclude Include="src\Texture.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Timer.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Transform.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -82,8 +97,9 @@
     <ClInclude Include="src\Vertex.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Window.h" />
-    <ClInclude Include="src\Events\Event.h" />
+    <ClInclude Include="src\Window.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BoundingBox.cpp">
@@ -103,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="src\Entity.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Events\Event.cpp">
+      <Filter>src\Events</Filter>
     </ClCompile>
     <ClCompile Include="src\ForwardRenderer.cpp">
       <Filter>src</Filter>
@@ -134,13 +153,17 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Timer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Transform.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="src\Events\Event.cpp" />
+    <ClCompile Include="src\Window.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

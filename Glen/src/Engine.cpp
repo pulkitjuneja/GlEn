@@ -1,7 +1,6 @@
 #include "Engine.h"
 
-sf::Time Engine::deltaTime;
-sf::Time Engine::timeSinceStart;
+Time Engine::deltaTime;
 
 void Engine::start() {
 
@@ -21,18 +20,17 @@ void Engine::start() {
 
     renderer = new ForwardRenderer();
     
-    sf::Clock clock;
+    Timer timer;
     while (isEngineRunning) {
-        window->processEvents();
-        deltaTime = clock.restart();
-        timeSinceStart += deltaTime;
-        update(deltaTime.asSeconds());
+        deltaTime = timer.restart();
+        update(deltaTime.getAsSeconds());
         renderer->render(scene);
         window->Display();
     }
 
     // todo: perform shutdown steps
     window->shutdown();
+    glfwTerminate();
 }
 
 void Engine::loadDefaultShaders()
@@ -41,9 +39,12 @@ void Engine::loadDefaultShaders()
 }
 
 bool Engine::setupWindow() {
-    window = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Glen Engine");
+ 
+    window = Window::createWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Glen Editor");
+    window->setEventCallback(std::bind(&Engine::onWindowEvent, this, std::placeholders::_1));
+    window->hookEvents();
+
     glewExperimental = GL_TRUE;
-    window->setEventCallback(std::bind(&Engine::onWindowEvent,this, std::placeholders::_1));
 
     if (GLEW_OK != glewInit())
     {
@@ -58,10 +59,9 @@ void Engine::update(float deltaTime) {
     scene->update(deltaTime);
 }
 
-void Engine::onWindowEvent(sf::Event& sfEvent)
+void Engine::onWindowEvent(Event& event)
 {
-    Event event(sfEvent);
-    event.Dispatch(sf::Event::EventType::Closed, [=](sf::Event& event)->bool {
+    event.Dispatch<WindowClosedEvent>([=](Event& event)->bool {
         cout << "closed";
         isEngineRunning = false;
         return true;

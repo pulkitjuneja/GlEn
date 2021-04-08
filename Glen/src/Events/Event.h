@@ -4,17 +4,41 @@
 
 #include "../Globals.h"
 
-// TOD: decouple this class from SFML events
-// Event class to encapsulate an sfml event;
+enum class EventType {
+	WindowClose, WindowResize
+};
+
 class Event {
 public:
-	using EventFunction = std::function<bool(sf::Event&)>;
-	sf::Event event;
-	sf::Event::EventType type;
-	bool isHandled;
+	template<typename T>
+	using EventFunction = std::function<bool(T&)>;
 
-	Event(sf::Event event);
-	bool Dispatch(sf::Event::EventType type, EventFunction func);
+	bool isHandled;
+	EventType eventType;
+	std::string name;
+
+	Event(EventType eventType, std::string name);
+	template<typename T>	
+	bool Dispatch(EventFunction<T> func) {
+		if (dynamic_cast<T*>(this)) {
+			isHandled = func(*(T*)this);
+			return true;
+		}
+		return false;
+	}
+	EventType getEventType() { return eventType; }
+	virtual ~Event() = default;
+};
+
+class WindowClosedEvent : public Event {
+public:
+	WindowClosedEvent() : Event(EventType::WindowClose, "WindowClosed") {}
+	static EventType GetType() { return EventType::WindowClose; }
+};
+
+class WindowResizedEvent : public Event {
+public:
+	WindowResizedEvent() : Event(EventType::WindowResize, "WindowResized") {}
 };
 
 #endif // !Event

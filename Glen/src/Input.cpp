@@ -4,16 +4,22 @@ Input* Input::instance;
 
 
 bool Input::isKeyPressed(Keys key) {
-	return sf::Keyboard::isKeyPressed((sf::Keyboard::Key)key);
+	GLFWwindow* window = Window::get()->getNativeWindow();
+	int state = glfwGetKey(window, static_cast<int>(key));
+	return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
 bool Input::isMouseButtonPressed(MouseButtons button) {
-	return sf::Mouse::isButtonPressed((sf::Mouse::Button)button);
+	GLFWwindow* window = Window::get()->getNativeWindow();
+	int state = glfwGetMouseButton(window, static_cast<int>(button));
+	return state == GLFW_PRESS;
 }
 
 glm::vec2 Input::getMousePosition() {
-	sf::Vector2i position = sf::Mouse::getPosition();
-	return glm::vec2(position.x, position.y);
+	GLFWwindow* window = Window::get()->getNativeWindow();
+	double xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+	return glm::vec2(xpos, ypos);
 }
 
 Input* Input::getInstance() {
