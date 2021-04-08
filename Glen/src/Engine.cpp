@@ -12,6 +12,8 @@ void Engine::start() {
     loadDefaultShaders();
     scene = new Scene();
 
+    Editor = new EditorGui(scene);
+
     if (!init()) {
         isEngineRunning = false;
     }
@@ -23,8 +25,14 @@ void Engine::start() {
     Timer timer;
     while (isEngineRunning) {
         deltaTime = timer.restart();
+
+        // update step
         update(deltaTime.getAsSeconds());
+
+        // render step
         renderer->render(scene);
+        Editor->render();
+
         window->Display();
     }
 
@@ -57,6 +65,7 @@ bool Engine::setupWindow() {
 
 void Engine::update(float deltaTime) {
     scene->update(deltaTime);
+    Editor->update();
 }
 
 void Engine::onWindowEvent(Event& event)

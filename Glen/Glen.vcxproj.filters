@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="ext">
+      <UniqueIdentifier>{7670880B-E279-887C-6BF5-9E7CD7FD937C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ext\ImGui">
+      <UniqueIdentifier>{20E67CFA-8C50-3171-D58E-E21641380FC6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ext\ImGui\examples">
+      <UniqueIdentifier>{CE17081E-BAFB-C873-235C-C3C60F5FB3F5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
@@ -100,8 +109,15 @@
     <ClInclude Include="src\Window.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\SceneHeirarchyPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">
+      <Filter>ext\ImGui\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\ImGui\examples\imgui_impl_opengl3.cpp">
+      <Filter>ext\ImGui\examples</Filter>
+    </ClCompile>
     <ClCompile Include="src\BoundingBox.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -113,6 +129,9 @@
     </ClCompile>
     <ClCompile Include="src\DebugDraw.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\EditorGui.cpp">
+      <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine.cpp">
       <Filter>src</Filter>
@@ -165,5 +184,6 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\SceneHeirarchyPanel.cpp" />
   </ItemGroup>
 </Project>

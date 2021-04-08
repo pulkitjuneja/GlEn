@@ -9,7 +9,7 @@ workspace "Glen"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-include "Glen/ext/imgui"
+include "Glen/ext/imGui"
 include "Glen/ext/glfw"
 
 project "Glen"
@@ -25,7 +25,9 @@ project "Glen"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/Glen.h"
+		"%{prj.name}/Glen.h",
+		"%{prj.name}/ext/ImGui/examples/imgui_impl_glfw.cpp",
+		"%{prj.name}/ext/ImGui/examples/imgui_impl_opengl3.cpp"
 	}
 
 	libdirs 
@@ -39,8 +41,8 @@ project "Glen"
 		"opengl32.lib",
 		"glew32.lib",
 		"assimp.lib",
-		"ImGui",
-		"GLFW"
+		"GLFW",
+		"ImGui"
 	}
 
 	includedirs
@@ -103,6 +105,7 @@ project "Sandbox"
 		"Glen/ext/Glew/include",
 		"Glen/ext/assimp/include",
 		"Glen/ext/stbi",
+		"Glen/ext/imgui",
 		"Glen/ext/glfw/glfw/include"
 	}
 

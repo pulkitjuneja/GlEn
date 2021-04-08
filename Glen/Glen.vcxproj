@@ -113,6 +113,7 @@
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\DebugDraw.h" />
     <ClInclude Include="src\Editor\EditorGui.h" />
+    <ClInclude Include="src\Editor\SceneHeirarchyPanel.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Events\Event.h" />
@@ -137,10 +138,14 @@
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp" />
+    <ClCompile Include="ext\ImGui\examples\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\BoundingBox.cpp" />
     <ClCompile Include="src\CSM.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\DebugDraw.cpp" />
+    <ClCompile Include="src\Editor\EditorGui.cpp" />
+    <ClCompile Include="src\Editor\SceneHeirarchyPanel.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
@@ -160,11 +165,11 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="ext\imgui\ImGui.vcxproj">
-      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
     <ProjectReference Include="ext\glfw\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="ext\imGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

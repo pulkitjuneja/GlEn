@@ -27,6 +27,7 @@ public:
 	void hookEvents();
 	void Display(); 
 	void shutdown();
+	WindowData& getWindowData();
 	GLFWwindow* getNativeWindow();
 private:
 	Window(int width, int height, char* title);

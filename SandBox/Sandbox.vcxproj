@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLN_PLATFORM_WINDOWS;GLN_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Glen\ext\glm;..\Glen;..\Glen\src;..\Glen\ext\Glew\include;..\Glen\ext\assimp\include;..\Glen\ext\stbi;..\Glen\ext\glfw\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Glen\ext\glm;..\Glen;..\Glen\src;..\Glen\ext\Glew\include;..\Glen\ext\assimp\include;..\Glen\ext\stbi;..\Glen\ext\imgui;..\Glen\ext\glfw\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -76,7 +76,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLN_PLATFORM_WINDOWS;GLN_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Glen\ext\glm;..\Glen;..\Glen\src;..\Glen\ext\Glew\include;..\Glen\ext\assimp\include;..\Glen\ext\stbi;..\Glen\ext\glfw\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Glen\ext\glm;..\Glen;..\Glen\src;..\Glen\ext\Glew\include;..\Glen\ext\assimp\include;..\Glen\ext\stbi;..\Glen\ext\imgui;..\Glen\ext\glfw\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

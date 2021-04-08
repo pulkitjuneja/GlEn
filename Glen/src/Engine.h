@@ -8,6 +8,7 @@
 #include "Events/Event.h"
 #include "Window.h"
 #include "Timer.h"
+#include "Editor/EditorGui.h"
 
     class GLN_API Engine {
 
@@ -17,6 +18,7 @@
         bool isEngineRunning = true;
         bool setupWindow();
         ForwardRenderer* renderer;
+        EditorGui* Editor;
 
     public:
         static Time deltaTime;

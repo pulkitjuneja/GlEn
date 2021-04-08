@@ -81,6 +81,11 @@ void Window::shutdown()
     glfwDestroyWindow(window);
 }
 
+Window::WindowData& Window::getWindowData()
+{
+    return data;
+}
+
 GLFWwindow* Window::getNativeWindow()
 {
     return window;

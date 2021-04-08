@@ -18,8 +18,8 @@ public:
 		string sponzaMeshLocation = "Assets/Meshes/Sponza/sponza.obj";
 		string crysisMeshLocation = "Assets/Meshes/crysisM/nanosuit.obj";
 
-		Entity* crysisEntity = scene->createEntity<Entity>("Model", ResourceManager::getInstance()->loadMesh(crysisMeshLocation));
-		Entity* sponzaEntity = scene->createEntity<Entity>("Model", ResourceManager::getInstance()->loadMesh(sponzaMeshLocation));
+		Entity* crysisEntity = scene->createEntity<Entity>("Crysis Entity", ResourceManager::getInstance()->loadMesh(crysisMeshLocation));
+		Entity* sponzaEntity = scene->createEntity<Entity>("Sponza Entity", ResourceManager::getInstance()->loadMesh(sponzaMeshLocation));
 
 		sponzaEntity->transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
 		crysisEntity->transfrom.setScale(glm::vec3(2, 2, 2));
