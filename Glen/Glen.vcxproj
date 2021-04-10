@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLN_PLATFORM_WINDOWS;GLN_BUILD_DLL;GLN_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>ext\glm;ext\stbi;ext\Glew\include;ext\assimp\include;ext\imgui;ext\glfw\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;ext\glm;ext\stbi;ext\Glew\include;ext\assimp\include;ext\imgui;ext\glfw\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -82,7 +82,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLN_PLATFORM_WINDOWS;GLN_BUILD_DLL;GLN_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>ext\glm;ext\stbi;ext\Glew\include;ext\assimp\include;ext\imgui;ext\glfw\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;ext\glm;ext\stbi;ext\Glew\include;ext\assimp\include;ext\imgui;ext\glfw\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -106,63 +106,62 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Glen.h" />
-    <ClInclude Include="src\BoundingBox.h" />
-    <ClInclude Include="src\CSM.h" />
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\Constants.h" />
-    <ClInclude Include="src\Core.h" />
-    <ClInclude Include="src\DebugDraw.h" />
-    <ClInclude Include="src\Editor\EditorGui.h" />
-    <ClInclude Include="src\Editor\SceneHeirarchyPanel.h" />
-    <ClInclude Include="src\Engine.h" />
-    <ClInclude Include="src\Entity.h" />
-    <ClInclude Include="src\Events\Event.h" />
-    <ClInclude Include="src\ForwardRenderer.h" />
-    <ClInclude Include="src\FrameBuffer.h" />
-    <ClInclude Include="src\Globals.h" />
-    <ClInclude Include="src\Input.h" />
-    <ClInclude Include="src\Light.h" />
-    <ClInclude Include="src\Material.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\ResourceManager.h" />
-    <ClInclude Include="src\Scene.h" />
-    <ClInclude Include="src\SceneRenderer.h" />
-    <ClInclude Include="src\Script.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\Timer.h" />
-    <ClInclude Include="src\Transform.h" />
-    <ClInclude Include="src\UniformBuffer.h" />
-    <ClInclude Include="src\Uniforms.h" />
-    <ClInclude Include="src\Vertex.h" />
-    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Glen\Scene\BoundingBox.h" />
+    <ClInclude Include="src\Glen\Rendering\CSM.h" />
+    <ClInclude Include="src\Glen\Scene\Camera.h" />
+    <ClInclude Include="src\Glen\Constants.h" />
+    <ClInclude Include="src\Glen\Core\Core.h" />
+    <ClInclude Include="src\Glen\Rendering\DebugDraw.h" />
+    <ClInclude Include="src\Glen\Editor\EditorGui.h" />
+    <ClInclude Include="src\Glen\Editor\SceneHeirarchyPanel.h" />
+    <ClInclude Include="src\Glen\Core\Engine.h" />
+    <ClInclude Include="src\Glen\Scene\Entity.h" />
+    <ClInclude Include="src\Glen\Events\Event.h" />
+    <ClInclude Include="src\Glen\Rendering\ForwardRenderer.h" />
+    <ClInclude Include="src\Glen\Rendering\FrameBuffer.h" />
+    <ClInclude Include="src\Glen\Globals.h" />
+    <ClInclude Include="src\Glen\Core\Input.h" />
+    <ClInclude Include="src\Glen\Rendering\Light.h" />
+    <ClInclude Include="src\Glen\Rendering\Material.h" />
+    <ClInclude Include="src\Glen\Rendering\Mesh.h" />
+    <ClInclude Include="src\Glen\ResourceManagement\ResourceManager.h" />
+    <ClInclude Include="src\Glen\Scene\Scene.h" />
+    <ClInclude Include="src\Glen\Rendering\SceneRenderer.h" />
+    <ClInclude Include="src\Glen\Scene\Script.h" />
+    <ClInclude Include="src\Glen\Rendering\Shader.h" />
+    <ClInclude Include="src\Glen\Rendering\Texture.h" />
+    <ClInclude Include="src\Glen\Core\Timer.h" />
+    <ClInclude Include="src\Glen\Scene\Transform.h" />
+    <ClInclude Include="src\Glen\Rendering\UniformBuffer.h" />
+    <ClInclude Include="src\Glen\Rendering\Uniforms.h" />
+    <ClInclude Include="src\Glen\Rendering\Vertex.h" />
+    <ClInclude Include="src\Glen\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp" />
     <ClCompile Include="ext\ImGui\examples\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="src\BoundingBox.cpp" />
-    <ClCompile Include="src\CSM.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\DebugDraw.cpp" />
-    <ClCompile Include="src\Editor\EditorGui.cpp" />
-    <ClCompile Include="src\Editor\SceneHeirarchyPanel.cpp" />
-    <ClCompile Include="src\Engine.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\Events\Event.cpp" />
-    <ClCompile Include="src\ForwardRenderer.cpp" />
-    <ClCompile Include="src\FrameBuffer.cpp" />
-    <ClCompile Include="src\Input.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
-    <ClCompile Include="src\ResourceManager.cpp" />
-    <ClCompile Include="src\Scene.cpp" />
-    <ClCompile Include="src\SceneRenderer.cpp" />
-    <ClCompile Include="src\Script.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\Timer.cpp" />
-    <ClCompile Include="src\Transform.cpp" />
-    <ClCompile Include="src\UniformBuffer.cpp" />
-    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Glen\Scene\BoundingBox.cpp" />
+    <ClCompile Include="src\Glen\Rendering\CSM.cpp" />
+    <ClCompile Include="src\Glen\Scene\Camera.cpp" />
+    <ClCompile Include="src\Glen\Rendering\DebugDraw.cpp" />
+    <ClCompile Include="src\Glen\Editor\EditorGui.cpp" />
+    <ClCompile Include="src\Glen\Editor\SceneHeirarchyPanel.cpp" />
+    <ClCompile Include="src\Glen\Core\Engine.cpp" />
+    <ClCompile Include="src\Glen\Scene\Entity.cpp" />
+    <ClCompile Include="src\Glen\Events\Event.cpp" />
+    <ClCompile Include="src\Glen\Rendering\ForwardRenderer.cpp" />
+    <ClCompile Include="src\Glen\Rendering\FrameBuffer.cpp" />
+    <ClCompile Include="src\Glen\Core\Input.cpp" />
+    <ClCompile Include="src\Glen\Rendering\Mesh.cpp" />
+    <ClCompile Include="src\Glen\ResourceManagement\ResourceManager.cpp" />
+    <ClCompile Include="src\Glen\Scene\Scene.cpp" />
+    <ClCompile Include="src\Glen\Rendering\SceneRenderer.cpp" />
+    <ClCompile Include="src\Glen\Rendering\Shader.cpp" />
+    <ClCompile Include="src\Glen\Rendering\Texture.cpp" />
+    <ClCompile Include="src\Glen\Core\Timer.cpp" />
+    <ClCompile Include="src\Glen\Scene\Transform.cpp" />
+    <ClCompile Include="src\Glen\Rendering\UniformBuffer.cpp" />
+    <ClCompile Include="src\Glen\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ext\glfw\GLFW.vcxproj">

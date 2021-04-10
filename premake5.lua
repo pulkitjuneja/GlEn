@@ -47,6 +47,7 @@ project "Glen"
 
 	includedirs
 	{
+		"%{prj.name}/src",
 		"%{prj.name}/ext/glm",
 		"%{prj.name}/ext/stbi",
 		"%{prj.name}/ext/Glew/include",
