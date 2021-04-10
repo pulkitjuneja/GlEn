@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Glen/Globals.h"
-
 #ifndef UNIFORM_BUFFER_H
 #define UNIFORM_BUFFER_H
+
+#include <GL/glew.h>
 
 class UniformBuffer {
 	GLuint id;

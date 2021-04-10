@@ -1,11 +1,11 @@
 #pragma once 
 
-#include "Glen/Globals.h"
+#ifndef UNIFORMS_H
+#define UNIFORMS_H 
+
 #include <glm/glm.hpp>
 #include "Light.h"
 
-#ifndef UNIFORMS_H
-#define UNIFORMS_H 
 
 #define MAX_POINT_LIGHTS 10
 

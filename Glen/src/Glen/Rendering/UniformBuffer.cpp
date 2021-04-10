@@ -4,7 +4,7 @@ UniformBuffer::UniformBuffer(GLsizeiptr bufferSize, GLuint bindIndex)
 {
 	glGenBuffers(1, &id);
 	glBindBuffer(GL_UNIFORM_BUFFER, id);
-	glBufferData(GL_UNIFORM_BUFFER, bufferSize, NULL, GL_STATIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, bufferSize, nullptr, GL_STATIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindIndex, id);

@@ -3,7 +3,7 @@
 #ifndef Mesh_h
 #define Mesh_h
 
-#include "Glen/Globals.h"
+#include <GL/glew.h>
 #include "Vertex.h"
 #include "Texture.h"
 #include "Material.h"

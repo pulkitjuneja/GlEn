@@ -3,6 +3,8 @@
 #ifndef DEBUG_DRAW_H
 #define DEBUG_DRAW_H
 
+#include <GL/glew.h>
+
 #include "Glen/Core/Core.h"
 #include "Glen/Globals.h"
 #include "Glen/Rendering/Mesh.h"

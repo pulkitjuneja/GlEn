@@ -3,6 +3,8 @@
 #ifndef CSM_H
 #define CSM_H
 
+#include <GL/glew.h>
+
 #include "Texture.h"
 #include "FrameBuffer.h"
 #include "Glen/SCene/Camera.h"

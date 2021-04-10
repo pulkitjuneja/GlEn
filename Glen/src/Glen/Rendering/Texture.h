@@ -3,6 +3,8 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <GL/glew.h>
+#include "Glen/Core/Core.h"
 #include "Glen/Globals.h"
 
 enum class TextureType {

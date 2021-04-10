@@ -3,6 +3,7 @@
 #ifndef VERTEX_H
 
 #include <unordered_map>
+#include "Glen/Globals.h"
 
 struct Vertex {
 	glm::vec3 position;

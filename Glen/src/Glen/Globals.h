@@ -23,9 +23,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <functional>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include "Glen/Constants.h"
 #include "Glen/Core/Core.h"
 

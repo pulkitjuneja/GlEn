@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Glen/Globals.h"
+#include <GL/glew.h>
+
 #include "Vertex.h"
 #include "Texture.h"
 

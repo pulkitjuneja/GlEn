@@ -2,7 +2,8 @@
 
 #ifndef TIME_H
 
-#include "Glen/Globals.h"
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 class Time {
 public:

@@ -3,6 +3,7 @@
 #ifndef Shader_h
 #define Shader_h
 
+#include <GL/glew.h>
 #include "Glen/Globals.h"
 #include <unordered_map>
 
