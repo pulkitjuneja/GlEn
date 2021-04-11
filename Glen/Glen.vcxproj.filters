@@ -118,6 +118,7 @@
     <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h" />
     <ClInclude Include="src\Glen\Core\Logger.h" />
     <ClInclude Include="src\Glen\Editor\LogWindowPanel.h" />
+    <ClInclude Include="src\Glen\Rendering\DeffererdRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">
@@ -194,5 +195,6 @@
     </ClCompile>
     <ClCompile Include="src\Glen\Core\Logger.cpp" />
     <ClCompile Include="src\Glen\Editor\LogWindowPanel.cpp" />
+    <ClCompile Include="src\Glen\Rendering\DeffererdRenderer.cpp" />
   </ItemGroup>
 </Project>

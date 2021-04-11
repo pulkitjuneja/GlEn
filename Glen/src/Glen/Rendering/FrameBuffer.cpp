@@ -4,8 +4,8 @@ FrameBuffer::FrameBuffer() {
 	glGenFramebuffers(1, &fboId);
 }
 
-void FrameBuffer::bind() {
-	glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+void FrameBuffer::bind(int bindTarget) {
+	glBindFramebuffer(bindTarget, fboId);
 }
 
 void FrameBuffer::unBind() {
@@ -109,7 +109,7 @@ void FrameBuffer::checkStatus(bool shouldBind)
 			error += "NOT";
 			break;
 		}
-		std::cout << error.c_str() << "\n";
+		Logger::logError(error);
 	}
 
 	if (shouldBind) {

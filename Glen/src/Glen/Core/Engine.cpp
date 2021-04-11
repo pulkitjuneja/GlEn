@@ -18,9 +18,14 @@ void Engine::start() {
         isEngineRunning = false;
     }
 
-    glEnable(GL_DEPTH_TEST);
 
-    renderer = new ForwardRenderer();
+    /*renderer = new ForwardRenderer();*/
+    defferedRenderer = new DefferedRenderer();
+    defferedRenderer->setScene(scene);
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     
     Timer timer;
     while (isEngineRunning) {
@@ -30,7 +35,7 @@ void Engine::start() {
         update(deltaTime.getAsSeconds());
 
         // render step
-        renderer->render(scene);
+        defferedRenderer->render();
         Editor->render();
 
         window->Display();
@@ -44,11 +49,17 @@ void Engine::start() {
 void Engine::loadDefaultShaders()
 {
     ResourceManager::getInstance()->loadShader("Assets/Shaders/DepthMap.vert", "Assets/Shaders/DepthMap.frag", "depthMap");
+    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedGeometryPass.vert", "Assets/Shaders/DefferedGeometryPass.frag", "defferedGeometryPass");
+    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/DefferedDirectionalLight.frag", "defferedDirectionalLightPass");
+    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedPointLight.vert", "Assets/Shaders/DefferedPointLight.frag", "defferedPointLightPass");
+    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/HDRToneMapping.frag", "basicToneMapping");
+    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/SSRPass.frag", "ssrPass");
 }
 
 bool Engine::setupWindow() {
  
     window = Window::createWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Glen Editor");
+    window->SetVsync(false);
     window->setEventCallback(std::bind(&Engine::onWindowEvent, this, std::placeholders::_1));
     window->hookEvents();
 

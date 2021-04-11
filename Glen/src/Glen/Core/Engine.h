@@ -5,6 +5,7 @@
 #include "Glen/ResourceManagement/ResourceManager.h"
 #include "Glen/Scene/Scene.h"
 #include "Glen/Rendering/ForwardRenderer.h"
+#include "Glen/Rendering/DeffererdRenderer.h"
 #include "Glen/Events/Event.h"
 #include "Window.h"
 #include "Timer.h"
@@ -18,6 +19,7 @@
         bool isEngineRunning = true;
         bool setupWindow();
         ForwardRenderer* renderer;
+        DefferedRenderer* defferedRenderer;
         EditorGui* Editor;
 
     public:

@@ -108,6 +108,7 @@
     <ClInclude Include="Glen.h" />
     <ClInclude Include="src\Glen\Core\Logger.h" />
     <ClInclude Include="src\Glen\Editor\LogWindowPanel.h" />
+    <ClInclude Include="src\Glen\Rendering\DeffererdRenderer.h" />
     <ClInclude Include="src\Glen\Scene\BoundingBox.h" />
     <ClInclude Include="src\Glen\Rendering\CSM.h" />
     <ClInclude Include="src\Glen\Scene\Camera.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="ext\ImGui\examples\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Glen\Core\Logger.cpp" />
     <ClCompile Include="src\Glen\Editor\LogWindowPanel.cpp" />
+    <ClCompile Include="src\Glen\Rendering\DeffererdRenderer.cpp" />
     <ClCompile Include="src\Glen\Scene\BoundingBox.cpp" />
     <ClCompile Include="src\Glen\Rendering\CSM.cpp" />
     <ClCompile Include="src\Glen\Scene\Camera.cpp" />
