@@ -13,6 +13,8 @@
 
 using namespace std;
 
+class LogWindowPanel;
+
 struct LogMessage {
 	string logType;
 	string time;
@@ -28,6 +30,7 @@ struct LogMessage {
 
 class Logger {
 public:
+	friend class LogWindowPanel;
 	static void logInfo(string message);
 	static void logWarn(string message);
 	static void logDebug(string message);

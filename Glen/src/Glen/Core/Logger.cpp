@@ -9,6 +9,7 @@ void Logger::logInfo(string message)
 	logBuffer.emplace(logMessage);
 	SetConsoleTextAttribute(hConsole, 10);
 	cout << logMessage.toString()<<"\n";
+	SetConsoleTextAttribute(hConsole, 15);
 }
 
 void Logger::logWarn(string message)
@@ -17,6 +18,7 @@ void Logger::logWarn(string message)
 	logBuffer.emplace(logMessage);
 	SetConsoleTextAttribute(hConsole, 14);
 	cout << logMessage.toString() << "\n";
+	SetConsoleTextAttribute(hConsole, 15);
 }
 
 void Logger::logDebug(string message)
@@ -25,14 +27,22 @@ void Logger::logDebug(string message)
 	logBuffer.emplace(logMessage);
 	SetConsoleTextAttribute(hConsole, 11);
 	cout << logMessage.toString() << "\n";
+	SetConsoleTextAttribute(hConsole, 15);
 }
 
 void Logger::logError(string message)
 {
-	LogMessage logMessage("DEBUG", getCurrentTimeString(), message);
+	LogMessage logMessage("ERROR", getCurrentTimeString(), message);
 	logBuffer.emplace(logMessage);
 	SetConsoleTextAttribute(hConsole, 12);
 	cout << logMessage.toString() << "\n";
+	SetConsoleTextAttribute(hConsole, 15);
+}
+
+void Logger::clearLogBuffer()
+{
+	FixedSizeQueue<LogMessage, 100> empty;
+	swap(logBuffer, empty);
 }
 
 string Logger::getCurrentTimeString()

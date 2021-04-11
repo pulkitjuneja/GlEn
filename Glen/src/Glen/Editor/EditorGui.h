@@ -10,10 +10,12 @@
 #include "examples/imgui_impl_glfw.h"
 
 #include "SceneHeirarchyPanel.h"
+#include "LogWindowPanel.h"
 
 class EditorGui {
 private:
 	SceneHeirarchyPanel sceneHeirarchyPanel;
+	LogWindowPanel logWindowPanel;
 public:
 	EditorGui(Scene* scene);
 	void update();

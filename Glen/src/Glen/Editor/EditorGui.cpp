@@ -34,8 +34,9 @@ void EditorGui::update()
 
 	// Add UI panels here
 	static bool show = true;
-	ImGui::ShowDemoWindow(&show);
+	//ImGui::ShowDemoWindow(&show);
 	sceneHeirarchyPanel.update();
+	logWindowPanel.update();
 }
 
 void EditorGui::shutDown()
