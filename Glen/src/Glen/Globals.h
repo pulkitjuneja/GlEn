@@ -13,6 +13,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <queue>
 #include <algorithm>
 #include <cstring>
 #include <glm/glm.hpp>

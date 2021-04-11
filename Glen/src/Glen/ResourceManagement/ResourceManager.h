@@ -20,6 +20,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "Glen/Core/Logger.h"
 
 using namespace std;
 

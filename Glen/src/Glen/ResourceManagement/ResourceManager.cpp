@@ -54,7 +54,8 @@ Mesh* ResourceManager::loadMesh(string path, int loaderFlags)
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
+		string error = import.GetErrorString();
+		Logger::logError("ERROR::ASSIMP: " + error);
 		return nullptr;
 	}
 	string directory = path.substr(0, path.find_last_of('/'));
@@ -143,7 +144,7 @@ Mesh* ResourceManager::loadMesh(string path, int loaderFlags)
 	Mesh* newMesh = new Mesh(vertices, indices, submeshes, hasNormals, hasTexCoords, hasTangents);
 	newMesh->bounds = meshBounds;
 	loadedMeshes.insert(make_pair(path, newMesh));
-	std::cout << "Mesh Loaded: " << path << std::endl;
+	Logger::logInfo("Mesh Loaded " + path);
 	return loadedMeshes.find(path)->second;
 }
 
@@ -176,7 +177,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 
 	if (loadedShaders.find(shaderName) != loadedShaders.end())
 	{
-		cout << "Shader already loaded, to get the shader use the getShader function";
+		Logger::logInfo("Shader already loaded, to get the shader use the getShader function");
 		return;
 	}
 	unsigned int vertexShader, fragmentShader;
@@ -193,8 +194,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 	if (!success)
 	{
 		glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-		std::cout << "ERROR " << shaderName << "::VERTEX::COMPILATION_FAILED\n"
-			<< infoLog << std::endl;
+		Logger::logError("ERROR " + shaderName + " ::VERTEX::COMPILATION_FAILED" + infoLog);
 	}
 
 	char* fragmentShaderSource;
@@ -205,8 +205,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 	if (!success)
 	{
 		glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-		std::cout << "ERROR " << shaderName << "::FRAGMENT::COMPILATION_FAILED\n"
-			<< infoLog << std::endl;
+		Logger::logError("ERROR " + shaderName + " ::FRAGMENT::COMPILATION_FAILED" + infoLog);
 	}
 	GLuint shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
@@ -216,8 +215,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 	if (!success)
 	{
 		glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-		std::cout << "ERROR" << shaderName << "::PROGRAM::LINKING_FAILED\n"
-			<< infoLog << std::endl;
+		Logger::logError("ERROR " + shaderName + " ::PROGRAM::LINKING_FAILED" + infoLog);
 	}
 
 	int uniformCount = 0;
@@ -229,7 +227,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 	newShader->setUniformBlockBinding("perFrameUniforms", 0);
 	newShader->setUniformBlockBinding("csmUniforms", 1);
 
-	cout << "Shader loaded : " << shaderName << " id : " << std::to_string(newShader->getShaderID()) << "\n";
+	Logger::logInfo("Shader loaded : " + shaderName + " id : " + std::to_string(newShader->getShaderID()));
 	loadedShaders.insert(make_pair(shaderName, newShader));
 }
 
@@ -242,7 +240,7 @@ Shader* ResourceManager::getShader(const string& shaderName)
 	}
 	else
 	{
-		cout << "Shader " << shaderName << " is not loaded";
+		Logger::logWarn("Shader " + shaderName + " is not loaded");
 		return nullptr;
 	}
 }
@@ -282,11 +280,11 @@ Texture* ResourceManager::loadTexture(const string& texturePath, const string& d
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		Logger::logError("Failed to load texture");
 	}
 	stbi_image_free(data);
 	textures.emplace(make_pair(texturePath, tex));
-	std::cout << "Texture Loaded: " << texturePath << std::endl;
+	Logger::logInfo("Texture Loaded " + texturePath);
 	return textures.find(texturePath)->second;
 }
 
@@ -309,7 +307,7 @@ Texture* ResourceManager::getTexture(const string& textureName)
 	}
 	else
 	{
-		cout << "Shader " << textureName << " does not exist";
+		Logger::logWarn("Texture " + textureName + " does not exist");
 		return nullptr;
 	}
 }

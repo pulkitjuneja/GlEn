@@ -115,6 +115,8 @@
     <ClInclude Include="src\Glen\Core\Window.h">
       <Filter>src\Glen</Filter>
     </ClInclude>
+    <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h" />
+    <ClInclude Include="src\Glen\Core\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">
@@ -189,5 +191,6 @@
     <ClCompile Include="src\Glen\Core\Window.cpp">
       <Filter>src\Glen</Filter>
     </ClCompile>
+    <ClCompile Include="src\Glen\Core\Logger.cpp" />
   </ItemGroup>
 </Project>
