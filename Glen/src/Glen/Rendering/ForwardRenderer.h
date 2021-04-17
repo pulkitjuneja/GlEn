@@ -22,7 +22,7 @@ class GLN_API ForwardRenderer {
 public:
 	ForwardRenderer();
 	SceneRenderer sceneRenderer;
-	DebugDraw debugDraw;
+	DebugDraw* debugDraw;
 	Csm* csm;
 	void render(Scene* scene);
 };

@@ -16,109 +16,144 @@
     <Filter Include="src\Glen">
       <UniqueIdentifier>{C2F61ECF-AEC3-79DA-D7DC-6782C308AF68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Glen\Core">
+      <UniqueIdentifier>{5AA4EA8E-C664-66C5-8F9F-AF42FB1EABA1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Glen\Editor">
       <UniqueIdentifier>{B8C503F8-2451-71BC-2D62-F4B0996CCDBC}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Glen\Events">
       <UniqueIdentifier>{663447F9-D2BF-B4BD-DBD0-37B247DB10BE}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Glen\Physics">
+      <UniqueIdentifier>{349CB251-2095-D1A3-49C7-B628351FB1AF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Glen\Rendering">
+      <UniqueIdentifier>{8F9AFF3A-7B7E-C090-E4DE-BAE3D0E1AA12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Glen\ResourceManagement">
+      <UniqueIdentifier>{B6810F27-228F-3D0D-AB75-39F8178209C4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Glen\Scene">
+      <UniqueIdentifier>{5FED596D-4BBB-4D73-344F-BE9920BC29D8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Glen\Utils">
+      <UniqueIdentifier>{A281876D-8E4F-7B73-77E3-EB99635057D8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Glen.h" />
-    <ClInclude Include="src\Glen\Scene\BoundingBox.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Rendering\CSM.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Scene\Camera.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
     <ClInclude Include="src\Glen\Constants.h">
       <Filter>src\Glen</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Core\Core.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Glen\Rendering\DebugDraw.h">
-      <Filter>src\Glen</Filter>
+    <ClInclude Include="src\Glen\Core\Engine.h">
+      <Filter>src\Glen\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Core\Input.h">
+      <Filter>src\Glen\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Core\Logger.h">
+      <Filter>src\Glen\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Core\Timer.h">
+      <Filter>src\Glen\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Core\Window.h">
+      <Filter>src\Glen\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Editor\EditorGui.h">
+      <Filter>src\Glen\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Editor\LogWindowPanel.h">
       <Filter>src\Glen\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Editor\SceneHeirarchyPanel.h">
       <Filter>src\Glen\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Glen\Core\Engine.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Scene\Entity.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
     <ClInclude Include="src\Glen\Events\Event.h">
       <Filter>src\Glen\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Rendering\ForwardRenderer.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Rendering\FrameBuffer.h">
-      <Filter>src\Glen</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Globals.h">
       <Filter>src\Glen</Filter>
     </ClInclude>
-    <ClInclude Include="src\Glen\Core\Input.h">
-      <Filter>src\Glen</Filter>
+    <ClInclude Include="src\Glen\Physics\Collider.h">
+      <Filter>src\Glen\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Physics\PhysicsContext.h">
+      <Filter>src\Glen\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Physics\RigidBody.h">
+      <Filter>src\Glen\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Rendering\CSM.h">
+      <Filter>src\Glen\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Rendering\DebugDraw.h">
+      <Filter>src\Glen\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Rendering\DeffererdRenderer.h">
+      <Filter>src\Glen\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Rendering\ForwardRenderer.h">
+      <Filter>src\Glen\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Rendering\FrameBuffer.h">
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\Light.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\Material.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\Mesh.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\ResourceManagement\ResourceManager.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Scene\Scene.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\SceneRenderer.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Scene\Script.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\Shader.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\Texture.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Core\Timer.h">
-      <Filter>src\Glen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Glen\Scene\Transform.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\UniformBuffer.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\Uniforms.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\Vertex.h">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Glen\Core\Window.h">
-      <Filter>src\Glen</Filter>
+    <ClInclude Include="src\Glen\ResourceManagement\ResourceManager.h">
+      <Filter>src\Glen\ResourceManagement</Filter>
     </ClInclude>
-    <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h" />
-    <ClInclude Include="src\Glen\Core\Logger.h" />
-    <ClInclude Include="src\Glen\Editor\LogWindowPanel.h" />
-    <ClInclude Include="src\Glen\Rendering\DeffererdRenderer.h" />
+    <ClInclude Include="src\Glen\Scene\BoundingBox.h">
+      <Filter>src\Glen\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Scene\Camera.h">
+      <Filter>src\Glen\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Scene\Entity.h">
+      <Filter>src\Glen\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Scene\Scene.h">
+      <Filter>src\Glen\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Scene\Script.h">
+      <Filter>src\Glen\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Scene\Transform.h">
+      <Filter>src\Glen\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h">
+      <Filter>src\Glen\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">
@@ -127,74 +162,89 @@
     <ClCompile Include="ext\ImGui\examples\imgui_impl_opengl3.cpp">
       <Filter>ext\ImGui\examples</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Scene\BoundingBox.cpp">
-      <Filter>src\Glen</Filter>
+    <ClCompile Include="src\Glen\Core\Engine.cpp">
+      <Filter>src\Glen\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Rendering\CSM.cpp">
-      <Filter>src\Glen</Filter>
+    <ClCompile Include="src\Glen\Core\Input.cpp">
+      <Filter>src\Glen\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Scene\Camera.cpp">
-      <Filter>src\Glen</Filter>
+    <ClCompile Include="src\Glen\Core\Logger.cpp">
+      <Filter>src\Glen\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Rendering\DebugDraw.cpp">
-      <Filter>src\Glen</Filter>
+    <ClCompile Include="src\Glen\Core\Timer.cpp">
+      <Filter>src\Glen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Core\Window.cpp">
+      <Filter>src\Glen\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Editor\EditorGui.cpp">
+      <Filter>src\Glen\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Editor\LogWindowPanel.cpp">
       <Filter>src\Glen\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Editor\SceneHeirarchyPanel.cpp">
       <Filter>src\Glen\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Core\Engine.cpp">
-      <Filter>src\Glen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Glen\Scene\Entity.cpp">
-      <Filter>src\Glen</Filter>
-    </ClCompile>
     <ClCompile Include="src\Glen\Events\Event.cpp">
       <Filter>src\Glen\Events</Filter>
     </ClCompile>
+    <ClCompile Include="src\Glen\Physics\Collider.cpp">
+      <Filter>src\Glen\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Physics\PhysicsContext.cpp">
+      <Filter>src\Glen\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Physics\RigidBody.cpp">
+      <Filter>src\Glen\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Rendering\CSM.cpp">
+      <Filter>src\Glen\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Rendering\DebugDraw.cpp">
+      <Filter>src\Glen\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Rendering\DeffererdRenderer.cpp">
+      <Filter>src\Glen\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Glen\Rendering\ForwardRenderer.cpp">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Rendering\FrameBuffer.cpp">
-      <Filter>src\Glen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Glen\Core\Input.cpp">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Rendering\Mesh.cpp">
-      <Filter>src\Glen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Glen\ResourceManagement\ResourceManager.cpp">
-      <Filter>src\Glen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Glen\Scene\Scene.cpp">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Rendering\SceneRenderer.cpp">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Rendering\Shader.cpp">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Rendering\Texture.cpp">
-      <Filter>src\Glen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Glen\Core\Timer.cpp">
-      <Filter>src\Glen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Glen\Scene\Transform.cpp">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Rendering\UniformBuffer.cpp">
-      <Filter>src\Glen</Filter>
+      <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Core\Window.cpp">
-      <Filter>src\Glen</Filter>
+    <ClCompile Include="src\Glen\ResourceManagement\ResourceManager.cpp">
+      <Filter>src\Glen\ResourceManagement</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Core\Logger.cpp" />
-    <ClCompile Include="src\Glen\Editor\LogWindowPanel.cpp" />
-    <ClCompile Include="src\Glen\Rendering\DeffererdRenderer.cpp" />
+    <ClCompile Include="src\Glen\Scene\BoundingBox.cpp">
+      <Filter>src\Glen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Scene\Camera.cpp">
+      <Filter>src\Glen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Scene\Entity.cpp">
+      <Filter>src\Glen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Scene\Scene.cpp">
+      <Filter>src\Glen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Scene\Transform.cpp">
+      <Filter>src\Glen\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

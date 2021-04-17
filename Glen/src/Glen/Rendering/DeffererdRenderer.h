@@ -50,7 +50,7 @@ class DefferedRenderer {
 	Shader* basicToneMappingShader;
 	Shader* ssr;
 
-	DebugDraw debugDraw;
+	DebugDraw* debugDraw;
 
 	void createUVSphere();
 	void setupGBuffer();

@@ -9,14 +9,15 @@
 #include "Script.h"
 #include "Glen/Rendering/Mesh.h"
 #include "Glen/Rendering/DebugDraw.h"
-
+#include "Glen/Physics/Collider.h"
+#include "Glen/Physics/RigidBody.h"
+#include "Glen/Core/Logger.h"
 
 enum DebugMeshTypes {
 	CUBE,
 	SPHERE,
 	CYLINDER
 };
-
 
 class GLN_API Entity {
 
@@ -25,8 +26,10 @@ public:
 	string name;
 	Transform transfrom;
 	Mesh* mesh;
-	Mesh* DebugMesh;
 	Material* overrideMaterial;
+	Collider* collider;
+	RigidBody* rigidBody;
+
 	std::vector<Script*> scripts;
 
 	Entity(string name);
@@ -34,7 +37,8 @@ public:
 
 	Transform* getTransform();
 
-	void attachDebugMesh(DebugMeshTypes debugMeshType);
+	void attachCollider(ColliderType colliderType);
+	void attachRigidBody();
 	void AddScript(Script* newScript);
 	void update(float deltaTime);
 };

@@ -1,5 +1,6 @@
 #include "Glen.h"
 #include "src/CameraController.h"
+#include "PxPhysicsAPI.h"
 
 
 class ObjectRotator : public Script {
@@ -23,7 +24,8 @@ public:
 
 		sponzaEntity->transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
 		crysisEntity->transfrom.setScale(glm::vec3(2, 2, 2));
-		crysisEntity->attachDebugMesh(CUBE);
+		crysisEntity->attachCollider(ColliderType::Box);
+		crysisEntity->attachRigidBody();
 
 		scene->setMainCamera(new Camera(glm::vec3(-4.31142f, 55.923f, 191.538f), glm::vec3(-16.8f, -89.1506f, 0), 90.0f, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 8.0f, 1000.0f));
 		scene->createPointLight(glm::vec4(-20, 10, 5, 1.0), glm::vec4(0.3f, 0.01, 0.01, 1.0), glm::vec4(2, 0, 0, 1.0), glm::vec4(1, 0, 0, 1.0));
@@ -49,10 +51,7 @@ public:
 	}
 };
 
-
-
-
-int main() {
-	TestWorld* world = new TestWorld();
-	world->start();
+void main() {
+	TestWorld world;
+	world.start();
 }

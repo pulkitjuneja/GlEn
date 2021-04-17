@@ -5,6 +5,7 @@ ForwardRenderer::ForwardRenderer()
 	csm = new Csm(0.3, 350.0f, 4, 4096);
 	perFrameUbo = new UniformBuffer(sizeof(PerFrameUniforms), 0);
 	CsmUbo = new UniformBuffer(sizeof(CSMUniforms), 1);
+	debugDraw = new DebugDraw();
 }
 
 void ForwardRenderer::render(Scene* scene)
@@ -40,5 +41,5 @@ void ForwardRenderer::render(Scene* scene)
 	sceneRenderer.renderScene(scene);
 
 	// render debug Meshes
-	debugDraw.render(scene);
+	debugDraw->render(scene);
 }

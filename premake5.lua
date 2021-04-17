@@ -33,7 +33,8 @@ project "Glen"
 	libdirs 
 	{
 		"%{prj.name}/ext/Glew/lib",
-		"%{prj.name}/ext/assimp/lib"
+		"%{prj.name}/ext/assimp/lib",
+		"%{prj.name}/ext/Physx/lib"
 	}
 
 	links
@@ -42,7 +43,13 @@ project "Glen"
 		"glew32.lib",
 		"assimp.lib",
 		"GLFW",
-		"ImGui"
+		"ImGui",
+		"PhysXCooking_64.lib",
+		"PhysX_64.lib",
+		"PhysXCommon_64.lib",
+		"PhysXFoundation_64.lib",
+		"PhysXPvdSDK_static_64.lib",
+		"PhysXExtensions_static_64.lib"
 	}
 
 	includedirs
@@ -53,7 +60,9 @@ project "Glen"
 		"%{prj.name}/ext/Glew/include",
 		"%{prj.name}/ext/assimp/include",
 		"%{prj.name}/ext/imgui",
-		"%{prj.name}/ext/glfw/glfw/include"
+		"%{prj.name}/ext/glfw/glfw/include",
+		"%{prj.name}/ext/Physx/Physx/pxshared/include",
+		"%{prj.name}/ext/Physx/Physx/include"
 	}
 
 	filter "system:windows"
@@ -98,6 +107,14 @@ project "Sandbox"
 		"%{prj.name}/Sandbox.cpp"
 	}
 
+	libdirs 
+	{
+		"Glen/ext/Glew/lib",
+		"Glen/ext/assimp/lib",
+		"Glen/ext/Physx/lib"
+	}
+
+
 	includedirs
 	{
 		"Glen/ext/glm",
@@ -107,12 +124,18 @@ project "Sandbox"
 		"Glen/ext/assimp/include",
 		"Glen/ext/stbi",
 		"Glen/ext/imgui",
-		"Glen/ext/glfw/glfw/include"
+		"Glen/ext/glfw/glfw/include",
+		"Glen/ext/Physx/Physx/pxshared/include",
+		"Glen/ext/Physx/Physx/include"
 	}
 
 	links
 	{
-		"Glen"
+		"Glen",
+		"PhysXCooking_64.lib",
+		"PhysX_64.lib",
+		"PhysXCommon_64.lib",
+		"PhysXFoundation_64.lib"
 	}
 
 	filter "system:windows"

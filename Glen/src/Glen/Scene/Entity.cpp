@@ -3,16 +3,18 @@
 Entity::Entity(string name)
 {
 	this->name = name;
-	this->DebugMesh = nullptr;
+	this->collider = nullptr;
 	this->mesh = nullptr;
+	this->rigidBody = nullptr;
 }
 
 Entity::Entity(string name, Mesh* mesh, Material* mat)
 {
 	this->name = name;
 	this->mesh = mesh;
-	this->DebugMesh = nullptr;
+	this->collider = nullptr;
 	this->overrideMaterial = mat;
+	this->rigidBody = nullptr;
 }
 
 Transform* Entity::getTransform()
@@ -20,12 +22,30 @@ Transform* Entity::getTransform()
 	return &this->transfrom;
 }
 
-void Entity::attachDebugMesh(DebugMeshTypes debugDrawType)
+void Entity::attachCollider(ColliderType colliderType)
 {
-	switch (debugDrawType) {
-		case CUBE: this->DebugMesh = DebugDraw::createCubeMesh(); break;
-		case CYLINDER: this->DebugMesh = DebugDraw::createCylinderMesh(); break;
-		case SPHERE: this->DebugMesh = DebugDraw::createSphereMesh();break;
+	if (colliderType == ColliderType::Box) {
+		auto bounds = mesh->bounds.getExtents();
+		collider = new BoxCollider(glm::vec3(bounds.x/2, bounds.y/2, bounds.z/2));
+	}
+	else if (colliderType == ColliderType::Sphere) {
+		auto bounds = mesh->bounds.getExtents();
+		float radius = std::max(bounds.x, std::max(bounds.y, bounds.z)) / 2;
+		collider = new SphereCollider(radius);
+	}
+	else {
+		Logger::logWarn("INvalid colider type specified to " + name);
+	}
+}
+
+void Entity::attachRigidBody()
+{
+	if (collider == nullptr) {
+		Logger::logWarn("No collider attached cannot attach rigidBody");
+		return;
+	}
+	else {
+		rigidBody = new RigidBody(transfrom, collider);
 	}
 }
 

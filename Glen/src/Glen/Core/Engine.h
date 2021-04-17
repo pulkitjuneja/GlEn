@@ -10,12 +10,14 @@
 #include "Window.h"
 #include "Timer.h"
 #include "Glen/Editor/EditorGui.h"
+#include "Glen/Physics/PhysicsContext.h"
 
     class GLN_API Engine {
 
     protected:
         Window* window;
         Scene* scene;
+        PhysicsContext* physicsContext;
         bool isEngineRunning = true;
         bool setupWindow();
         ForwardRenderer* renderer;

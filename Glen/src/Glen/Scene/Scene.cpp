@@ -57,6 +57,41 @@ void Scene::update(float deltaTime)
 {
 	std::vector<Entity*>::iterator it = Entities.begin();
 	for (; it != Entities.end(); it++) {
+
 		(*it)->update(deltaTime);
+
+
+		if ((*it)->rigidBody != nullptr) {
+
+			Entity* ent = (*it);
+			PxRigidDynamic* rb = ent->rigidBody->getNativeRigidBody();
+			PxShape* shapes[1];
+			rb->getShapes(shapes, 1);
+			PxTransform world = PxShapeExt::getGlobalPose(*shapes[0], *rb);
+
+			glm::vec3 position(world.p.x, world.p.y, world.p.z);
+
+			PxQuat q = world.q;
+
+			double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
+			double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
+			double roll = std::atan2(sinr_cosp, cosr_cosp);
+
+			double pitch;
+			double sinp = 2 * (q.w * q.y - q.z * q.x);
+			if (std::abs(sinp) >= 1)
+				pitch = std::copysign(3.1415 / 2, sinp); // use 90 degrees if out of range
+			else
+				pitch = std::asin(sinp);
+
+			double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+			double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+			double yaw = std::atan2(siny_cosp, cosy_cosp);
+
+			ent->transfrom.setPosition(position);
+			ent->transfrom.setRotation(glm::vec3(roll, pitch, yaw));
+		}
 	}
+
+	// update entity transforms based on rigidBody
 }

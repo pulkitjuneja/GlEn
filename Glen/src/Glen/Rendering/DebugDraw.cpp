@@ -1,7 +1,12 @@
 #include "DebugDraw.h"
 #include "Glen/Scene/Scene.h"
 
-Mesh* DebugDraw::createCubeMesh()
+DebugDraw::DebugDraw()
+{
+	createDebugMesh();
+}
+
+void DebugDraw::createDebugMesh()
 {
 	std::vector<Vertex> vertices = {
 	Vertex(glm::vec3(-1,-1,-1), glm::vec3(0,0,0), glm::vec2(0,0.66)),
@@ -32,8 +37,7 @@ Mesh* DebugDraw::createCubeMesh()
 		SubMesh(cubeMaterial,0,36,0)
 	};
 
-	Mesh* cubeMesh = new Mesh(vertices, indices, cubeSubmeshes, false, false, false);
-	return cubeMesh;
+	DebugCubeMesh = new Mesh(vertices, indices, cubeSubmeshes, false, false, false);
 }
 
 void DebugDraw::render(Scene* scene) {
@@ -46,24 +50,27 @@ void DebugDraw::render(Scene* scene) {
 		
 		Entity* ent = (*it);
 
-		if (ent->DebugMesh == nullptr) {
+		if (ent->collider == nullptr) {
 			continue;
 		}
 
 		Shader* basicShader = ResourceManager::getInstance()->getShader("texturedMeshUnlit");
 		basicShader->use();
 
+		// TODO : add debug draw fro sphere colliders
+		BoxCollider* boxCollider = (BoxCollider*)ent->collider;
+
 		glm::mat4 transformationMAtrix(1.0f);
-		glm::vec3 scale = ent->mesh->bounds.getExtents() * ent->transfrom.getScale();
+		glm::vec3 scale = boxCollider->halfExtents * ent->transfrom.getScale();
 		glm::quat rotationQuat = glm::quat(ent->transfrom.getEulerAngles());
 		glm::mat4 rotationMatrix = glm::toMat4(rotationQuat);
-		transformationMAtrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x / 2, scale.y / 2, scale.z / 2)) * transformationMAtrix;
+		transformationMAtrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z)) * transformationMAtrix;
 		transformationMAtrix = rotationMatrix * transformationMAtrix;
 		transformationMAtrix = glm::translate(glm::mat4(1.0f), ent->mesh->bounds.getCenter() * ent->transfrom.getScale() + ent->transfrom.getPosition()) * transformationMAtrix;
 		basicShader->setMat4("modelMatrix", transformationMAtrix);
 
-		glBindVertexArray(ent->DebugMesh->VAO);
-		SubMesh submesh = ent->DebugMesh->subMeshes[0];
+		glBindVertexArray(DebugCubeMesh->VAO);
+		SubMesh submesh = DebugCubeMesh->subMeshes[0];
 		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
 	}
 

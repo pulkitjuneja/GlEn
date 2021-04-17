@@ -13,12 +13,17 @@
 class Scene;
 
 class GLN_API DebugDraw {
+private:
+	Mesh* DebugCubeMesh;
 public:
+
+	DebugDraw();
+
 	// TODO : Dont know if these functions belong here, re-evaluate
 	// Debug mesh creators
-	static Mesh* createCubeMesh();
-	static Mesh* createSphereMesh() { return nullptr; };
-	static Mesh* createCylinderMesh() { return nullptr; };
+	void createDebugMesh();
+	void createSphereMesh() {};
+	void createCylinderMesh() {};
 
 	void render(Scene* scene);
 };

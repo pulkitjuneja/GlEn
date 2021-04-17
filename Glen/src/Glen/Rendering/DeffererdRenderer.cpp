@@ -138,6 +138,8 @@ DefferedRenderer::DefferedRenderer()
 	glGenVertexArrays(1, &screenQuadVAO);
 	createUVSphere();
 
+	debugDraw = new DebugDraw();
+
 	std::cout << glGetError() << std::endl;
 }
 
@@ -239,7 +241,7 @@ void DefferedRenderer::render()
 		GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
 	glDisable(GL_CULL_FACE);
-	debugDraw.render(scene);
+	debugDraw->render(scene);
 	glEnable(GL_CULL_FACE);
 	/*postProcessingTexture->bind(GL_TEXTURE0 + 15);
 	ssr->setInt("finalImageBuffer", 15);

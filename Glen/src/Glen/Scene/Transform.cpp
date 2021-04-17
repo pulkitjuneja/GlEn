@@ -6,7 +6,6 @@ glm::mat4 Transform::getTransformationMatrix() {
 	glm::quat rotationQuat = glm::quat(eulerAngles);
 	glm::mat4 rotationMatrix = glm::toMat4(rotationQuat);
 	glm::mat4 transformationMAtrix(1.0f);
-	//transformationMAtrix = glm::translate(glm::mat4(1.0f), -position);
 	transformationMAtrix = glm::scale(glm::mat4(1.0f), scale) * transformationMAtrix;
 	transformationMAtrix = rotationMatrix * transformationMAtrix;
 	transformationMAtrix = glm::translate(glm::mat4(1.0f), position) * transformationMAtrix;

@@ -18,7 +18,6 @@ void Engine::start() {
         isEngineRunning = false;
     }
 
-
     /*renderer = new ForwardRenderer();*/
     defferedRenderer = new DefferedRenderer();
     defferedRenderer->setScene(scene);
@@ -75,6 +74,7 @@ bool Engine::setupWindow() {
 }
 
 void Engine::update(float deltaTime) {
+    PhysicsContext::get()->update();
     scene->update(deltaTime);
     Editor->update();
 }
