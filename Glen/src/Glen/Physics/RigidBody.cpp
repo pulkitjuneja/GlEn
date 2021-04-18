@@ -1,30 +1,38 @@
 #include "RigidBody.h"
 
-RigidBody::RigidBody(Transform& transform, Collider* collider)
+PxRigidActor* RigidBody::getNativeRigidBody()
 {
-	PxVec3 p(transform.getPosition().x, transform.getPosition().y, transform.getPosition().z);
-	glm::quat rotationQuat = glm::quat(transform.getEulerAngles());
-	PxQuat q(rotationQuat.x, rotationQuat.y, rotationQuat.z, rotationQuat.w);
-	PxTransform localTm(p,q);
-	dynamic = PhysicsContext::get()->physics->createRigidDynamic(localTm);
-
-	PxShape* shape;
-	if (dynamic_cast<BoxCollider*>(collider)) {
-		glm::vec3 halfExtents = dynamic_cast<BoxCollider*>(collider)->halfExtents;
-		shape = PhysicsContext::get()->physics->createShape(PxBoxGeometry(halfExtents.x, halfExtents.y, halfExtents.z), 
-			*collider->material);
-	}
-	else if (dynamic_cast<SphereCollider*>(collider)) {
-		float radius = dynamic_cast<SphereCollider*>(collider)->radius;
-		shape = PhysicsContext::get()->physics->createShape(PxSphereGeometry(radius),
-			*collider->material);
-	}
-	dynamic->attachShape(*shape);
-	PxRigidBodyExt::updateMassAndInertia(*dynamic, 10.0f);
-	PhysicsContext::get()->physicsScene->addActor(*dynamic);
+	return rigidBody;
 }
 
-PxRigidDynamic* RigidBody::getNativeRigidBody()
+void RigidBody::addForce(glm::vec3 force)
 {
-	return dynamic;
+	if (type == RigidBodyType::Static) {
+		Logger::logWarn("Cannot add force to a static rigidBody");
+	}
+	else {
+		((PxRigidDynamic*)rigidBody)->addForce(PxVec3(force.x, force.y, force.z));
+	}
+}
+
+RigidBody::RigidBody(Transform& transform, Collider* collider, RigidBodyType type)
+{	
+	glm::vec3 centerPosition = transform.getPosition();
+	PxVec3 p(centerPosition.x, centerPosition.y, centerPosition.z);
+	glm::quat rotationQuat = glm::quat(transform.getEulerAngles());
+	PxQuat q(rotationQuat.x, rotationQuat.y, rotationQuat.z, rotationQuat.w);
+	PxTransform localTm(p, q);
+	if (type == RigidBodyType::Dynamic) {
+		rigidBody = PhysicsContext::get()->getPhysicsRef()->createRigidDynamic(localTm);
+		PxRigidBodyExt::updateMassAndInertia(*(PxRigidDynamic*)rigidBody, 10.0f);
+	}
+	else {
+		rigidBody = PhysicsContext::get()->getPhysicsRef()->createRigidStatic(localTm);
+	}
+	PxShape* shape;
+	shape = PhysicsContext::get()->getPhysicsRef()->createShape(*collider->colliderGeometry, *collider->material);
+	rigidBody->attachShape(*shape);
+	PhysicsContext::get()->getSceneRef()->addActor(*rigidBody);
+
+	this->type = type;
 }

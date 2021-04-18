@@ -43,7 +43,7 @@ project "Glen"
 		"glew32.lib",
 		"assimp.lib",
 		"GLFW",
-		"ImGui",
+		"ImGui", 
 		"PhysXCooking_64.lib",
 		"PhysX_64.lib",
 		"PhysXCommon_64.lib",

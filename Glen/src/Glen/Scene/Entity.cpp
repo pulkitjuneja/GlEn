@@ -24,12 +24,11 @@ Transform* Entity::getTransform()
 
 void Entity::attachCollider(ColliderType colliderType)
 {
+	auto bounds = mesh->bounds.getExtents() * transfrom.getScale();
 	if (colliderType == ColliderType::Box) {
-		auto bounds = mesh->bounds.getExtents();
-		collider = new BoxCollider(glm::vec3(bounds.x/2, bounds.y/2, bounds.z/2));
+		collider = new BoxCollider(glm::vec3(bounds.x/2, bounds.y/2, bounds.z/2), mesh->bounds.getCenter());
 	}
 	else if (colliderType == ColliderType::Sphere) {
-		auto bounds = mesh->bounds.getExtents();
 		float radius = std::max(bounds.x, std::max(bounds.y, bounds.z)) / 2;
 		collider = new SphereCollider(radius);
 	}
@@ -38,14 +37,19 @@ void Entity::attachCollider(ColliderType colliderType)
 	}
 }
 
-void Entity::attachRigidBody()
+void Entity::attachBoxCollider(glm::vec3 halfExtents)
+{
+	collider = new BoxCollider(halfExtents);
+}
+
+void Entity::attachRigidBody(RigidBodyType type)
 {
 	if (collider == nullptr) {
 		Logger::logWarn("No collider attached cannot attach rigidBody");
 		return;
 	}
 	else {
-		rigidBody = new RigidBody(transfrom, collider);
+		rigidBody = new RigidBody(transfrom, collider, type);
 	}
 }
 

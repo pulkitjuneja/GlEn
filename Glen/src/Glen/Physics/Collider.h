@@ -13,6 +13,7 @@ enum ColliderType
 
 struct Collider {
 	PxMaterial* material;
+	PxGeometry* colliderGeometry;
 	glm::vec3 positionOffset;
 
 protected:

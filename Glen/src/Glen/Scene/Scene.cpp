@@ -64,7 +64,7 @@ void Scene::update(float deltaTime)
 		if ((*it)->rigidBody != nullptr) {
 
 			Entity* ent = (*it);
-			PxRigidDynamic* rb = ent->rigidBody->getNativeRigidBody();
+			PxRigidActor* rb = ent->rigidBody->getNativeRigidBody();
 			PxShape* shapes[1];
 			rb->getShapes(shapes, 1);
 			PxTransform world = PxShapeExt::getGlobalPose(*shapes[0], *rb);
@@ -88,6 +88,7 @@ void Scene::update(float deltaTime)
 			double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
 			double yaw = std::atan2(siny_cosp, cosy_cosp);
 
+			// Hacky fix to attach rigidbody at the center of the mesh
 			ent->transfrom.setPosition(position);
 			ent->transfrom.setRotation(glm::vec3(roll, pitch, yaw));
 		}

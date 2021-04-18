@@ -61,13 +61,21 @@ void DebugDraw::render(Scene* scene) {
 		BoxCollider* boxCollider = (BoxCollider*)ent->collider;
 
 		glm::mat4 transformationMAtrix(1.0f);
-		glm::vec3 scale = boxCollider->halfExtents * ent->transfrom.getScale();
+		glm::vec3 scale = boxCollider->halfExtents;
 		glm::quat rotationQuat = glm::quat(ent->transfrom.getEulerAngles());
 		glm::mat4 rotationMatrix = glm::toMat4(rotationQuat);
 		transformationMAtrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z)) * transformationMAtrix;
 		transformationMAtrix = rotationMatrix * transformationMAtrix;
-		transformationMAtrix = glm::translate(glm::mat4(1.0f), ent->mesh->bounds.getCenter() * ent->transfrom.getScale() + ent->transfrom.getPosition()) * transformationMAtrix;
+		glm::vec3 meshCenter = ent->mesh != nullptr ? ent->mesh->bounds.getCenter() : glm::vec3(0, 0, 0);
+		transformationMAtrix = glm::translate(glm::mat4(1.0f), ent->transfrom.getPosition()) * transformationMAtrix;
 		basicShader->setMat4("modelMatrix", transformationMAtrix);
+
+		//PxRigidActor* rb = ent->rigidBody->getNativeRigidBody();
+		//PxShape* shapes[1];
+		//rb->getShapes(shapes, 1);
+		//const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *rb));
+		//GLuint loc = glGetUniformLocation(basicShader->getShaderID(), "modelMatrix");
+		//glProgramUniformMatrix4fv(basicShader->getShaderID(), loc, 1, GL_FALSE, &shapePose.column0.x);
 
 		glBindVertexArray(DebugCubeMesh->VAO);
 		SubMesh submesh = DebugCubeMesh->subMeshes[0];

@@ -29,6 +29,8 @@ private:
 public:
 	PxMaterial* defaultMaterial;
 	static PhysicsContext* get();
+	PxPhysics* getPhysicsRef() { return physics; }
+	PxScene* getSceneRef() { return physicsScene; }
 	void update();
 	void shutdown();
 };

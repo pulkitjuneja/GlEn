@@ -38,7 +38,8 @@ public:
 	Transform* getTransform();
 
 	void attachCollider(ColliderType colliderType);
-	void attachRigidBody();
+	void attachBoxCollider(glm::vec3 halfExtents);
+	void attachRigidBody(RigidBodyType type);
 	void AddScript(Script* newScript);
 	void update(float deltaTime);
 };
