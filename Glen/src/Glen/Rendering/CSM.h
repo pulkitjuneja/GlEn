@@ -10,7 +10,8 @@
 #include "Glen/SCene/Camera.h"
 #include "Glen/ResourceManagement/ResourceManager.h"
 #include "SceneRenderer.h"
-#include "Glen/Scene/Scene.h" 
+#include "Glen/Scene/Scene.h"
+#include "Glen/Core/EngineContext.h"
 
 struct FrustumSplit
 {
@@ -49,7 +50,7 @@ public:
     void updateFarBounds(Camera* camera);
 
     void updateUniforms(CSMUniforms& csmUniforms);
-    void render(Scene* scene);
+    void render(SceneManager* scene);
 };
 
 

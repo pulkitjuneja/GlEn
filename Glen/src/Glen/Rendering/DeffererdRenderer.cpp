@@ -53,25 +53,25 @@ void DefferedRenderer::setupGBuffer()
 	gBuffer = new FrameBuffer();
 	gBuffer->bind();
 
-	gBufferPositionTexture = ResourceManager::getInstance()->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::DIFFUSE,
+	gBufferPositionTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::DIFFUSE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
 	gBufferPositionTexture->bind();
 	gBufferPositionTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer->attachRenderTarget(gBufferPositionTexture, 0, 0);
 
-	gBufferNormalTexture = ResourceManager::getInstance()->generateTexture(G_BUFFER_NORMAL_TEXTURE_NAME, TextureType::DIFFUSE,
+	gBufferNormalTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_NORMAL_TEXTURE_NAME, TextureType::DIFFUSE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
 	gBufferNormalTexture->bind();
 	gBufferNormalTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer->attachRenderTarget(gBufferNormalTexture, 0, 1);
 
-	gBufferColorTexture = ResourceManager::getInstance()->generateTexture(G_BUFFER_COLOR_TEXTURE_NAME, TextureType::DIFFUSE,
+	gBufferColorTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_COLOR_TEXTURE_NAME, TextureType::DIFFUSE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1);
 	gBufferColorTexture->bind();
 	gBufferColorTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer->attachRenderTarget(gBufferColorTexture, 0, 2);
 
-	gBUfferDepthTexture = ResourceManager::getInstance()->generateTexture(G_BUFFER_DEPTH_TEXTURE_NAME, TextureType::DEPTH, SCREEN_WIDTH, SCREEN_HEIGHT,
+	gBUfferDepthTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_DEPTH_TEXTURE_NAME, TextureType::DEPTH, SCREEN_WIDTH, SCREEN_HEIGHT,
 		GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT, 1);
 	gBUfferDepthTexture->bind();
 	gBUfferDepthTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
@@ -87,7 +87,7 @@ void DefferedRenderer::setupHDRBuffer()
 	HDRBBuffer = new FrameBuffer();
 	HDRBBuffer->bind();
 
-	HDRBUfferTexture = ResourceManager::getInstance()->generateTexture(HDR_BUFFER_TEXTURE_NAME, TextureType::DIFFUSE,
+	HDRBUfferTexture = EngineContext::get()->resourceManager->generateTexture(HDR_BUFFER_TEXTURE_NAME, TextureType::DIFFUSE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
 	HDRBUfferTexture->bind();
 	HDRBUfferTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
@@ -97,7 +97,7 @@ void DefferedRenderer::setupHDRBuffer()
 
 	postProcessingBuffer = new FrameBuffer();
 	postProcessingBuffer->bind();
-	postProcessingTexture = ResourceManager::getInstance()->generateTexture(PP_BUFFER_TEXTURE_NAME, TextureType::DIFFUSE,
+	postProcessingTexture = EngineContext::get()->resourceManager->generateTexture(PP_BUFFER_TEXTURE_NAME, TextureType::DIFFUSE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT, 1);
 	postProcessingTexture->bind();
 	postProcessingTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
@@ -108,7 +108,7 @@ void DefferedRenderer::setupHDRBuffer()
 
 }
 
-DefferedRenderer::DefferedRenderer()
+void DefferedRenderer::startup()
 {
 	setupGBuffer();
 	setupHDRBuffer();
@@ -116,10 +116,10 @@ DefferedRenderer::DefferedRenderer()
 	perFrameUbo = new UniformBuffer(sizeof(PerFrameUniforms), 0);
 	CsmUbo = new UniformBuffer(sizeof(CSMUniforms), 1);
 
-	directionalLightShader = ResourceManager::getInstance()->getShader("defferedDirectionalLightPass");
-	pointLightShader = ResourceManager::getInstance()->getShader("defferedPointLightPass");
-	basicToneMappingShader = ResourceManager::getInstance()->getShader("basicToneMapping");
-	ssr = ResourceManager::getInstance()->getShader("ssrPass");
+	directionalLightShader = EngineContext::get()->resourceManager->getShader("defferedDirectionalLightPass");
+	pointLightShader = EngineContext::get()->resourceManager->getShader("defferedPointLightPass");
+	basicToneMappingShader = EngineContext::get()->resourceManager->getShader("basicToneMapping");
+	ssr = EngineContext::get()->resourceManager->getShader("ssrPass");
 
 	directionalLightShader->setInt("positionTexture", 11);
 	directionalLightShader->setInt("normalTexture", 12);
@@ -138,14 +138,12 @@ DefferedRenderer::DefferedRenderer()
 	glGenVertexArrays(1, &screenQuadVAO);
 	createUVSphere();
 
-	debugDraw = new DebugDraw();
-
 	std::cout << glGetError() << std::endl;
-}
+	scene = EngineContext::get()->sceneManager;
 
-void DefferedRenderer::setScene(Scene* scene)
-{
-	this->scene = scene;
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 }
 
 void DefferedRenderer::runGeometryPass()
@@ -157,7 +155,7 @@ void DefferedRenderer::runGeometryPass()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Material* gBufferMaterial = new Material();
-	gBufferMaterial->setShader(ResourceManager::getInstance()->getShader("defferedGeometryPass"));
+	gBufferMaterial->setShader(EngineContext::get()->resourceManager->getShader("defferedGeometryPass"));
 	sceneRenderer.renderScene(scene, gBufferMaterial, true);
 	gBuffer->unBind();
 
@@ -195,12 +193,12 @@ void DefferedRenderer::runPointLightPass()
 	glFrontFace(GL_CCW);
 }
 
-void DefferedRenderer::render()
+void DefferedRenderer::update(float deltaTime)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	csm->update(scene->getMainCamera(), scene->getDirectionalLight()->direction);
+	csm->update(EngineContext::get()->sceneManager->getMainCamera(), scene->getDirectionalLight()->direction);
 	sceneRenderer.setGlobalUniforms(perFrameUniforms, scene);
 	csm->updateUniforms(csmUniforms);
 
@@ -239,10 +237,7 @@ void DefferedRenderer::render()
 
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
-	glDisable(GL_CULL_FACE);
-	debugDraw->render(scene);
-	glEnable(GL_CULL_FACE);
+	
 	/*postProcessingTexture->bind(GL_TEXTURE0 + 15);
 	ssr->setInt("finalImageBuffer", 15);
 	postProcessingBuffer->unBind();
@@ -257,6 +252,8 @@ void DefferedRenderer::render()
 
 	//toneMappingPass();
 }
+
+void DefferedRenderer::shutdown() {}
 
 void DefferedRenderer::toneMappingPass()
 {

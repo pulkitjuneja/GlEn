@@ -109,17 +109,20 @@
     <ClInclude Include="src\Glen\Constants.h" />
     <ClInclude Include="src\Glen\Core\Core.h" />
     <ClInclude Include="src\Glen\Core\Engine.h" />
+    <ClInclude Include="src\Glen\Core\EngineContext.h" />
     <ClInclude Include="src\Glen\Core\Input.h" />
     <ClInclude Include="src\Glen\Core\Logger.h" />
+    <ClInclude Include="src\Glen\Core\System.h" />
     <ClInclude Include="src\Glen\Core\Timer.h" />
     <ClInclude Include="src\Glen\Core\Window.h" />
-    <ClInclude Include="src\Glen\Editor\EditorGui.h" />
+    <ClInclude Include="src\Glen\Editor\GuiSystem.h" />
     <ClInclude Include="src\Glen\Editor\LogWindowPanel.h" />
     <ClInclude Include="src\Glen\Editor\SceneHeirarchyPanel.h" />
     <ClInclude Include="src\Glen\Events\Event.h" />
     <ClInclude Include="src\Glen\Globals.h" />
     <ClInclude Include="src\Glen\Physics\Collider.h" />
     <ClInclude Include="src\Glen\Physics\PhysicsContext.h" />
+    <ClInclude Include="src\Glen\Physics\PhysicsSystem.h" />
     <ClInclude Include="src\Glen\Physics\RigidBody.h" />
     <ClInclude Include="src\Glen\Rendering\CSM.h" />
     <ClInclude Include="src\Glen\Rendering\DebugDraw.h" />
@@ -141,6 +144,7 @@
     <ClInclude Include="src\Glen\Scene\Entity.h" />
     <ClInclude Include="src\Glen\Scene\Scene.h" />
     <ClInclude Include="src\Glen\Scene\Script.h" />
+    <ClInclude Include="src\Glen\Scene\ScriptingSystem.h" />
     <ClInclude Include="src\Glen\Scene\Transform.h" />
     <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h" />
   </ItemGroup>
@@ -148,16 +152,18 @@
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp" />
     <ClCompile Include="ext\ImGui\examples\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Glen\Core\Engine.cpp" />
+    <ClCompile Include="src\Glen\Core\EngineContext.cpp" />
     <ClCompile Include="src\Glen\Core\Input.cpp" />
     <ClCompile Include="src\Glen\Core\Logger.cpp" />
     <ClCompile Include="src\Glen\Core\Timer.cpp" />
     <ClCompile Include="src\Glen\Core\Window.cpp" />
-    <ClCompile Include="src\Glen\Editor\EditorGui.cpp" />
+    <ClCompile Include="src\Glen\Editor\GuiSystem.cpp" />
     <ClCompile Include="src\Glen\Editor\LogWindowPanel.cpp" />
     <ClCompile Include="src\Glen\Editor\SceneHeirarchyPanel.cpp" />
     <ClCompile Include="src\Glen\Events\Event.cpp" />
     <ClCompile Include="src\Glen\Physics\Collider.cpp" />
     <ClCompile Include="src\Glen\Physics\PhysicsContext.cpp" />
+    <ClCompile Include="src\Glen\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\Glen\Physics\RigidBody.cpp" />
     <ClCompile Include="src\Glen\Rendering\CSM.cpp" />
     <ClCompile Include="src\Glen\Rendering\DebugDraw.cpp" />
@@ -174,7 +180,9 @@
     <ClCompile Include="src\Glen\Scene\Camera.cpp" />
     <ClCompile Include="src\Glen\Scene\Entity.cpp" />
     <ClCompile Include="src\Glen\Scene\Scene.cpp" />
+    <ClCompile Include="src\Glen\Scene\ScriptingSystem.cpp" />
     <ClCompile Include="src\Glen\Scene\Transform.cpp" />
+    <ClCompile Include="src\Glen\Utils\TypeName.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ext\glfw\GLFW.vcxproj">

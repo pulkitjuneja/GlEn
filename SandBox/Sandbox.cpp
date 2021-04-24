@@ -6,7 +6,7 @@
 class ObjectRotator : public Script {
 
 	void Update(float deltaTime) override {
-		if (Input::getInstance()->isKeyPressed(Keys::Space)) {
+		if (EngineContext::get()->inputStatus->isKeyPressed(Keys::Space)) {
 			parent->rigidBody->addForce(glm::vec3(0, 50, 0));
 		}
 	}
@@ -21,8 +21,8 @@ public:
 		string sponzaMeshLocation = "Assets/Meshes/Sponza/sponza.obj";
 		string crysisMeshLocation = "Assets/Meshes/crysisM/nanosuit.obj";
 
-		Entity* crysisEntity = scene->createEntity<Entity>("Crysis Entity", ResourceManager::getInstance()->loadMesh(crysisMeshLocation));
-		Entity* sponzaEntity = scene->createEntity<Entity>("Sponza Entity", ResourceManager::getInstance()->loadMesh(sponzaMeshLocation));
+		Entity* crysisEntity = scene->createEntity<Entity>("Crysis Entity", EngineContext::get()->resourceManager->loadMesh(crysisMeshLocation));
+		Entity* sponzaEntity = scene->createEntity<Entity>("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
 		Entity* groundPLaneEntity = scene->createEntity<Entity>("Ground Plane");
 		groundPLaneEntity->attachBoxCollider(glm::vec3(100, 1, 100));
 		groundPLaneEntity->attachRigidBody(RigidBodyType::Static);
@@ -52,9 +52,9 @@ public:
 	}
 
 	void loadShaders() {
-		ResourceManager::getInstance()->loadShader("Assets/Shaders/basic.vert", "Assets/Shaders/basic.frag", "defaultShader");
-		ResourceManager::getInstance()->loadShader("Assets/Shaders/TexturedMeshUnlit.vert", "Assets/Shaders/TexturedMeshUnlit.frag", "texturedMeshUnlit");
-		ResourceManager::getInstance()->loadShader("Assets/Shaders/TexturedMesh.vert", "Assets/Shaders/TexturedMesh.frag", "texturedMeshShader");
+		EngineContext::get()->resourceManager->loadShader("Assets/Shaders/basic.vert", "Assets/Shaders/basic.frag", "defaultShader");
+		EngineContext::get()->resourceManager->loadShader("Assets/Shaders/TexturedMeshUnlit.vert", "Assets/Shaders/TexturedMeshUnlit.frag", "texturedMeshUnlit");
+		EngineContext::get()->resourceManager->loadShader("Assets/Shaders/TexturedMesh.vert", "Assets/Shaders/TexturedMesh.frag", "texturedMeshShader");
 	}
 };
 

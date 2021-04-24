@@ -8,7 +8,7 @@
 #include "Glen/Rendering/Light.h"
 #include "Camera.h"
 
-class GLN_API Scene {
+class GLN_API SceneManager {
 protected:
 	std::vector<Entity*> Entities;
 	std::vector<PointLight*> pointLights;
@@ -31,12 +31,10 @@ public:
 	std::vector<PointLight*>& getPointLIghts();
 	DirectionalLight* getDirectionalLight();
 	Camera* getMainCamera();
-
-	void update(float deltaTime);
 };
 
 template<class T>
-inline T* Scene::createEntity(string name, Mesh* mesh, Material* overrideMat)
+inline T* SceneManager::createEntity(string name, Mesh* mesh, Material* overrideMat)
 {
 	T* ent = new T(name);
 	// this is to make sure T is always an entity

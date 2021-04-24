@@ -7,7 +7,7 @@ CameraController::CameraController(Camera* camera)
 
 void CameraController::Update(float deltaTime)
 {
-	Input* input = Input::getInstance();
+	InputStatus* input = EngineContext::get()->inputStatus;
 	handleRotation();
 	if (input->isKeyPressed(Keys::W)) {
 		camera->transform.translate(camera->front * CAMERA_SPEED);
@@ -25,7 +25,7 @@ void CameraController::Update(float deltaTime)
 
 void CameraController::handleRotation()
 {
-	Input* input = Input::getInstance();
+	InputStatus* input = EngineContext::get()->inputStatus;
 	if (input->isMouseButtonPressed(MouseButtons::Left)) {
 		glm::vec2 currentMousePosition = input->getMousePosition();
 		if (firstMouseMove) {

@@ -1,16 +1,11 @@
 #include "SceneHeirarchyPanel.h"
 
-void SceneHeirarchyPanel::setSceneRef(Scene* scene)
-{
-	this->sceneRef = scene;
-}
-
 void SceneHeirarchyPanel::update()
 {
 	ImGui::SetNextWindowPos(ImVec2(20, 40));
 	ImGui::Begin("Scene Heirarchy");
 
-	std::vector<Entity*> entities = sceneRef->getEntities();
+	std::vector<Entity*> entities = EngineContext::get()->sceneManager->getEntities();
 
 	for (Entity* entity : entities) {
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), entity->name.c_str());

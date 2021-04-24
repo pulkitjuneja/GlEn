@@ -4,6 +4,7 @@
 
 #include "Glen/Globals.h"
 #include "PhysicsContext.h"
+#include "Glen/Core/EngineContext.h"
 
 enum ColliderType
 {

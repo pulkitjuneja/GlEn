@@ -1,6 +1,6 @@
-#include "EditorGui.h"
+#include "GuiSystem.h"
 
-EditorGui::EditorGui(Scene* scene)
+void GuiSystem::startup()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -17,16 +17,16 @@ EditorGui::EditorGui(Scene* scene)
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 
-	GLFWwindow* window = Window::get()->getNativeWindow();
+	GLFWwindow* window = EngineContext::get()->window->getNativeWindow();
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 410");
 
 	// initialize panels
-	sceneHeirarchyPanel.setSceneRef(scene);
+	//sceneHeirarchyPanel.setSceneRef(scene);
 }
 
-void EditorGui::update()
+void GuiSystem::update(float deltaTime)
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -37,19 +37,9 @@ void EditorGui::update()
 	//ImGui::ShowDemoWindow(&show);
 	sceneHeirarchyPanel.update();
 	logWindowPanel.update();
-}
 
-void EditorGui::shutDown()
-{
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-}
-
-void EditorGui::render()
-{
 	ImGuiIO& io = ImGui::GetIO();
-	Window* window = Window::get();
+	Window* window = EngineContext::get()->window;
 	io.DisplaySize = ImVec2(window->getWindowData().width, window->getWindowData().height);
 
 	// Rendering
@@ -65,4 +55,10 @@ void EditorGui::render()
 	}
 }
 
+void GuiSystem::shutdown()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+}
 

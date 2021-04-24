@@ -209,7 +209,7 @@ void Csm::updateUniforms(CSMUniforms& csmUniforms)
 	csmUniforms.splitCount = splitCount;
 }
 
-void Csm::render(Scene* scene)
+void Csm::render(SceneManager* scene)
 {
 	for (int i = 0; i < splitCount; i++) {
 		depthMapMaterial->getShader()->setMat4("lightSpaceMatrix", cropMatrices[i]);
@@ -224,7 +224,7 @@ void Csm::render(Scene* scene)
 
 Csm::Csm(float lambda, float nearOffset, int splitCount, int shadowMapSize) : lambda(lambda), nearOffset(nearOffset), splitCount(splitCount), shadowMapSize(shadowMapSize)
 {
-	shadowMaps = ResourceManager::getInstance()->generateTexture(CSM_SHADOW_MAPS, TextureType::DEPTH, shadowMapSize, shadowMapSize,
+	shadowMaps = EngineContext::get()->resourceManager->generateTexture(CSM_SHADOW_MAPS, TextureType::DEPTH, shadowMapSize, shadowMapSize,
 		GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT, splitCount);
 	shadowMaps->bind();
 	shadowMaps->bind(GL_TEXTURE0 + 10);
@@ -243,7 +243,7 @@ Csm::Csm(float lambda, float nearOffset, int splitCount, int shadowMapSize) : la
 		0.0f, 0.0f, 0.5f, 0.0f,
 		0.5f, 0.5f, 0.5f, 1.0f);
 	depthMapMaterial = new Material();
-	depthMapMaterial->setShader(ResourceManager::getInstance()->getShader("depthMap"));
+	depthMapMaterial->setShader(EngineContext::get()->resourceManager->getShader("depthMap"));
 }
 
 void Csm::update(Camera* camera, glm::vec3 lightDir)

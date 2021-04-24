@@ -23,16 +23,16 @@ RigidBody::RigidBody(Transform& transform, Collider* collider, RigidBodyType typ
 	PxQuat q(rotationQuat.x, rotationQuat.y, rotationQuat.z, rotationQuat.w);
 	PxTransform localTm(p, q);
 	if (type == RigidBodyType::Dynamic) {
-		rigidBody = PhysicsContext::get()->getPhysicsRef()->createRigidDynamic(localTm);
+		rigidBody = EngineContext::get()->physicsContext->physics->createRigidDynamic(localTm);
 		PxRigidBodyExt::updateMassAndInertia(*(PxRigidDynamic*)rigidBody, 10.0f);
 	}
 	else {
-		rigidBody = PhysicsContext::get()->getPhysicsRef()->createRigidStatic(localTm);
+		rigidBody = EngineContext::get()->physicsContext->physics->createRigidStatic(localTm);
 	}
 	PxShape* shape;
-	shape = PhysicsContext::get()->getPhysicsRef()->createShape(*collider->colliderGeometry, *collider->material);
+	shape = EngineContext::get()->physicsContext->physics->createShape(*collider->colliderGeometry, *collider->material);
 	rigidBody->attachShape(*shape);
-	PhysicsContext::get()->getSceneRef()->addActor(*rigidBody);
+	EngineContext::get()->physicsContext->physicsScene->addActor(*rigidBody);
 
 	this->type = type;
 }

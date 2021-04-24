@@ -4,14 +4,13 @@
 
 #include "Glen/Scene/Scene.h"
 #include <imgui.h>
+#include "Glen/Core/EngineContext.h"
 
 
 // TODO: Abstract this into a separate panel class
 class SceneHeirarchyPanel {
 private:
-	Scene* sceneRef;
 public:
-	void setSceneRef(Scene* scene);
 	void update();
 };
 

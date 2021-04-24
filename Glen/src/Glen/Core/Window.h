@@ -22,9 +22,6 @@ public:
 		EventCallback eventCallback;
 	};
 
-	static Window* createWindow(int width, int height, char* title);
-	static Window* get() { return currentWindow; }
-
 	void setEventCallback(const EventCallback& eventCallback);
 	void SetVsync(bool vsync);
 	void hookEvents();
@@ -32,12 +29,11 @@ public:
 	void shutdown();
 	WindowData& getWindowData();
 	GLFWwindow* getNativeWindow();
-private:
+
 	Window(int width, int height, char* title);
+private:
 	WindowData data;
 	GLFWwindow* window;
-
-	static Window* currentWindow;
 
 };
 

@@ -1,6 +1,6 @@
 #include "SceneRenderer.h"
 
-void SceneRenderer::setGlobalUniforms(PerFrameUniforms& perFrameUniforms, Scene* scene)
+void SceneRenderer::setGlobalUniforms(PerFrameUniforms& perFrameUniforms, SceneManager* scene)
 {
 	Camera* mainCamera = scene->getMainCamera();
 	perFrameUniforms.viewMatrix = mainCamera->getViewMatrix();
@@ -21,13 +21,13 @@ void SceneRenderer::setGlobalUniforms(PerFrameUniforms& perFrameUniforms, Scene*
 
 void SceneRenderer::bindGlobalMaps()
 {
-	Texture* depthMapTexture = ResourceManager::getInstance()->getTexture(CSM_SHADOW_MAPS);
+	Texture* depthMapTexture = EngineContext::get()->resourceManager->getTexture(CSM_SHADOW_MAPS);
 	if (depthMapTexture) {
 		depthMapTexture->bind(GL_TEXTURE0 + 10);
 	}
 }
 
-void SceneRenderer::renderScene(Scene* scene, Material* overrideMaterial, bool passBaseMaterialProperties)
+void SceneRenderer::renderScene(SceneManager* scene, Material* overrideMaterial, bool passBaseMaterialProperties)
 {
 	std::vector<Entity*> entities = scene->getEntities();
 	std::vector<Entity*>::iterator it = entities.begin();

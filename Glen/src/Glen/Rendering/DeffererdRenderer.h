@@ -17,9 +17,10 @@
 #include "SceneRenderer.h"
 #include "UniformBuffer.h"
 #include "Csm.h"
+#include "Glen/Core/System.h"
 
-class DefferedRenderer {
-	Scene* scene;
+class DefferedRenderer : ISystem {
+	SceneManager* scene;
 
 	Texture* gBufferPositionTexture;
 	Texture* gBufferColorTexture;
@@ -50,20 +51,20 @@ class DefferedRenderer {
 	Shader* basicToneMappingShader;
 	Shader* ssr;
 
-	DebugDraw* debugDraw;
-
 	void createUVSphere();
 	void setupGBuffer();
 	void setupHDRBuffer();
 public:
-	DefferedRenderer();
+	DefferedRenderer() = default;
 	void toneMappingPass();
 	void runGeometryPass();
 	void runDirectionalLightPass();
 	void runPointLightPass();
-	void setScene(Scene* scene);
 	//void runLightingPass();
-	void render();
+
+	virtual void startup() override;
+	virtual void update(float deltaTimer) override;
+	virtual void shutdown() override;
 };
 
 #endif

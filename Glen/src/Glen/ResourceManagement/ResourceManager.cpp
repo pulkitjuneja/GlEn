@@ -3,7 +3,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-ResourceManager* ResourceManager::instance;
 
 void ResourceManager::readFromFile(const std::string& fileName, char*& shaderContent)
 {
@@ -13,19 +12,6 @@ void ResourceManager::readFromFile(const std::string& fileName, char*& shaderCon
 	buffer << shaderFile.rdbuf();
 	shaderContent = new char[buffer.str().length()];
 	strcpy(shaderContent, &buffer.str()[0]);
-}
-
-ResourceManager::ResourceManager() {
-
-}
-
-ResourceManager* ResourceManager::getInstance()
-{
-	if (instance == nullptr)
-	{
-		instance = new ResourceManager();
-	}
-	return instance;
 }
 
 Texture* ResourceManager::loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType aiTextureType, string directory)

@@ -59,10 +59,3 @@ void Entity::AddScript(Script* newScript)
 	newScript->Start();
 	scripts.push_back(newScript);
 }
-
-void Entity::update(float deltaTime) {
-	for (auto script : scripts) {
-		script->Update(deltaTime);
-	}
-}
-

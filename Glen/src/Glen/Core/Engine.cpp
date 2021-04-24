@@ -9,22 +9,35 @@ void Engine::start() {
         isEngineRunning = false;
     }
 
-    loadDefaultShaders();
-    scene = new Scene();
+    scene = new SceneManager();
 
-    Editor = new EditorGui(scene);
+    EngineContext::get()->resourceManager = new ResourceManager();
+    EngineContext::get()->window = window;
+    EngineContext::get()->inputStatus = new InputStatus();
+    EngineContext::get()->sceneManager = scene;
+    EngineContext::get()->physicsContext = new PhysicsContext();
+
+    loadDefaultShaders();
+
+    guiSystem = new GuiSystem();
+    physicsSystem = new PhysicsSystem();
+    /*renderer = new ForwardRenderer();*/
+    defferedRenderer = new DefferedRenderer();
+    debugDraw = new DebugDraw();
+    scriptingSystem = new ScriptingSystem();
+
+    systemManager.registerSystem<ScriptingSystem>();
+
+    scriptingSystem->startup();
+    physicsSystem->startup();
+    defferedRenderer->startup();
+    debugDraw->startup();
+    guiSystem->startup();
+
 
     if (!init()) {
         isEngineRunning = false;
     }
-
-    /*renderer = new ForwardRenderer();*/
-    defferedRenderer = new DefferedRenderer();
-    defferedRenderer->setScene(scene);
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
     
     Timer timer;
     while (isEngineRunning) {
@@ -32,10 +45,6 @@ void Engine::start() {
 
         // update step
         update(deltaTime.getAsSeconds());
-
-        // render step
-        defferedRenderer->render();
-        Editor->render();
 
         window->Display();
     }
@@ -47,17 +56,17 @@ void Engine::start() {
 
 void Engine::loadDefaultShaders()
 {
-    ResourceManager::getInstance()->loadShader("Assets/Shaders/DepthMap.vert", "Assets/Shaders/DepthMap.frag", "depthMap");
-    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedGeometryPass.vert", "Assets/Shaders/DefferedGeometryPass.frag", "defferedGeometryPass");
-    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/DefferedDirectionalLight.frag", "defferedDirectionalLightPass");
-    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedPointLight.vert", "Assets/Shaders/DefferedPointLight.frag", "defferedPointLightPass");
-    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/HDRToneMapping.frag", "basicToneMapping");
-    ResourceManager::getInstance()->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/SSRPass.frag", "ssrPass");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DepthMap.vert", "Assets/Shaders/DepthMap.frag", "depthMap");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedGeometryPass.vert", "Assets/Shaders/DefferedGeometryPass.frag", "defferedGeometryPass");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/DefferedDirectionalLight.frag", "defferedDirectionalLightPass");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedPointLight.vert", "Assets/Shaders/DefferedPointLight.frag", "defferedPointLightPass");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/HDRToneMapping.frag", "basicToneMapping");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/SSRPass.frag", "ssrPass");
 }
 
 bool Engine::setupWindow() {
  
-    window = Window::createWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Glen Editor");
+    window = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Glen Editor");
     window->SetVsync(false);
     window->setEventCallback(std::bind(&Engine::onWindowEvent, this, std::placeholders::_1));
     window->hookEvents();
@@ -74,9 +83,11 @@ bool Engine::setupWindow() {
 }
 
 void Engine::update(float deltaTime) {
-    PhysicsContext::get()->update();
-    scene->update(deltaTime);
-    Editor->update();
+    scriptingSystem->update(deltaTime);
+    physicsSystem->update(deltaTime);
+    defferedRenderer->update(deltaTime);
+    debugDraw->update(deltaTime);
+    guiSystem->update(deltaTime);
 }
 
 void Engine::onWindowEvent(Event& event)

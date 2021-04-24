@@ -41,7 +41,6 @@ public:
 	void attachBoxCollider(glm::vec3 halfExtents);
 	void attachRigidBody(RigidBodyType type);
 	void AddScript(Script* newScript);
-	void update(float deltaTime);
 };
 
 #endif // !ENTITY_H

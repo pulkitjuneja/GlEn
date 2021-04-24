@@ -7,3 +7,4 @@
 #include "src/Glen/Scene/Script.h"
 #include "src/Glen/Rendering/DebugDraw.h"
 #include "Glen/Core/Timer.h"
+#include "Glen/Core/EngineContext.h"

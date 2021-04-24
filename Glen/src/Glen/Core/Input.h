@@ -5,6 +5,7 @@
 
 #include "Glen/Globals.h"
 #include "Window.h"
+#include "EngineContext.h"
 
 enum class Keys {
     Space = 32,
@@ -95,12 +96,10 @@ enum class MouseButtons {
     Middle,
 };
 
-class GLN_API Input {
-	static Input* instance;
+class GLN_API InputStatus {
 public:
 	bool isKeyPressed(Keys key);
 	bool isMouseButtonPressed(MouseButtons button);
 	glm::vec2 getMousePosition();
-	static Input* getInstance();
 };
 #endif // !INPUT_H

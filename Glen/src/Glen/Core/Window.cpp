@@ -1,6 +1,5 @@
 #include "Window.h"
 
-Window* Window::currentWindow;
 
 Window::Window(int width, int height, char* title)
 {
@@ -54,14 +53,6 @@ void Window::hookEvents()
             WindowClosedEvent event;
             data.eventCallback(event);
         });
-}
-
-Window* Window::createWindow(int width, int height, char* title)
-{
-    if (currentWindow == nullptr) {
-        currentWindow = new Window(width, height, title);
-    }
-    return currentWindow;
 }
 
 void Window::setEventCallback(const EventCallback& eventCallback)

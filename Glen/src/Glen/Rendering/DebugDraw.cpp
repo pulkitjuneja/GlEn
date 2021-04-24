@@ -1,9 +1,10 @@
 #include "DebugDraw.h"
 #include "Glen/Scene/Scene.h"
 
-DebugDraw::DebugDraw()
+void DebugDraw::startup()
 {
 	createDebugMesh();
+	this->scene = EngineContext::get()->sceneManager;
 }
 
 void DebugDraw::createDebugMesh()
@@ -30,8 +31,8 @@ void DebugDraw::createDebugMesh()
 	};
 
 	Material* cubeMaterial = new Material();
-	cubeMaterial->setShader(ResourceManager::getInstance()->getShader("texturedMeshUnlit"));
-	cubeMaterial->diffuseMap = ResourceManager::getInstance()->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
+	cubeMaterial->setShader(EngineContext::get()->resourceManager->getShader("texturedMeshUnlit"));
+	cubeMaterial->diffuseMap = EngineContext::get()->resourceManager->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
 
 	std::vector<SubMesh> cubeSubmeshes = {
 		SubMesh(cubeMaterial,0,36,0)
@@ -40,10 +41,11 @@ void DebugDraw::createDebugMesh()
 	DebugCubeMesh = new Mesh(vertices, indices, cubeSubmeshes, false, false, false);
 }
 
-void DebugDraw::render(Scene* scene) {
+void DebugDraw::update(float deltaTime) {
 	std::vector<Entity*> entities = scene->getEntities();
 	std::vector<Entity*>::iterator it = entities.begin();
-
+	
+	glDisable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	for (; it != entities.end(); it++) {
@@ -54,7 +56,7 @@ void DebugDraw::render(Scene* scene) {
 			continue;
 		}
 
-		Shader* basicShader = ResourceManager::getInstance()->getShader("texturedMeshUnlit");
+		Shader* basicShader = EngineContext::get()->resourceManager->getShader("texturedMeshUnlit");
 		basicShader->use();
 
 		// TODO : add debug draw fro sphere colliders
@@ -83,4 +85,7 @@ void DebugDraw::render(Scene* scene) {
 	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_CULL_FACE);
 }
+
+void DebugDraw::shutdown() {}

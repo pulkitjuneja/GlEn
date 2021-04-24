@@ -1,7 +1,7 @@
 #include "Collider.h"
 
 Collider::Collider(glm::vec3 positionOffset) : positionOffset(positionOffset),
-	material(PhysicsContext::get()->defaultMaterial){}
+	material(EngineContext::get()->physicsContext->defaultMaterial){}
 
 BoxCollider::BoxCollider(glm::vec3 halfExtents, glm::vec3 positionOffset) : halfExtents(halfExtents),
 	Collider(positionOffset) {

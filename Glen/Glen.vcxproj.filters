@@ -64,7 +64,7 @@
     <ClInclude Include="src\Glen\Core\Window.h">
       <Filter>src\Glen\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Glen\Editor\EditorGui.h">
+    <ClInclude Include="src\Glen\Editor\GuiSystem.h">
       <Filter>src\Glen\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Editor\LogWindowPanel.h">
@@ -154,6 +154,10 @@
     <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h">
       <Filter>src\Glen\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\Glen\Core\System.h" />
+    <ClInclude Include="src\Glen\Core\EngineContext.h" />
+    <ClInclude Include="src\Glen\Physics\PhysicsSystem.h" />
+    <ClInclude Include="src\Glen\Scene\ScriptingSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">
@@ -177,7 +181,7 @@
     <ClCompile Include="src\Glen\Core\Window.cpp">
       <Filter>src\Glen\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Editor\EditorGui.cpp">
+    <ClCompile Include="src\Glen\Editor\GuiSystem.cpp">
       <Filter>src\Glen\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Editor\LogWindowPanel.cpp">
@@ -246,5 +250,9 @@
     <ClCompile Include="src\Glen\Scene\Transform.cpp">
       <Filter>src\Glen\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Glen\Core\EngineContext.cpp" />
+    <ClCompile Include="src\Glen\Physics\PhysicsSystem.cpp" />
+    <ClCompile Include="src\Glen\Scene\ScriptingSystem.cpp" />
+    <ClCompile Include="src\Glen\Utils\TypeName.h" />
   </ItemGroup>
 </Project>

@@ -9,15 +9,19 @@
 #include "Glen/Globals.h"
 #include "Glen/Rendering/Mesh.h"
 #include "Glen/ResourceManagement/ResourceManager.h"
+#include "Glen/Core/EngineContext.h"
+#include "Glen/Core/System.h"
 
-class Scene;
+class SceneManager;
 
-class GLN_API DebugDraw {
+class GLN_API DebugDraw : ISystem {
 private:
 	Mesh* DebugCubeMesh;
+	SceneManager* scene;
+
 public:
 
-	DebugDraw();
+	DebugDraw() = default;
 
 	// TODO : Dont know if these functions belong here, re-evaluate
 	// Debug mesh creators
@@ -25,7 +29,9 @@ public:
 	void createSphereMesh() {};
 	void createCylinderMesh() {};
 
-	void render(Scene* scene);
+	void startup() override;
+	void update(float deltaTimer) override;
+	void shutdown() override;
 };
 
 #endif // !DEBUG_DRAW_H

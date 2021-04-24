@@ -9,20 +9,29 @@
 #include "Glen/Events/Event.h"
 #include "Window.h"
 #include "Timer.h"
-#include "Glen/Editor/EditorGui.h"
+#include "Glen/Editor/GuiSystem.h"
 #include "Glen/Physics/PhysicsContext.h"
+#include "EngineContext.h"
+#include "Input.h"
+
+#include "Glen/Physics/PhysicsSystem.h"
+#include "Glen/Scene/ScriptingSystem.h"
 
     class GLN_API Engine {
 
     protected:
         Window* window;
-        Scene* scene;
-        PhysicsContext* physicsContext;
+        SceneManager* scene;
         bool isEngineRunning = true;
         bool setupWindow();
+
+        PhysicsSystem* physicsSystem;
         ForwardRenderer* renderer;
         DefferedRenderer* defferedRenderer;
-        EditorGui* Editor;
+        GuiSystem* guiSystem;
+        DebugDraw* debugDraw;
+        ScriptingSystem* scriptingSystem;
+        SystemManager systemManager;
 
     public:
         static Time deltaTime;

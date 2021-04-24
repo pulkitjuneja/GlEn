@@ -9,8 +9,8 @@
 
 class SceneRenderer {
 public:
-	void setGlobalUniforms(PerFrameUniforms& perFrameUniforms, Scene* scene);
-	void renderScene(Scene* scene, Material* overrideMaterial = nullptr, bool passBaseMaterialProperties = false);
+	void setGlobalUniforms(PerFrameUniforms& perFrameUniforms, SceneManager* scene);
+	void renderScene(SceneManager* scene, Material* overrideMaterial = nullptr, bool passBaseMaterialProperties = false);
 	void bindGlobalMaps();
 };
 

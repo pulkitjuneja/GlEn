@@ -1,23 +1,6 @@
 #include "PhysicsContext.h"
 
-PhysicsContext* PhysicsContext::instance;
-
-PhysicsContext* PhysicsContext::get()
-{
-	if (instance == nullptr)
-	{
-		instance = new PhysicsContext();
-	}
-	return instance;
-}
-
-void PhysicsContext::update()
-{
-	physicsScene->simulate(1.0f / 60.0f);
-	physicsScene->fetchResults(true);
-}
-
-PhysicsContext::PhysicsContext()
+void PhysicsContext::initialize()
 {
 	PxDefaultErrorCallback	ErrorCallback;
 	foundation = PxCreateFoundation(PX_PHYSICS_VERSION, memAllocator, ErrorCallback);
@@ -30,7 +13,7 @@ PhysicsContext::PhysicsContext()
 
 	PxSceneDesc sceneDesc(physics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.81, 0.0f);
-    dispatcher = PxDefaultCpuDispatcherCreate(2);
+	dispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = dispatcher;
 	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 	physicsScene = physics->createScene(sceneDesc);
@@ -46,7 +29,7 @@ PhysicsContext::PhysicsContext()
 	defaultMaterial = physics->createMaterial(0.5f, 0.5f, 0.6f);
 }
 
-void PhysicsContext::shutdown()
+void PhysicsContext::release()
 {
 	PX_RELEASE(physicsScene);
 	PX_RELEASE(dispatcher);
