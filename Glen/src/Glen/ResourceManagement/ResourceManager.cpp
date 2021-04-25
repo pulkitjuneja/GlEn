@@ -6,15 +6,15 @@
 
 void ResourceManager::readFromFile(const std::string& fileName, char*& shaderContent)
 {
-	string fullPath = fileName;
-	ifstream shaderFile(fullPath);
-	stringstream buffer;
+	std::string fullPath = fileName;
+	std::ifstream shaderFile(fullPath);
+	std::stringstream buffer;
 	buffer << shaderFile.rdbuf();
 	shaderContent = new char[buffer.str().length()];
 	strcpy(shaderContent, &buffer.str()[0]);
 }
 
-Texture* ResourceManager::loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType aiTextureType, string directory)
+Texture* ResourceManager::loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType aiTextureType, std::string directory)
 {
 	aiString texturePath;
 	if (aiMaterial->GetTextureCount(aiTextureType) > 0) {
@@ -28,7 +28,7 @@ Texture* ResourceManager::loadMaterialTexture(aiMaterial* aiMaterial, aiTextureT
 	}
 }
 
-Mesh* ResourceManager::loadMesh(string path, int loaderFlags)
+Mesh* ResourceManager::loadMesh(std::string path, int loaderFlags)
 {
 	if (loadedMeshes.find(path) != loadedMeshes.end())
 	{
@@ -40,11 +40,11 @@ Mesh* ResourceManager::loadMesh(string path, int loaderFlags)
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		string error = import.GetErrorString();
+		std::string error = import.GetErrorString();
 		Logger::logError("ERROR::ASSIMP: " + error);
 		return nullptr;
 	}
-	string directory = path.substr(0, path.find_last_of('/'));
+	std::string directory = path.substr(0, path.find_last_of('/'));
 
 	// Sort scene meshes based on material
 	struct {
@@ -134,10 +134,10 @@ Mesh* ResourceManager::loadMesh(string path, int loaderFlags)
 	return loadedMeshes.find(path)->second;
 }
 
-Material* ResourceManager::getAiSceneMaterial(const aiScene* scene, int materialIndex, string directory)
+Material* ResourceManager::getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory)
 {
 	Material* material = new Material();
-	material->name = string(directory);
+	material->name = std::string(directory);
 	material->name += "_";
 	material->name += std::to_string(materialIndex);
 
@@ -218,7 +218,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 }
 
 
-Shader* ResourceManager::getShader(const string& shaderName)
+Shader* ResourceManager::getShader(const std::string& shaderName)
 {
 	if (loadedShaders.find(shaderName) != loadedShaders.end())
 	{
@@ -231,10 +231,10 @@ Shader* ResourceManager::getShader(const string& shaderName)
 	}
 }
 
-Texture* ResourceManager::loadTexture(const string& texturePath, const string& directory, TextureType type)
+Texture* ResourceManager::loadTexture(const std::string& texturePath, const std::string& directory, TextureType type)
 {
 
-	string filename = string(texturePath);
+	std::string filename = std::string(texturePath);
 	filename = directory + '/' + filename;
 
 	if (textures.find(texturePath) != textures.end())
@@ -274,7 +274,7 @@ Texture* ResourceManager::loadTexture(const string& texturePath, const string& d
 	return textures.find(texturePath)->second;
 }
 
-Texture* ResourceManager::generateTexture(const string& identifier, TextureType textureType, const uint32_t& w,
+Texture* ResourceManager::generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
 	const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize) {
 	if (textures.find(identifier) != textures.end())
 	{
@@ -285,7 +285,7 @@ Texture* ResourceManager::generateTexture(const string& identifier, TextureType 
 	return tex;
 }
 
-Texture* ResourceManager::getTexture(const string& textureName)
+Texture* ResourceManager::getTexture(const std::string& textureName)
 {
 	if (textures.find(textureName) != textures.end())
 	{

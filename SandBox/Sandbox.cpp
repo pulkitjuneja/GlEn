@@ -18,8 +18,8 @@ public:
 	TestWorld() {};
 	bool init() {
 		loadShaders();
-		string sponzaMeshLocation = "Assets/Meshes/Sponza/sponza.obj";
-		string crysisMeshLocation = "Assets/Meshes/crysisM/nanosuit.obj";
+		std::string sponzaMeshLocation = "Assets/Meshes/Sponza/sponza.obj";
+		std::string crysisMeshLocation = "Assets/Meshes/crysisM/nanosuit.obj";
 
 		Entity* crysisEntity = scene->createEntity<Entity>("Crysis Entity", EngineContext::get()->resourceManager->loadMesh(crysisMeshLocation));
 		Entity* sponzaEntity = scene->createEntity<Entity>("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));

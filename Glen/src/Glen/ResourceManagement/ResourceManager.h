@@ -22,8 +22,6 @@
 #include <assimp/postprocess.h>
 #include "Glen/Core/Logger.h"
 
-using namespace std;
-
 struct EnumClassHash
 {
 	template <typename T>
@@ -38,30 +36,30 @@ private:
 
 	// Resource Maps
 	std::unordered_map <std::string, Shader*> loadedShaders;
-	std::unordered_map <string, Texture*> textures;
-	std::unordered_map <string, Mesh*> loadedMeshes;
+	std::unordered_map <std::string, Texture*> textures;
+	std::unordered_map <std::string, Mesh*> loadedMeshes;
 	std::unordered_map <aiTextureType, TextureType, EnumClassHash> textureTypeMap = {
 		{aiTextureType_DIFFUSE, TextureType::DIFFUSE},
 		{aiTextureType_SPECULAR, TextureType::SPECULAR},
 		{aiTextureType_HEIGHT, TextureType::NORMAL}
 	};
 
-	void readFromFile(const string& fileName, char*& shaderContent);
-	Texture* loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType textureType, string directory);
-	Material* getAiSceneMaterial(const aiScene* scene, int materialIndex, string directory);
+	void readFromFile(const std::string& fileName, char*& shaderContent);
+	Texture* loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType textureType, std::string directory);
+	Material* getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory);
 
 public:
 
 	//Resource Loaders
-	void loadShader(const string& vertexShaderPath, const string& fragmentShaderPath, const string& shaderName);
-	Texture* loadTexture(const string& texturePath, const string& directory, TextureType textureType);
-	Mesh* loadMesh(string path, int loaderFlags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-	Texture* generateTexture(const string& identifier, TextureType textureType, const uint32_t& w,
+	void loadShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const std::string& shaderName);
+	Texture* loadTexture(const std::string& texturePath, const std::string& directory, TextureType textureType);
+	Mesh* loadMesh(std::string path, int loaderFlags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	Texture* generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
 		const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize);
 
 	//Getters
-	Shader* getShader(const string& shaderName);
-	Texture* getTexture(const string& textureName);
+	Shader* getShader(const std::string& shaderName);
+	Texture* getTexture(const std::string& textureName);
 
 	ResourceManager() {};
 };

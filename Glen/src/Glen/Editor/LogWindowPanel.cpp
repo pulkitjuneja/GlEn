@@ -1,6 +1,6 @@
 #include  "LogWindowPanel.h"
 
-ImVec4 LogWindowPanel::getColorFromLogType(string& logType)
+ImVec4 LogWindowPanel::getColorFromLogType(std::string& logType)
 {
 	ImVec4 color;
 	if (logType.compare("INFO") == 0)
@@ -29,7 +29,7 @@ void LogWindowPanel::renderLogMessage(LogMessage& logMessage)
 void LogWindowPanel::update()
 {
 
-	string windowTitle = "Log";
+	std::string windowTitle = "Log";
 	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 	bool show = true;
 	ImGui::Begin(windowTitle.c_str() , &show);

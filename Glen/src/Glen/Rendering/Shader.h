@@ -7,26 +7,24 @@
 #include "Glen/Globals.h"
 #include <unordered_map>
 
-using namespace std;
-
 static int currentShaderProgramInUse;
 
 class GLN_API Shader {
-    void readFromFile(const string& fileName, char*& shaderContent);
+    void readFromFile(const std::string& fileName, char*& shaderContent);
     GLuint shaderProgram;
-    unordered_map<string, GLuint> uniformLocations;
+    std::unordered_map<std::string, GLuint> uniformLocations;
 public:
-    string shaderName;
-    Shader(const GLuint shaderProgram, const string& shaderName, int uniformCount);
+    std::string shaderName;
+    Shader(const GLuint shaderProgram, const std::string& shaderName, int uniformCount);
     void use();
     GLuint getShaderID();
-    void setBool(const string& name, bool value) const;
-    void setInt(const string& name, int value) const;
-    void setFloat(const string& name, float value) const;
-    void setFloat3(const string& name, float value1, float value2, float value3);
-    void setMat4(const string& name, glm::mat4& matrix);
-    void setUniformBlockBinding(const string& name, int index);
-    GLuint getUniformLocation(const string& name) const;
+    void setBool(const std::string& name, bool value) const;
+    void setInt(const std::string& name, int value) const;
+    void setFloat(const std::string& name, float value) const;
+    void setFloat3(const std::string& name, float value1, float value2, float value3);
+    void setMat4(const std::string& name, glm::mat4& matrix);
+    void setUniformBlockBinding(const std::string& name, int index);
+    GLuint getUniformLocation(const std::string& name) const;
 };
 
 

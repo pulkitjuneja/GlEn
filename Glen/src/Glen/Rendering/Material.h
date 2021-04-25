@@ -10,7 +10,7 @@
 class GLN_API Material {
 
 public:
-	string name;
+	std::string name;
 	Shader* getShader() { return shader; };
 	void setShader(Shader* shader) { this->shader = shader; };
 	Texture* normalMap;

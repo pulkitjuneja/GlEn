@@ -22,7 +22,7 @@ public:
 	glm::mat4 directionalLightSpaceMatrix;
 
 	template <class T >
-	T* createEntity(string name, Mesh* mesh = nullptr, Material* overrideMat = nullptr);
+	T* createEntity(std::string name, Mesh* mesh = nullptr, Material* overrideMat = nullptr);
 	PointLight* createPointLight(glm::vec4 position, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular);
 	DirectionalLight* createDirectionalLight(glm::vec4 direction, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular);
 	void setMainCamera(Camera* camera);
@@ -34,7 +34,7 @@ public:
 };
 
 template<class T>
-inline T* SceneManager::createEntity(string name, Mesh* mesh, Material* overrideMat)
+inline T* SceneManager::createEntity(std::string name, Mesh* mesh, Material* overrideMat)
 {
 	T* ent = new T(name);
 	// this is to make sure T is always an entity

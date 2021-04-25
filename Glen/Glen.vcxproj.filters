@@ -52,10 +52,16 @@
     <ClInclude Include="src\Glen\Core\Engine.h">
       <Filter>src\Glen\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Glen\Core\EngineContext.h">
+      <Filter>src\Glen\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Glen\Core\Input.h">
       <Filter>src\Glen\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Core\Logger.h">
+      <Filter>src\Glen\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Core\System.h">
       <Filter>src\Glen\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Core\Timer.h">
@@ -83,6 +89,9 @@
       <Filter>src\Glen\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Physics\PhysicsContext.h">
+      <Filter>src\Glen\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Glen\Physics\PhysicsSystem.h">
       <Filter>src\Glen\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Physics\RigidBody.h">
@@ -148,16 +157,18 @@
     <ClInclude Include="src\Glen\Scene\Script.h">
       <Filter>src\Glen\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Glen\Scene\ScriptingSystem.h">
+      <Filter>src\Glen\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Glen\Scene\Transform.h">
       <Filter>src\Glen\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h">
       <Filter>src\Glen\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Glen\Core\System.h" />
-    <ClInclude Include="src\Glen\Core\EngineContext.h" />
-    <ClInclude Include="src\Glen\Physics\PhysicsSystem.h" />
-    <ClInclude Include="src\Glen\Scene\ScriptingSystem.h" />
+    <ClInclude Include="src\Glen\Utils\TypeName.h">
+      <Filter>src\Glen\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">
@@ -167,6 +178,9 @@
       <Filter>ext\ImGui\examples</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Core\Engine.cpp">
+      <Filter>src\Glen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Core\EngineContext.cpp">
       <Filter>src\Glen\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Core\Input.cpp">
@@ -197,6 +211,9 @@
       <Filter>src\Glen\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Physics\PhysicsContext.cpp">
+      <Filter>src\Glen\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Glen\Physics\PhysicsSystem.cpp">
       <Filter>src\Glen\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Physics\RigidBody.cpp">
@@ -247,12 +264,12 @@
     <ClCompile Include="src\Glen\Scene\Scene.cpp">
       <Filter>src\Glen\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Glen\Scene\ScriptingSystem.cpp">
+      <Filter>src\Glen\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Glen\Scene\Transform.cpp">
       <Filter>src\Glen\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Core\EngineContext.cpp" />
-    <ClCompile Include="src\Glen\Physics\PhysicsSystem.cpp" />
-    <ClCompile Include="src\Glen\Scene\ScriptingSystem.cpp" />
-    <ClCompile Include="src\Glen\Utils\TypeName.h" />
+    <ClCompile Include="src\Glen\Core\System.cpp" />
   </ItemGroup>
 </Project>

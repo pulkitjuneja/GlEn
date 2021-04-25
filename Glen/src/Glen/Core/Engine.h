@@ -25,19 +25,12 @@
         bool isEngineRunning = true;
         bool setupWindow();
 
-        PhysicsSystem* physicsSystem;
-        ForwardRenderer* renderer;
-        DefferedRenderer* defferedRenderer;
-        GuiSystem* guiSystem;
-        DebugDraw* debugDraw;
-        ScriptingSystem* scriptingSystem;
         SystemManager systemManager;
 
     public:
         static Time deltaTime;
         void loadDefaultShaders();
         virtual bool init() = 0;
-        void update(float deltaTime);
         void onWindowEvent(Event& event);
         void start();
     };

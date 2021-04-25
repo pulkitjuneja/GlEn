@@ -23,7 +23,7 @@ class GLN_API Entity {
 
 public:
 
-	string name;
+	std::string name;
 	Transform transfrom;
 	Mesh* mesh;
 	Material* overrideMaterial;
@@ -32,8 +32,8 @@ public:
 
 	std::vector<Script*> scripts;
 
-	Entity(string name);
-	Entity(string name, Mesh* mesh, Material* mat);
+	Entity(std::string name);
+	Entity(std::string name, Mesh* mesh, Material* mat);
 
 	Transform* getTransform();
 

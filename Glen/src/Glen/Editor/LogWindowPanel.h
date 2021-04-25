@@ -7,7 +7,7 @@
 
 class LogWindowPanel {
 	ImGuiTextFilter     filter;
-	ImVec4 getColorFromLogType(string& logType);
+	ImVec4 getColorFromLogType(std::string& logType);
 	void renderLogMessage(LogMessage& logMessage);
 public:
 	void update();

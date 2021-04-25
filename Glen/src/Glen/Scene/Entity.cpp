@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity(string name)
+Entity::Entity(std::string name)
 {
 	this->name = name;
 	this->collider = nullptr;
@@ -8,7 +8,7 @@ Entity::Entity(string name)
 	this->rigidBody = nullptr;
 }
 
-Entity::Entity(string name, Mesh* mesh, Material* mat)
+Entity::Entity(std::string name, Mesh* mesh, Material* mat)
 {
 	this->name = name;
 	this->mesh = mesh;

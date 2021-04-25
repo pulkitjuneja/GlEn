@@ -19,7 +19,7 @@
 #include "Csm.h"
 #include "Glen/Core/System.h"
 
-class DefferedRenderer : ISystem {
+class DefferedRenderer : public ISystem {
 	SceneManager* scene;
 
 	Texture* gBufferPositionTexture;

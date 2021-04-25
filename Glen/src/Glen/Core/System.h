@@ -21,6 +21,7 @@ public:
 	template<typename T>
 	void registerSystem();
 	void initialize();
+	void update(float deltaTime);
 	void shutdown();
 
 private:
@@ -31,7 +32,7 @@ template<typename T>
 void SystemManager::registerSystem(){
 	T* system = new T();
 	ISystem* ref = static_cast<ISystem*>(system);
-	//system->name = TypeName<T>();
+	system->name = TypeName<T>();
 	systems.push_back(ref);
 }
 

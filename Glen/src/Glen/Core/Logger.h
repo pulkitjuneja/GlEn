@@ -11,36 +11,34 @@
 #define NOMINMAX
 #include <windows.h>
 
-using namespace std;
-
 class LogWindowPanel;
 
 struct LogMessage {
-	string logType;
-	string time;
-	string message;
+	std::string logType;
+	std::string time;
+	std::string message;
 
-	string toString() {
+	std::string toString() {
 		return time + " " + logType + " " + message;
 	}
 
-	LogMessage(string logType, string time, string message): logType(logType),
+	LogMessage(std::string logType, std::string time, std::string message) : logType(logType),
 		time(time), message(message) {}
 };
 
 class Logger {
 public:
 	friend class LogWindowPanel;
-	static void logInfo(string message);
-	static void logWarn(string message);
-	static void logDebug(string message);
-	static void logError(string message);
+	static void logInfo(std::string message);
+	static void logWarn(std::string message);
+	static void logDebug(std::string message);
+	static void logError(std::string message);
 private:
 	static FixedSizeQueue<LogMessage, 100> logBuffer;
 	static HANDLE  hConsole;
 
 	static void clearLogBuffer();
-	static string getCurrentTimeString();
+	static std::string getCurrentTimeString();
 };
 
 #endif // !LOGGER_H

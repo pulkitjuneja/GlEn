@@ -19,20 +19,13 @@ void Engine::start() {
 
     loadDefaultShaders();
 
-    guiSystem = new GuiSystem();
-    physicsSystem = new PhysicsSystem();
-    /*renderer = new ForwardRenderer();*/
-    defferedRenderer = new DefferedRenderer();
-    debugDraw = new DebugDraw();
-    scriptingSystem = new ScriptingSystem();
-
     systemManager.registerSystem<ScriptingSystem>();
+    systemManager.registerSystem<PhysicsSystem>();
+    systemManager.registerSystem<DefferedRenderer>();
+    systemManager.registerSystem<DebugDraw>();
+    systemManager.registerSystem<GuiSystem>();
 
-    scriptingSystem->startup();
-    physicsSystem->startup();
-    defferedRenderer->startup();
-    debugDraw->startup();
-    guiSystem->startup();
+    systemManager.initialize();
 
 
     if (!init()) {
@@ -44,7 +37,7 @@ void Engine::start() {
         deltaTime = timer.restart();
 
         // update step
-        update(deltaTime.getAsSeconds());
+        systemManager.update(deltaTime.getAsSeconds());
 
         window->Display();
     }
@@ -82,18 +75,10 @@ bool Engine::setupWindow() {
     return true;
 }
 
-void Engine::update(float deltaTime) {
-    scriptingSystem->update(deltaTime);
-    physicsSystem->update(deltaTime);
-    defferedRenderer->update(deltaTime);
-    debugDraw->update(deltaTime);
-    guiSystem->update(deltaTime);
-}
-
 void Engine::onWindowEvent(Event& event)
 {
     event.Dispatch<WindowClosedEvent>([=](Event& event)->bool {
-        cout << "closed";
+        std::cout << "closed";
         isEngineRunning = false;
         return true;
     });

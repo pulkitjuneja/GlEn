@@ -14,7 +14,7 @@
 
 class SceneManager;
 
-class GLN_API DebugDraw : ISystem {
+class GLN_API DebugDraw : public ISystem {
 private:
 	Mesh* DebugCubeMesh;
 	SceneManager* scene;
