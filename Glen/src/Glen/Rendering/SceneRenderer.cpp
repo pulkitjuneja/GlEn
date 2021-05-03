@@ -50,7 +50,7 @@ void SceneRenderer::renderScene(SceneManager* scene, Material* overrideMaterial,
 		for (int i = 0; i < currentMesh->subMeshes.size(); i++) {
 
 			SubMesh currentSubMesh = currentMesh->subMeshes[i];
-			Shader* submeshShader = currentSubMesh.material->getShader();
+			Shader* submeshShader = currentSubMesh.material.getShader();
 
 			if (overrideMaterial) {
 				currentShader = overrideMaterial->getShader();
@@ -66,17 +66,17 @@ void SceneRenderer::renderScene(SceneManager* scene, Material* overrideMaterial,
 			unsigned int hasNormalMap = 0;
 			int j = 0;
 			if (!overrideMaterial || (overrideMaterial && passBaseMaterialProperties)) {
-				if (currentSubMesh.material->diffuseMap != NULL) {
-					currentSubMesh.material->diffuseMap->bind(GL_TEXTURE0 + 1);
+				if (currentSubMesh.material.diffuseMap != NULL) {
+					currentSubMesh.material.diffuseMap->bind(GL_TEXTURE0 + 1);
 					currentShader->setInt("material.texture_diffuse", 1);
 				}
-				if (currentSubMesh.material->specularMap != NULL) {
-					currentSubMesh.material->specularMap->bind(GL_TEXTURE0 + 2);
+				if (currentSubMesh.material.specularMap != NULL) {
+					currentSubMesh.material.specularMap->bind(GL_TEXTURE0 + 2);
 					currentShader->setInt("material.texture_specular", 2);
 					hasSpecularMap = 1;
 				}
-				if (currentSubMesh.material->normalMap != NULL) {
-					currentSubMesh.material->normalMap->bind(GL_TEXTURE0 + 3);
+				if (currentSubMesh.material.normalMap != NULL) {
+					currentSubMesh.material.normalMap->bind(GL_TEXTURE0 + 3);
 					currentShader->setInt("material.texture_normal", 3);
 					hasNormalMap = 1;
 				}

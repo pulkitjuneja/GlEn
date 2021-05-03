@@ -107,6 +107,7 @@
   <ItemGroup>
     <ClInclude Include="Glen.h" />
     <ClInclude Include="src\Glen\Constants.h" />
+    <ClInclude Include="src\Glen\Core\Allocator.h" />
     <ClInclude Include="src\Glen\Core\Core.h" />
     <ClInclude Include="src\Glen\Core\Engine.h" />
     <ClInclude Include="src\Glen\Core\EngineContext.h" />

@@ -17,12 +17,16 @@ class TestWorld : public Engine {
 public:
 	TestWorld() {};
 	bool init() {
+		Timer timer;
 		loadShaders();
 		std::string sponzaMeshLocation = "Assets/Meshes/Sponza/sponza.obj";
 		std::string crysisMeshLocation = "Assets/Meshes/crysisM/nanosuit.obj";
 
 		Entity* crysisEntity = scene->createEntity<Entity>("Crysis Entity", EngineContext::get()->resourceManager->loadMesh(crysisMeshLocation));
 		Entity* sponzaEntity = scene->createEntity<Entity>("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
+		Time testTime = timer.restart();
+		Logger::logInfo("Resource load time" + std::to_string(testTime.getAsMilliSeconds()));
+
 		Entity* groundPLaneEntity = scene->createEntity<Entity>("Ground Plane");
 		groundPLaneEntity->attachBoxCollider(glm::vec3(100, 1, 100));
 		groundPLaneEntity->attachRigidBody(RigidBodyType::Static);

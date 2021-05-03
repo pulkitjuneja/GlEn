@@ -26,7 +26,7 @@ struct LogMessage {
 		time(time), message(message) {}
 };
 
-class Logger {
+class GLN_API Logger {
 public:
 	friend class LogWindowPanel;
 	static void logInfo(std::string message);

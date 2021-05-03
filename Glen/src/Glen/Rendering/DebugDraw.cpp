@@ -30,9 +30,9 @@ void DebugDraw::createDebugMesh()
 		4, 5, 0, 0, 5, 1
 	};
 
-	Material* cubeMaterial = new Material();
-	cubeMaterial->setShader(EngineContext::get()->resourceManager->getShader("texturedMeshUnlit"));
-	cubeMaterial->diffuseMap = EngineContext::get()->resourceManager->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
+	Material cubeMaterial;
+	cubeMaterial.setShader(EngineContext::get()->resourceManager->getShader("texturedMeshUnlit"));
+	cubeMaterial.diffuseMap = EngineContext::get()->resourceManager->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
 
 	std::vector<SubMesh> cubeSubmeshes = {
 		SubMesh(cubeMaterial,0,36,0)
@@ -68,19 +68,24 @@ void DebugDraw::update(float deltaTime) {
 		glm::mat4 rotationMatrix = glm::toMat4(rotationQuat);
 		transformationMAtrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z)) * transformationMAtrix;
 		transformationMAtrix = rotationMatrix * transformationMAtrix;
-		glm::vec3 meshCenter = ent->mesh != nullptr ? ent->mesh->bounds.getCenter() : glm::vec3(0, 0, 0);
-		transformationMAtrix = glm::translate(glm::mat4(1.0f), ent->transfrom.getPosition()) * transformationMAtrix;
+		glm::vec3 meshCenter = ent->mesh != nullptr ? ent->collider->positionOffset : glm::vec3(0, 0, 0);
+		transformationMAtrix = glm::translate(glm::mat4(1.0f),meshCenter + ent->transfrom.getPosition()) * transformationMAtrix;
 		basicShader->setMat4("modelMatrix", transformationMAtrix);
 
-		//PxRigidActor* rb = ent->rigidBody->getNativeRigidBody();
-		//PxShape* shapes[1];
-		//rb->getShapes(shapes, 1);
-		//const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *rb));
-		//GLuint loc = glGetUniformLocation(basicShader->getShaderID(), "modelMatrix");
-		//glProgramUniformMatrix4fv(basicShader->getShaderID(), loc, 1, GL_FALSE, &shapePose.column0.x);
 
 		glBindVertexArray(DebugCubeMesh->VAO);
 		SubMesh submesh = DebugCubeMesh->subMeshes[0];
+		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
+
+		PxRigidActor* rb = ent->rigidBody->getNativeRigidBody();
+		PxShape* shapes[1];
+		rb->getShapes(shapes, 1);
+		const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *rb));
+		GLuint loc = glGetUniformLocation(basicShader->getShaderID(), "modelMatrix");
+		glProgramUniformMatrix4fv(basicShader->getShaderID(), loc, 1, GL_FALSE, &shapePose.column0.x);
+
+		glBindVertexArray(DebugCubeMesh->VAO);
+		submesh = DebugCubeMesh->subMeshes[0];
 		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
 	}
 

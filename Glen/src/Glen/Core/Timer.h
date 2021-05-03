@@ -4,8 +4,9 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include "Core.h"
 
-class Time {
+class GLN_API Time {
 public:
 	Time();
 	float getAsSeconds();
@@ -19,7 +20,7 @@ private:
 	float time;
 };
 
-class Timer {
+class GLN_API Timer {
 public:
 	Time restart();
 private:

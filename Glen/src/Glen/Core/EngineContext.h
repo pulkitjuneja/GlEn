@@ -10,6 +10,7 @@ class Window;
 class InputStatus;
 class SceneManager;
 class PhysicsContext;
+class IAllocator;
 
 class GLN_API EngineContext {
 public:
@@ -18,6 +19,7 @@ public:
 	InputStatus* inputStatus = nullptr;
 	SceneManager* sceneManager = nullptr;
 	PhysicsContext* physicsContext = nullptr;
+	IAllocator* sceneAllocator = nullptr;
 
 	static EngineContext* instance;
 	static EngineContext* get();

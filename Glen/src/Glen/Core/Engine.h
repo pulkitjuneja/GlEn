@@ -13,6 +13,7 @@
 #include "Glen/Physics/PhysicsContext.h"
 #include "EngineContext.h"
 #include "Input.h"
+#include "Allocator.h"
 
 #include "Glen/Physics/PhysicsSystem.h"
 #include "Glen/Scene/ScriptingSystem.h"

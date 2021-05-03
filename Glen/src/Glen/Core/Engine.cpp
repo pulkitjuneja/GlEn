@@ -16,6 +16,7 @@ void Engine::start() {
     EngineContext::get()->inputStatus = new InputStatus();
     EngineContext::get()->sceneManager = scene;
     EngineContext::get()->physicsContext = new PhysicsContext();
+    EngineContext::get()->sceneAllocator = new StackAllocator(1024*1024* 500); // 500 mb
 
     loadDefaultShaders();
 

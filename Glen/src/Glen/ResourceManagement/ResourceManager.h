@@ -21,6 +21,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "Glen/Core/Logger.h"
+#include "Glen/Core/EngineContext.h"
+#include "Glen/Core/Allocator.h"
 
 struct EnumClassHash
 {
@@ -46,7 +48,7 @@ private:
 
 	void readFromFile(const std::string& fileName, char*& shaderContent);
 	Texture* loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType textureType, std::string directory);
-	Material* getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory);
+	void getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory, Material& material);
 
 public:
 

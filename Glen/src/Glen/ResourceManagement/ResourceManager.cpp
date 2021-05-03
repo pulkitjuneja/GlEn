@@ -1,4 +1,5 @@
 #include "ResourceManager.h"
+#include "Glen/Core/EngineContext.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -83,7 +84,9 @@ Mesh* ResourceManager::loadMesh(std::string path, int loaderFlags)
 				runningBaseIndexSum += submeshes[currentSubmeshIndex].indexCount;
 			}
 			currentSubmeshIndex++;
-			submeshes[currentSubmeshIndex].material = getAiSceneMaterial(scene, currentRunningMaterialIndex, directory);
+			Material material;
+			getAiSceneMaterial(scene, currentRunningMaterialIndex, directory, material);
+			submeshes[currentSubmeshIndex].material = material;
 			submeshes[currentSubmeshIndex].baseVertex = vertexCount;
 			submeshes[currentSubmeshIndex].baseIndex = runningBaseIndexSum;
 			indexOffset = 0;
@@ -127,35 +130,33 @@ Mesh* ResourceManager::loadMesh(std::string path, int loaderFlags)
 		indexOffset += currentMesh->mNumFaces * 3;
 	}
 	meshBounds.FinalizeData();
-	Mesh* newMesh = new Mesh(vertices, indices, submeshes, hasNormals, hasTexCoords, hasTangents);
+	void* alloc = EngineContext::get()->sceneAllocator->Alloc(sizeof(Mesh));
+	Mesh* newMesh = new(alloc) Mesh(vertices, indices, submeshes, hasNormals, hasTexCoords, hasTangents);
 	newMesh->bounds = meshBounds;
 	loadedMeshes.insert(make_pair(path, newMesh));
 	Logger::logInfo("Mesh Loaded " + path);
 	return loadedMeshes.find(path)->second;
 }
 
-Material* ResourceManager::getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory)
+void ResourceManager::getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory, Material& material)
 {
-	Material* material = new Material();
-	material->name = std::string(directory);
-	material->name += "_";
-	material->name += std::to_string(materialIndex);
+	material.name = std::string(directory);
+	material.name += "_";
+	material.name += std::to_string(materialIndex);
 
 	if (materialIndex >= 0)
 	{
-		material->setShader(getShader("texturedMeshShader"));
+		material.setShader(getShader("texturedMeshShader"));
 		aiMaterial* aiMaterial = scene->mMaterials[materialIndex];
-		material->diffuseMap = loadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, directory);
-		material->specularMap = loadMaterialTexture(aiMaterial, aiTextureType_SPECULAR, directory);
-		material->normalMap = loadMaterialTexture(aiMaterial, aiTextureType_HEIGHT, directory);
+		material.diffuseMap = loadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, directory);
+		material.specularMap = loadMaterialTexture(aiMaterial, aiTextureType_SPECULAR, directory);
+		material.normalMap = loadMaterialTexture(aiMaterial, aiTextureType_HEIGHT, directory);
 	}
 
 	else
 	{
-		material->setShader(getShader("defaultShader"));
+		material.setShader(getShader("defaultShader"));
 	}
-
-	return material;
 }
 
 void ResourceManager::loadShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const std::string& shaderName)
@@ -209,7 +210,8 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-	Shader* newShader = new Shader(shaderProgram, shaderName, uniformCount);
+	void* alloc = EngineContext::get()->sceneAllocator->Alloc(sizeof(Shader));
+	Shader* newShader = new(alloc) Shader(shaderProgram, shaderName, uniformCount);
 	newShader->setUniformBlockBinding("perFrameUniforms", 0);
 	newShader->setUniformBlockBinding("csmUniforms", 1);
 
@@ -256,7 +258,8 @@ Texture* ResourceManager::loadTexture(const std::string& texturePath, const std:
 			format = GL_RGB;
 		else if (nrComponents == 4)
 			format = GL_RGBA;
-		tex = new Texture(type, 1, width, height, format, GL_UNSIGNED_BYTE, format);
+		void* alloc = EngineContext::get()->sceneAllocator->Alloc(sizeof(Texture));
+		tex = new(alloc) Texture(type, 1, width, height, format, GL_UNSIGNED_BYTE, format);
 		tex->bind();
 		tex->setData(data, 0);
 		tex->generateMipMaps();
@@ -280,7 +283,8 @@ Texture* ResourceManager::generateTexture(const std::string& identifier, Texture
 	{
 		return textures.find(identifier)->second;
 	}
-	Texture* tex = new Texture(textureType, arraySize, w, h, format, dataType, internalFormat);
+	void* alloc = EngineContext::get()->sceneAllocator->Alloc(sizeof(Texture));
+	Texture* tex = new(alloc) Texture(textureType, arraySize, w, h, format, dataType, internalFormat);
 	textures.emplace(make_pair(identifier, tex));
 	return tex;
 }

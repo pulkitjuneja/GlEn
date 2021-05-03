@@ -169,6 +169,7 @@
     <ClInclude Include="src\Glen\Utils\TypeName.h">
       <Filter>src\Glen\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\Glen\Core\Allocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">

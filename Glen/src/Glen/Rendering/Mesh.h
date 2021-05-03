@@ -10,20 +10,19 @@
 #include "Glen/Scene/BoundingBox.h"
 
 struct SubMesh {
-	Material* material;
+	Material material;
 	uint32_t baseIndex;
 	uint32_t indexCount;
 	uint32_t baseVertex;
 
 public:
 	SubMesh() {
-		material = NULL;
 		baseIndex = 0;
 		indexCount = 0;
 		baseVertex = 0;
 	}
 
-	SubMesh(Material* material, uint32_t baseIndex, uint32_t indexCount, uint32_t baseVertex) {
+	SubMesh(Material& material, uint32_t baseIndex, uint32_t indexCount, uint32_t baseVertex) {
 		this->material = material;
 		this->baseIndex = baseIndex;
 		this->indexCount = indexCount;
