@@ -11,7 +11,7 @@ void Engine::start() {
         isEngineRunning = false;
     }
 
-    scene = new SceneManager();
+    scene = Mem::Allocate<SceneManager>();
 
     EngineContext::get()->resourceManager = Mem::Allocate<ResourceManager>();
     EngineContext::get()->window = window;
@@ -43,16 +43,23 @@ void Engine::start() {
 
         window->Display();
     }
-
-
-    systemManager.shutdown();
-    window->shutdown();
-    glfwTerminate();
 }
 
 Engine::~Engine()
 {
-    std::cout << "Engine Destructor called";
+    Logger::logInfo("Shutting down Glen");
+
+    systemManager.shutdown();
+
+    EngineContext::get()->resourceManager->Release();
+    scene->Release();
+    window->shutdown();
+    glfwTerminate();
+
+    EngineContext::get()->sceneAllocator->Release();
+
+    delete EngineContext::get();
+
 }
 
 void Engine::loadDefaultShaders()

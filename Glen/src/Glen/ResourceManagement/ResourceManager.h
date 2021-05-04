@@ -56,6 +56,8 @@ public:
 	void loadShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const std::string& shaderName);
 	Texture* loadTexture(const std::string& texturePath, const std::string& directory, TextureType textureType);
 	Mesh* loadMesh(std::string path, int loaderFlags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	Mesh* CreateMesh(std::string identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, 
+		std::vector<SubMesh>& subMeshes, bool hasNormals, bool hasTextCoords, bool hasTangents);
 	Texture* generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
 		const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize);
 
@@ -64,6 +66,7 @@ public:
 	Texture* getTexture(const std::string& textureName);
 
 	ResourceManager() {};
+	void Release();
 };
 
 

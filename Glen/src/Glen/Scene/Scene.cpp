@@ -48,6 +48,13 @@ Camera* SceneManager::getMainCamera()
 	return mainCamera;
 }
 
+void SceneManager::Release()
+{
+	this->Entities.clear();
+	this->pointLights.clear();
+	delete mainCamera;
+}
+
 void  SceneManager::setMainCamera(Camera* camera)
 {
 	this->mainCamera = camera;

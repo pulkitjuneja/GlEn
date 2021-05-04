@@ -137,6 +137,13 @@ Mesh* ResourceManager::loadMesh(std::string path, int loaderFlags)
 	return loadedMeshes.find(path)->second;
 }
 
+Mesh* ResourceManager::CreateMesh(std::string identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<SubMesh>& subMeshes, bool hasNormals, bool hasTextCoords, bool hasTangents)
+{
+	Mesh* newMesh = Mem::Allocate<Mesh>(vertices, indices, subMeshes, hasNormals, hasTextCoords, hasTangents);
+	loadedMeshes.insert(make_pair(identifier, newMesh));
+	return loadedMeshes.find(identifier)->second;
+}
+
 void ResourceManager::getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory, Material& material)
 {
 	material.name = std::string(directory);
@@ -297,4 +304,11 @@ Texture* ResourceManager::getTexture(const std::string& textureName)
 		Logger::logWarn("Texture " + textureName + " does not exist");
 		return nullptr;
 	}
+}
+
+void ResourceManager::Release()
+{
+	loadedMeshes.clear();
+	loadedShaders.clear();
+	textures.clear();
 }

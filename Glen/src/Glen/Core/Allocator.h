@@ -12,6 +12,7 @@ public:
 	virtual void* Alloc(size_t size) = 0;
 	virtual void Free(std::byte* buffer) = 0;
 	virtual void Reset() {};
+	virtual void Release() {};
 	virtual ~IAllocator() {}
 };
 
@@ -55,7 +56,13 @@ public:
 
 	virtual void Reset() override
 	{
+		current = buffer;	
+	}
+
+	virtual void Release() override
+	{
 		current = buffer;
+		delete[] current;
 	}
 
 	~StackAllocator() {}

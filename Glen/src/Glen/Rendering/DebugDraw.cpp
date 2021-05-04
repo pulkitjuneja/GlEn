@@ -38,7 +38,7 @@ void DebugDraw::createDebugMesh()
 		SubMesh(cubeMaterial,0,36,0)
 	};
 
-	DebugCubeMesh = new Mesh(vertices, indices, cubeSubmeshes, false, false, false);
+	DebugCubeMesh = EngineContext::get()->resourceManager->CreateMesh("CUBE", vertices, indices, cubeSubmeshes, false, false, false);
 }
 
 void DebugDraw::update(float deltaTime) {

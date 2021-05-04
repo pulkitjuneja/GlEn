@@ -34,6 +34,8 @@ public:
 	std::vector<PointLight>& getPointLIghts();
 	DirectionalLight& getDirectionalLight();
 	Camera* getMainCamera();
+
+	void Release();
 };
 
 inline SceneManager::SceneManager()
