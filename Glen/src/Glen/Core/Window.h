@@ -30,7 +30,7 @@ public:
 	WindowData& getWindowData();
 	GLFWwindow* getNativeWindow();
 
-	Window(int width, int height, char* title);
+	Window(int width, int height, std::string title);
 private:
 	WindowData data;
 	GLFWwindow* window;

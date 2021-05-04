@@ -4,6 +4,8 @@ Time Engine::deltaTime;
 
 void Engine::start() {
 
+    EngineContext::get()->sceneAllocator = new StackAllocator(1024 * 1024 * 500); // 500 mb
+
     // engine specific initializations
     if (!setupWindow()) {
         isEngineRunning = false;
@@ -11,12 +13,11 @@ void Engine::start() {
 
     scene = new SceneManager();
 
-    EngineContext::get()->resourceManager = new ResourceManager();
+    EngineContext::get()->resourceManager = Mem::Allocate<ResourceManager>();
     EngineContext::get()->window = window;
-    EngineContext::get()->inputStatus = new InputStatus();
+    EngineContext::get()->inputStatus = Mem::Allocate<InputStatus>();
     EngineContext::get()->sceneManager = scene;
-    EngineContext::get()->physicsContext = new PhysicsContext();
-    EngineContext::get()->sceneAllocator = new StackAllocator(1024*1024* 500); // 500 mb
+    EngineContext::get()->physicsContext = Mem::Allocate<PhysicsContext>();
 
     loadDefaultShaders();
 
@@ -43,9 +44,15 @@ void Engine::start() {
         window->Display();
     }
 
-    // todo: perform shutdown steps
+
+    systemManager.shutdown();
     window->shutdown();
     glfwTerminate();
+}
+
+Engine::~Engine()
+{
+    std::cout << "Engine Destructor called";
 }
 
 void Engine::loadDefaultShaders()
@@ -60,7 +67,7 @@ void Engine::loadDefaultShaders()
 
 bool Engine::setupWindow() {
  
-    window = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Glen Editor");
+    window = Mem::Allocate<Window>(SCREEN_WIDTH, SCREEN_HEIGHT, "Glen Editor");
     window->SetVsync(false);
     window->setEventCallback(std::bind(&Engine::onWindowEvent, this, std::placeholders::_1));
     window->hookEvents();

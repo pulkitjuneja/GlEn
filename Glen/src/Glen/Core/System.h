@@ -5,6 +5,7 @@
 #include <string>
 #include "Glen/Globals.h"
 #include "Glen/Utils/TypeName.h"
+#include "Allocator.h"
 
 class ISystem {
 public:
@@ -30,7 +31,7 @@ private:
 
 template<typename T>
 void SystemManager::registerSystem(){
-	T* system = new T();
+	T* system = Mem::Allocate<T>();
 	ISystem* ref = static_cast<ISystem*>(system);
 	system->name = TypeName<T>();
 	systems.push_back(ref);

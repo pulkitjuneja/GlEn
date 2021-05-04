@@ -1,5 +1,11 @@
 #include "PhysicsContext.h"
 
+PhysicsContext::~PhysicsContext()
+{
+	this->release();
+	Logger::logInfo("Physics released");
+}
+
 void PhysicsContext::initialize()
 {
 	PxDefaultErrorCallback	ErrorCallback;

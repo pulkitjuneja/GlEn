@@ -1,9 +1,9 @@
 #include "Window.h"
 
 
-Window::Window(int width, int height, char* title)
+Window::Window(int width, int height, std::string title)
 {
-    data = WindowData{ title, width, height, true };
+    data = WindowData{ title.c_str(), width, height, true };
 
     if (!glfwInit())
     {

@@ -29,6 +29,8 @@
         SystemManager systemManager;
 
     public:
+        Engine() = default;
+        ~Engine();
         static Time deltaTime;
         void loadDefaultShaders();
         virtual bool init() = 0;

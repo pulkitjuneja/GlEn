@@ -25,6 +25,7 @@ private:
 
 public:
 	PhysicsContext() = default;
+	~PhysicsContext();
 	void initialize();
 	void release();
 
