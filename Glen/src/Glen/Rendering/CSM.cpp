@@ -183,7 +183,6 @@ void Csm::updateCropMatrices(glm::mat4 lightModelView, Camera* camera, glm::vec3
 		//shadowCropMatrix = glm::transpose(shadowCropMatrix);
 
 		//glm::mat4 finalProjectionMatrix = shadowCropMatrix * ortho;
-
 		//// Store the projection matrix
 		//projectionMatrices[i] = finalProjectionMatrix;
 		//cropMatrices[i] = finalProjectionMatrix * lightModelView;
@@ -212,13 +211,13 @@ void Csm::updateUniforms(CSMUniforms& csmUniforms)
 void Csm::render(SceneManager* scene)
 {
 	for (int i = 0; i < splitCount; i++) {
-		depthMapMaterial->getShader()->setMat4("lightSpaceMatrix", cropMatrices[i]);
-		shadowFbos[i]->bind();
+		depthMapMaterial.getShader()->setMat4("lightSpaceMatrix", cropMatrices[i]);
+		shadowFbos[i].bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, shadowMapSize, shadowMapSize);
-		sceneRenderer.renderScene(scene, depthMapMaterial);
+		sceneRenderer.renderScene(scene, &depthMapMaterial);
 	}
-	shadowFbos[splitCount - 1]->unBind();
+	shadowFbos[splitCount - 1].unBind();
 }
 
 
@@ -234,16 +233,14 @@ Csm::Csm(float lambda, float nearOffset, int splitCount, int shadowMapSize) : la
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_COMPARE_FUNC, GL_GEQUAL);
 
 	for (int i = 0; i < splitCount; i++) {
-		shadowFbos[i] = new FrameBuffer();
-		shadowFbos[i]->bind();
-		shadowFbos[i]->attachDepthTarget(shadowMaps, 0, i, true);
+		shadowFbos[i].bind();
+		shadowFbos[i].attachDepthTarget(shadowMaps, 0, i, true);
 	}
 	biasMatrix = glm::mat4(0.5f, 0.0f, 0.0f, 0.0f,
 		0.0f, 0.5f, 0.0f, 0.0f,
 		0.0f, 0.0f, 0.5f, 0.0f,
 		0.5f, 0.5f, 0.5f, 1.0f);
-	depthMapMaterial = new Material();
-	depthMapMaterial->setShader(EngineContext::get()->resourceManager->getShader("depthMap"));
+	depthMapMaterial.setShader(EngineContext::get()->resourceManager->getShader("depthMap"));
 }
 
 void Csm::update(Camera* camera, glm::vec3 lightDir)

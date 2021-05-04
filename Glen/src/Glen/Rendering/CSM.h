@@ -26,13 +26,13 @@ struct FrustumSplit
 
 class Csm {
     Texture* shadowMaps;
-    FrameBuffer* shadowFbos[CSM_MAX_SPLIT_COUNT];
+    FrameBuffer shadowFbos[CSM_MAX_SPLIT_COUNT];
     float lambda;
     float nearOffset;
     int   splitCount;
     int   shadowMapSize;
     SceneRenderer sceneRenderer;
-    Material* depthMapMaterial;
+    Material depthMapMaterial;
     glm::mat4 biasMatrix;
     float farBounds[CSM_MAX_SPLIT_COUNT];
     FrustumSplit splits[CSM_MAX_SPLIT_COUNT];

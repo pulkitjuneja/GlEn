@@ -28,20 +28,20 @@ class DefferedRenderer : public ISystem {
 	Texture* gBUfferDepthTexture;
 	Texture* HDRBUfferTexture;
 	Texture* postProcessingTexture;
-	FrameBuffer* HDRBBuffer;
-	FrameBuffer* postProcessingBuffer;
-	FrameBuffer* gBuffer;
+	FrameBuffer HDRBBuffer;
+	FrameBuffer postProcessingBuffer;
+	FrameBuffer gBuffer;
 
 	//Uniforms
 	PerFrameUniforms perFrameUniforms;
 	CSMUniforms csmUniforms;
 
 	//UniformBUffers
-	UniformBuffer* perFrameUbo;
-	UniformBuffer* CsmUbo;
+	UniformBuffer perFrameUbo;
+	UniformBuffer CsmUbo;
 
 	SceneRenderer sceneRenderer;
-	Csm* csm;
+	Csm csm;
 
 	GLuint screenQuadVAO;
 	Mesh* pointVolumeMesh;
@@ -55,7 +55,7 @@ class DefferedRenderer : public ISystem {
 	void setupGBuffer();
 	void setupHDRBuffer();
 public:
-	DefferedRenderer() = default;
+	DefferedRenderer();
 	void toneMappingPass();
 	void runGeometryPass();
 	void runDirectionalLightPass();
