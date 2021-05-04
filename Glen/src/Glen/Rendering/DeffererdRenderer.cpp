@@ -45,12 +45,12 @@ void DefferedRenderer::createUVSphere()
 	std::vector<SubMesh> submeshes;
 	submeshes.resize(1);
 	submeshes[0].indexCount = indices.size();
-	pointVolumeMesh = new Mesh(vertices, indices, submeshes, false, false, false);
+	pointVolumeMesh = EngineContext::get()->resourceManager->CreateMesh("UV_SPHERE", vertices, indices, submeshes, false, false, false);
 }
 
 void DefferedRenderer::setupGBuffer()
 {
-	gBuffer = new FrameBuffer();
+	gBuffer = Mem::Allocate<FrameBuffer>();
 	gBuffer->bind();
 
 	gBufferPositionTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::DIFFUSE,
@@ -84,7 +84,7 @@ void DefferedRenderer::setupGBuffer()
 
 void DefferedRenderer::setupHDRBuffer()
 {
-	HDRBBuffer = new FrameBuffer();
+	HDRBBuffer = Mem::Allocate<FrameBuffer>();
 	HDRBBuffer->bind();
 
 	HDRBUfferTexture = EngineContext::get()->resourceManager->generateTexture(HDR_BUFFER_TEXTURE_NAME, TextureType::DIFFUSE,
@@ -95,7 +95,7 @@ void DefferedRenderer::setupHDRBuffer()
 	HDRBBuffer->checkStatus();
 	HDRBBuffer->unBind();
 
-	postProcessingBuffer = new FrameBuffer();
+	postProcessingBuffer = Mem::Allocate<FrameBuffer>();
 	postProcessingBuffer->bind();
 	postProcessingTexture = EngineContext::get()->resourceManager->generateTexture(PP_BUFFER_TEXTURE_NAME, TextureType::DIFFUSE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT, 1);
@@ -112,9 +112,9 @@ void DefferedRenderer::startup()
 {
 	setupGBuffer();
 	setupHDRBuffer();
-	csm = new Csm(0.3, 150.0f, 3, 4096);
-	perFrameUbo = new UniformBuffer(sizeof(PerFrameUniforms), 0);
-	CsmUbo = new UniformBuffer(sizeof(CSMUniforms), 1);
+	csm = Mem::Allocate<Csm>(0.3, 150.0f, 3, 4096);
+	perFrameUbo = Mem::Allocate<UniformBuffer>(sizeof(PerFrameUniforms), 0);
+	CsmUbo = Mem::Allocate<UniformBuffer>(sizeof(CSMUniforms), 1);
 
 	directionalLightShader = EngineContext::get()->resourceManager->getShader("defferedDirectionalLightPass");
 	pointLightShader = EngineContext::get()->resourceManager->getShader("defferedPointLightPass");
