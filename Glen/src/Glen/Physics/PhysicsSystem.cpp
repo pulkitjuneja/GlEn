@@ -23,15 +23,12 @@ void PhysicsSystem::shutdown()
 void PhysicsSystem::updateTransforms()
 {
 
-	std::vector<Entity*> entities = EngineContext::get()->sceneManager->getEntities();
-	std::vector<Entity*>::iterator it = entities.begin();
-	for (; it != entities.end(); it++) {
+	std::vector<Entity>& entities = EngineContext::get()->sceneManager->getEntities();
+	for(int i = 0 ; i <entities.size(); i++ ){
+		Entity& ent = entities[i];
 
-
-		if ((*it)->rigidBody != nullptr) {
-
-			Entity* ent = (*it);
-			PxRigidActor* rb = ent->rigidBody->getNativeRigidBody();
+		if (ent.rigidBody != nullptr) {
+			PxRigidActor* rb = ent.rigidBody->getNativeRigidBody();
 			PxShape* shapes[1];
 			rb->getShapes(shapes, 1);
 			PxTransform world = PxShapeExt::getGlobalPose(*shapes[0], *rb);
@@ -56,8 +53,8 @@ void PhysicsSystem::updateTransforms()
 			double yaw = std::atan2(siny_cosp, cosy_cosp);
 
 			// Hacky fix to attach rigidbody at the center of the mesh
-			ent->transfrom.setPosition(position);
-			ent->transfrom.setRotation(glm::vec3(roll, pitch, yaw));
+			ent.transfrom.setPosition(position);
+			ent.transfrom.setRotation(glm::vec3(roll, pitch, yaw));
 		}
 	}
 }

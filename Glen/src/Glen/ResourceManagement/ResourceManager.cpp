@@ -130,8 +130,7 @@ Mesh* ResourceManager::loadMesh(std::string path, int loaderFlags)
 		indexOffset += currentMesh->mNumFaces * 3;
 	}
 	meshBounds.FinalizeData();
-	void* alloc = EngineContext::get()->sceneAllocator->Alloc(sizeof(Mesh));
-	Mesh* newMesh = new(alloc) Mesh(vertices, indices, submeshes, hasNormals, hasTexCoords, hasTangents);
+	Mesh* newMesh = Mem::Allocate<Mesh>(vertices, indices, submeshes, hasNormals, hasTexCoords, hasTangents);
 	newMesh->bounds = meshBounds;
 	loadedMeshes.insert(make_pair(path, newMesh));
 	Logger::logInfo("Mesh Loaded " + path);
@@ -210,8 +209,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-	void* alloc = EngineContext::get()->sceneAllocator->Alloc(sizeof(Shader));
-	Shader* newShader = new(alloc) Shader(shaderProgram, shaderName, uniformCount);
+	Shader* newShader = Mem::Allocate<Shader>(shaderProgram, shaderName, uniformCount);
 	newShader->setUniformBlockBinding("perFrameUniforms", 0);
 	newShader->setUniformBlockBinding("csmUniforms", 1);
 
@@ -258,8 +256,8 @@ Texture* ResourceManager::loadTexture(const std::string& texturePath, const std:
 			format = GL_RGB;
 		else if (nrComponents == 4)
 			format = GL_RGBA;
-		void* alloc = EngineContext::get()->sceneAllocator->Alloc(sizeof(Texture));
-		tex = new(alloc) Texture(type, 1, width, height, format, GL_UNSIGNED_BYTE, format);
+		
+		tex = Mem::Allocate<Texture>(type, 1, width, height, format, GL_UNSIGNED_BYTE, format);
 		tex->bind();
 		tex->setData(data, 0);
 		tex->generateMipMaps();
@@ -283,8 +281,7 @@ Texture* ResourceManager::generateTexture(const std::string& identifier, Texture
 	{
 		return textures.find(identifier)->second;
 	}
-	void* alloc = EngineContext::get()->sceneAllocator->Alloc(sizeof(Texture));
-	Texture* tex = new(alloc) Texture(textureType, arraySize, w, h, format, dataType, internalFormat);
+	Texture* tex = Mem::Allocate<Texture>(textureType, arraySize, w, h, format, dataType, internalFormat);
 	textures.emplace(make_pair(identifier, tex));
 	return tex;
 }

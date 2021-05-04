@@ -42,17 +42,17 @@ void DebugDraw::createDebugMesh()
 }
 
 void DebugDraw::update(float deltaTime) {
-	std::vector<Entity*> entities = scene->getEntities();
-	std::vector<Entity*>::iterator it = entities.begin();
+	std::vector<Entity> entities = scene->getEntities();
+	std::vector<Entity>::iterator it = entities.begin();
 	
 	glDisable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	for (; it != entities.end(); it++) {
 		
-		Entity* ent = (*it);
+		Entity& ent = (*it);
 
-		if (ent->collider == nullptr) {
+		if (ent.collider == nullptr) {
 			continue;
 		}
 
@@ -60,16 +60,16 @@ void DebugDraw::update(float deltaTime) {
 		basicShader->use();
 
 		// TODO : add debug draw fro sphere colliders
-		BoxCollider* boxCollider = (BoxCollider*)ent->collider;
+		BoxCollider* boxCollider = (BoxCollider*)ent.collider;
 
 		glm::mat4 transformationMAtrix(1.0f);
 		glm::vec3 scale = boxCollider->halfExtents;
-		glm::quat rotationQuat = glm::quat(ent->transfrom.getEulerAngles());
+		glm::quat rotationQuat = glm::quat(ent.transfrom.getEulerAngles());
 		glm::mat4 rotationMatrix = glm::toMat4(rotationQuat);
 		transformationMAtrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z)) * transformationMAtrix;
 		transformationMAtrix = rotationMatrix * transformationMAtrix;
-		glm::vec3 meshCenter = ent->mesh != nullptr ? ent->collider->positionOffset : glm::vec3(0, 0, 0);
-		transformationMAtrix = glm::translate(glm::mat4(1.0f),meshCenter + ent->transfrom.getPosition()) * transformationMAtrix;
+		glm::vec3 meshCenter = ent.mesh != nullptr ? ent.collider->positionOffset : glm::vec3(0, 0, 0);
+		transformationMAtrix = glm::translate(glm::mat4(1.0f),meshCenter + ent.transfrom.getPosition()) * transformationMAtrix;
 		basicShader->setMat4("modelMatrix", transformationMAtrix);
 
 
@@ -77,7 +77,7 @@ void DebugDraw::update(float deltaTime) {
 		SubMesh submesh = DebugCubeMesh->subMeshes[0];
 		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
 
-		PxRigidActor* rb = ent->rigidBody->getNativeRigidBody();
+		PxRigidActor* rb = ent.rigidBody->getNativeRigidBody();
 		PxShape* shapes[1];
 		rb->getShapes(shapes, 1);
 		const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *rb));

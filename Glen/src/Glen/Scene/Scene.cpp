@@ -2,43 +2,43 @@
 
 #include "Scene.h"
 
-PointLight* SceneManager::createPointLight(glm::vec4 position, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular)
+PointLight& SceneManager::createPointLight(glm::vec4 position, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular)
 {
-	PointLight* light = new PointLight();
-	light->position = position;
-	light->ambient = ambient;
-	light->diffuse = diffuse;
-	light->specular = specular;
+	PointLight light;
+	light.position = position;
+	light.ambient = ambient;
+	light.diffuse = diffuse;
+	light.specular = specular;
 
 	pointLights.push_back(light);
-	return light;
+	return pointLights[pointLights.size()-1];
 }
 
-DirectionalLight* SceneManager::createDirectionalLight(glm::vec4 direction, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular)
+DirectionalLight& SceneManager::createDirectionalLight(glm::vec4 direction, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular)
 {
-	DirectionalLight* light = new DirectionalLight();
+	DirectionalLight light;
 
-	light->ambient = ambient;
-	light->diffuse = diffuse;
-	light->specular = specular;
-	light->direction = direction;
+	light.ambient = ambient;
+	light.diffuse = diffuse;
+	light.specular = specular;
+	light.direction = direction;
 
 	this->directionalLight = light;
 	return light;
 
 }
 
-std::vector<Entity*>& SceneManager::getEntities()
+std::vector<Entity>& SceneManager::getEntities()
 {
 	return Entities;
 }
 
-std::vector<PointLight*>& SceneManager::getPointLIghts()
+std::vector<PointLight>& SceneManager::getPointLIghts()
 {
 	return pointLights;
 }
 
-DirectionalLight* SceneManager::getDirectionalLight()
+DirectionalLight& SceneManager::getDirectionalLight()
 {
 	return directionalLight;
 }

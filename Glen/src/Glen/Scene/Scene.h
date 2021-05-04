@@ -8,42 +8,48 @@
 #include "Glen/Rendering/Light.h"
 #include "Camera.h"
 
+#define MAXENTITIES 5000
+#define MAXPOINTLIGHTS 1000
+
 class GLN_API SceneManager {
 protected:
-	std::vector<Entity*> Entities;
-	std::vector<PointLight*> pointLights;
-	DirectionalLight* directionalLight;
+	std::vector<Entity> Entities;
+	std::vector<PointLight> pointLights;
+	DirectionalLight directionalLight;
 	Camera* mainCamera;
-	//Mesh* cameraFrustumMesh;
 
 public:
+
+	SceneManager();
 
 	//TODO: remove this implmenet uniform buffers to fix uniform assignement;
 	glm::mat4 directionalLightSpaceMatrix;
 
-	template <class T >
-	T* createEntity(std::string name, Mesh* mesh = nullptr, Material* overrideMat = nullptr);
-	PointLight* createPointLight(glm::vec4 position, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular);
-	DirectionalLight* createDirectionalLight(glm::vec4 direction, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular);
+	Entity& createEntity(std::string name, Mesh* mesh = nullptr, Material* overrideMat = nullptr);
+	PointLight& createPointLight(glm::vec4 position, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular);
+	DirectionalLight& createDirectionalLight(glm::vec4 direction, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular);
 	void setMainCamera(Camera* camera);
 
-	std::vector<Entity*>& getEntities();
-	std::vector<PointLight*>& getPointLIghts();
-	DirectionalLight* getDirectionalLight();
+	std::vector<Entity>& getEntities();
+	std::vector<PointLight>& getPointLIghts();
+	DirectionalLight& getDirectionalLight();
 	Camera* getMainCamera();
 };
 
-template<class T>
-inline T* SceneManager::createEntity(std::string name, Mesh* mesh, Material* overrideMat)
+inline SceneManager::SceneManager()
 {
-	T* ent = new T(name);
-	// this is to make sure T is always an entity
-	static_cast<Entity*>(ent);
-	ent->mesh = mesh;
-	ent->overrideMaterial = overrideMat;
+	Entities.reserve(MAXENTITIES);
+	pointLights.reserve(MAXPOINTLIGHTS);
+}
+
+inline Entity& SceneManager::createEntity(std::string name, Mesh* mesh, Material* overrideMat)
+{
+	Entity ent(name);
+	ent.mesh = mesh;
+	ent.overrideMaterial = overrideMat;
 
 	Entities.push_back(ent);
-	return ent;
+	return Entities[Entities.size() - 1];
 }
 
 #endif

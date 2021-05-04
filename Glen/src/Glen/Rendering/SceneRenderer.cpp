@@ -9,12 +9,12 @@ void SceneRenderer::setGlobalUniforms(PerFrameUniforms& perFrameUniforms, SceneM
 	perFrameUniforms.cameraPosition = glm::vec4(cameraPosition.x, cameraPosition.y, cameraPosition.z, 1.0f);
 
 	// set directional light
-	perFrameUniforms.directionalLight = *scene->getDirectionalLight();
+	perFrameUniforms.directionalLight = scene->getDirectionalLight();
 
 	// set pointlight(s) into shader
 	auto pointLights = scene->getPointLIghts();
 	for (int i = 0; i < pointLights.size(); i++) {
-		perFrameUniforms.pointLights[i] = *pointLights[i];
+		perFrameUniforms.pointLights[i] = pointLights[i];
 	}
 	perFrameUniforms.pointLightCount = pointLights.size();
 }
@@ -29,21 +29,21 @@ void SceneRenderer::bindGlobalMaps()
 
 void SceneRenderer::renderScene(SceneManager* scene, Material* overrideMaterial, bool passBaseMaterialProperties)
 {
-	std::vector<Entity*> entities = scene->getEntities();
-	std::vector<Entity*>::iterator it = entities.begin();
+	std::vector<Entity> entities = scene->getEntities();
+	std::vector<Entity>::iterator it = entities.begin();
 
 
 	for (; it != entities.end(); it++) {
-		Entity* ent = (*it);
+		Entity& ent = (*it);
 
-		if (ent->mesh == nullptr) {
+		if (ent.mesh == nullptr) {
 			continue;
 		}
 
-		Mesh* currentMesh = ent->mesh;
+		Mesh* currentMesh = ent.mesh;
 		glBindVertexArray(currentMesh->VAO);
 
-		glm::mat4 modelMatrix = ent->getTransform()->getTransformationMatrix();
+		glm::mat4 modelMatrix = ent.getTransform()->getTransformationMatrix();
 
 		Shader* currentShader = nullptr;
 

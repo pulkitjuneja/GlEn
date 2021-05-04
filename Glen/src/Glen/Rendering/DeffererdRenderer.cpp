@@ -198,7 +198,7 @@ void DefferedRenderer::update(float deltaTime)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	csm->update(EngineContext::get()->sceneManager->getMainCamera(), scene->getDirectionalLight()->direction);
+	csm->update(EngineContext::get()->sceneManager->getMainCamera(), scene->getDirectionalLight().direction);
 	sceneRenderer.setGlobalUniforms(perFrameUniforms, scene);
 	csm->updateUniforms(csmUniforms);
 

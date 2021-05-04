@@ -11,7 +11,7 @@ void ForwardRenderer::render(SceneManager* scene)
 {
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
 
-	csm->update(scene->getMainCamera(), scene->getDirectionalLight()->direction);
+	csm->update(scene->getMainCamera(), scene->getDirectionalLight().direction);
 	csm->updateUniforms(csmUniforms);
 
 	//Update Global Uniform blocks

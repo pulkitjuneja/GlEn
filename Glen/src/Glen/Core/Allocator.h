@@ -68,8 +68,11 @@ private:
 };
 
 namespace Mem {
-	template<typename T>
-	T* Allocate(IAllocator* allocator) {
+	template<typename T, typename ...Args>
+	T* Allocate(Args&& ... args) {
+		IAllocator* defaultAllocator = EngineContext::get()->sceneAllocator;
+		void* alloc = defaultAllocator->Alloc(sizeof(T));
+		return new(alloc) T(std::forward<Args>(args)...);
 
 	}
 };
