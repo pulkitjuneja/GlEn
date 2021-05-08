@@ -3,10 +3,13 @@
 void PhysicsSystem::startup()
 {
 	EngineContext::get()->physicsContext->initialize();
+	actorEntitymap.reserve(MAXENTITIES);
 }
 
 void PhysicsSystem::update(float deltaTime)
 {
+	buildRigidBody();
+
 	EngineContext::get()->physicsContext->physicsScene->simulate(1.0f / 60.0f);
 	EngineContext::get()->physicsContext->physicsScene->fetchResults(true);
 
@@ -19,6 +22,34 @@ void PhysicsSystem::shutdown()
 	EngineContext::get()->physicsContext->release();
 }
 
+// TODO: do this using an event system
+void PhysicsSystem::buildRigidBody()
+{
+	std::vector<Entity>& entities = EngineContext::get()->sceneManager->getEntities();
+	for (int i = 0; i < entities.size(); i++) {
+		Entity& ent = entities[i];
+		if (ent.rigidBody.isAttached && ent.rigidBody.getNativeRigidBody() == nullptr) {
+			glm::vec3 entityCenterPosition = ent.transfrom.getPosition();
+			PxVec3 p(entityCenterPosition.x, entityCenterPosition.y, entityCenterPosition.z);
+			glm::quat rotationQuat = glm::quat(ent.transfrom.getEulerAngles());
+			PxQuat q(rotationQuat.x, rotationQuat.y, rotationQuat.z, rotationQuat.w);
+			PxTransform localTm(p, q);
+			if (ent.rigidBody.type == RigidBodyType::Dynamic) {
+				ent.rigidBody.actorRef = EngineContext::get()->physicsContext->physics->createRigidDynamic(localTm);
+				PxRigidBodyExt::updateMassAndInertia(*(PxRigidDynamic*)ent.rigidBody.actorRef, 10.0f);
+			}
+			else {
+				ent.rigidBody.actorRef = EngineContext::get()->physicsContext->physics->createRigidStatic(localTm);
+			}
+			PxShape* shape;
+			shape = EngineContext::get()->physicsContext->physics->createShape(*ent.collider->colliderGeometry, *ent.collider->material);
+			ent.rigidBody.actorRef->attachShape(*shape);
+			EngineContext::get()->physicsContext->physicsScene->addActor(*ent.rigidBody.actorRef);
+			actorEntitymap.insert(std::make_pair(ent.rigidBody.getNativeRigidBody(), &ent));
+		}
+	}
+}
+
 void PhysicsSystem::updateTransforms()
 {
 
@@ -26,8 +57,8 @@ void PhysicsSystem::updateTransforms()
 	for(int i = 0 ; i <entities.size(); i++ ){
 		Entity& ent = entities[i];
 
-		if (ent.rigidBody != nullptr) {
-			PxRigidActor* rb = ent.rigidBody->getNativeRigidBody();
+		if (ent.rigidBody.isAttached) {
+			PxRigidActor* rb = ent.rigidBody.getNativeRigidBody();
 			PxShape* shapes[1];
 			rb->getShapes(shapes, 1);
 			PxTransform world = PxShapeExt::getGlobalPose(*shapes[0], *rb);

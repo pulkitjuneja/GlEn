@@ -77,7 +77,7 @@ void DebugDraw::update(float deltaTime) {
 		SubMesh submesh = DebugCubeMesh->subMeshes[0];
 		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
 
-		PxRigidActor* rb = ent.rigidBody->getNativeRigidBody();
+		PxRigidActor* rb = ent.rigidBody.getNativeRigidBody();
 		PxShape* shapes[1];
 		rb->getShapes(shapes, 1);
 		const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *rb));

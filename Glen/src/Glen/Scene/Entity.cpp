@@ -5,7 +5,6 @@ Entity::Entity(std::string name)
 	this->name = name;
 	this->collider = nullptr;
 	this->mesh = nullptr;
-	this->rigidBody = nullptr;
 }
 
 Entity::Entity(std::string name, Mesh* mesh, Material* mat)
@@ -14,7 +13,6 @@ Entity::Entity(std::string name, Mesh* mesh, Material* mat)
 	this->mesh = mesh;
 	this->collider = nullptr;
 	this->overrideMaterial = mat;
-	this->rigidBody = nullptr;
 }
 
 Transform* Entity::getTransform()
@@ -49,7 +47,8 @@ void Entity::attachRigidBody(RigidBodyType type)
 		return;
 	}
 	else {
-		rigidBody = new RigidBody(transfrom, collider, type);
+		rigidBody.isAttached = true;
+		rigidBody.type = type;
 	}
 }
 

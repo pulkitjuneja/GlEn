@@ -17,13 +17,13 @@ enum class RigidBodyType {
 };
 
 class GLN_API RigidBody {
-private:
-	PxRigidActor* rigidBody;
-	// support multiple shapes per rigidBody ?
-	PxShape* shape;
-	RigidBodyType type;
 public:
-	RigidBody(Transform& transform, Collider* collider, RigidBodyType type);
+	PxRigidActor* actorRef;
+	RigidBodyType type;
+	// Put this into a rigidBody component
+	bool isAttached = false;
+
+	RigidBody();
 	PxRigidActor* getNativeRigidBody();
 	void addForce(glm::vec3 force);
 };

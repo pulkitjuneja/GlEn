@@ -28,7 +28,7 @@ public:
 	Mesh* mesh;
 	Material* overrideMaterial;
 	Collider* collider;
-	RigidBody* rigidBody;
+	RigidBody rigidBody;
 
 	std::vector<Script*> scripts;
 

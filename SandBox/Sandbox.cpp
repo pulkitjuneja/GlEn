@@ -7,7 +7,7 @@ class ObjectRotator : public Script {
 
 	void Update(float deltaTime) override {
 		if (EngineContext::get()->inputStatus->isKeyPressed(Keys::Space)) {
-			parent->rigidBody->addForce(glm::vec3(0, 50, 0));
+			parent->rigidBody.addForce(glm::vec3(0, 50, 0));
 		}
 	}
 };

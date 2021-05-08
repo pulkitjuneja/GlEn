@@ -208,9 +208,6 @@
     <ClCompile Include="src\Glen\Events\Event.cpp">
       <Filter>src\Glen\Events</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Physics\Collider.cpp">
-      <Filter>src\Glen\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Glen\Physics\PhysicsContext.cpp">
       <Filter>src\Glen\Physics</Filter>
     </ClCompile>
@@ -272,5 +269,6 @@
       <Filter>src\Glen\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\Core\System.cpp" />
+    <ClCompile Include="src\Glen\Physics\Collider.cpp" />
   </ItemGroup>
 </Project>
