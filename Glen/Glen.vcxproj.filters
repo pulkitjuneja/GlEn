@@ -170,6 +170,7 @@
       <Filter>src\Glen\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Core\Allocator.h" />
+    <ClInclude Include="src\Glen\Physics\PhysicsEventCallbacks.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">
@@ -270,5 +271,6 @@
     </ClCompile>
     <ClCompile Include="src\Glen\Core\System.cpp" />
     <ClCompile Include="src\Glen\Physics\Collider.cpp" />
+    <ClCompile Include="src\Glen\Physics\PhysicsEventCallbacks.cpp" />
   </ItemGroup>
 </Project>

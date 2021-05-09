@@ -10,7 +10,7 @@ void PhysicsSystem::update(float deltaTime)
 {
 	buildRigidBody();
 
-	EngineContext::get()->physicsContext->physicsScene->simulate(1.0f / 60.0f);
+	EngineContext::get()->physicsContext->physicsScene->simulate(deltaTime);
 	EngineContext::get()->physicsContext->physicsScene->fetchResults(true);
 
 	updateTransforms();
@@ -43,7 +43,17 @@ void PhysicsSystem::buildRigidBody()
 			}
 			PxShape* shape;
 			shape = EngineContext::get()->physicsContext->physics->createShape(*ent.collider->colliderGeometry, *ent.collider->material);
+
+			PxFilterData filterData;
+
+			// Only one otype of object in collision filtering for now
+			filterData.word0 = 1;
+			filterData.word1 = 1;
+
+			shape->setSimulationFilterData(filterData);
+
 			ent.rigidBody.actorRef->attachShape(*shape);
+
 			EngineContext::get()->physicsContext->physicsScene->addActor(*ent.rigidBody.actorRef);
 			actorEntitymap.insert(std::make_pair(ent.rigidBody.getNativeRigidBody(), &ent));
 		}

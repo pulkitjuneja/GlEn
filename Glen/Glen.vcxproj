@@ -123,6 +123,7 @@
     <ClInclude Include="src\Glen\Globals.h" />
     <ClInclude Include="src\Glen\Physics\Collider.h" />
     <ClInclude Include="src\Glen\Physics\PhysicsContext.h" />
+    <ClInclude Include="src\Glen\Physics\PhysicsEventCallbacks.h" />
     <ClInclude Include="src\Glen\Physics\PhysicsSystem.h" />
     <ClInclude Include="src\Glen\Physics\RigidBody.h" />
     <ClInclude Include="src\Glen\Rendering\CSM.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="src\Glen\Events\Event.cpp" />
     <ClCompile Include="src\Glen\Physics\Collider.cpp" />
     <ClCompile Include="src\Glen\Physics\PhysicsContext.cpp" />
+    <ClCompile Include="src\Glen\Physics\PhysicsEventCallbacks.cpp" />
     <ClCompile Include="src\Glen\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="src\Glen\Physics\RigidBody.cpp" />
     <ClCompile Include="src\Glen\Rendering\CSM.cpp" />

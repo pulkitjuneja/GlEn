@@ -5,6 +5,7 @@
 
 #include <utility>
 #include "Glen/Core/Logger.h"
+#include "EngineContext.h"
 
 class IAllocator
 {

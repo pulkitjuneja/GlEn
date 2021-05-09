@@ -5,6 +5,8 @@
 #include "PxPhysicsAPI.h"
 //#include "Glen/Scene/Scene.h"
 #include "Glen/Core/Logger.h"
+#include "PhysicsEventCallbacks.h"
+#include "Glen/Core/Allocator.h"
 
 #define PHYSX_SNIPPET_PVD_H
 #define PVD_HOST "127.0.0.1"
