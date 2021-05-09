@@ -5,6 +5,7 @@ Entity::Entity(std::string name)
 	this->name = name;
 	this->collider = nullptr;
 	this->mesh = nullptr;
+	color = glm::vec3(1, 1, 1);
 }
 
 Entity::Entity(std::string name, Mesh* mesh, Material* mat)
@@ -13,6 +14,7 @@ Entity::Entity(std::string name, Mesh* mesh, Material* mat)
 	this->mesh = mesh;
 	this->collider = nullptr;
 	this->overrideMaterial = mat;
+	color = glm::vec3(1, 1, 1);
 }
 
 Transform* Entity::getTransform()

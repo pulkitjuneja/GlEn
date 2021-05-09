@@ -30,6 +30,9 @@ public:
 	Collider* collider;
 	RigidBody rigidBody;
 
+	// TODO: temporary remove
+	glm::vec3 color;
+
 	std::vector<Script*> scripts;
 
 	Entity(std::string name);

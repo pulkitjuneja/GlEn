@@ -16,6 +16,7 @@
 using namespace physx;
 
 class RigidBody;
+class Entity;
 
 class PhysicsContext {
 	friend class RigidBody;
@@ -34,6 +35,7 @@ public:
 	PxMaterial* defaultMaterial;
 	PxPhysics* physics;
 	PxScene* physicsScene;
+	std::unordered_map<PxActor*, Entity*> actorEntitymap;
 };
 
 #endif // !PHYSICS_CONTEXT_H

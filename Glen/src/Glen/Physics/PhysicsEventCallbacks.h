@@ -5,6 +5,7 @@
 
 #include "PxPhysicsAPI.h"
 #include "Glen/Core/Logger.h"
+#include "Glen/Core/EngineContext.h"
 
 using namespace physx;
 

@@ -3,14 +3,14 @@
 void PhysicsSystem::startup()
 {
 	EngineContext::get()->physicsContext->initialize();
-	actorEntitymap.reserve(MAXENTITIES);
+	EngineContext::get()->physicsContext->actorEntitymap.reserve(MAXENTITIES);
 }
 
 void PhysicsSystem::update(float deltaTime)
 {
 	buildRigidBody();
 
-	EngineContext::get()->physicsContext->physicsScene->simulate(deltaTime);
+	EngineContext::get()->physicsContext->physicsScene->simulate(1/60.0f);
 	EngineContext::get()->physicsContext->physicsScene->fetchResults(true);
 
 	updateTransforms();
@@ -55,7 +55,7 @@ void PhysicsSystem::buildRigidBody()
 			ent.rigidBody.actorRef->attachShape(*shape);
 
 			EngineContext::get()->physicsContext->physicsScene->addActor(*ent.rigidBody.actorRef);
-			actorEntitymap.insert(std::make_pair(ent.rigidBody.getNativeRigidBody(), &ent));
+			EngineContext::get()->physicsContext->actorEntitymap.insert(std::make_pair(ent.rigidBody.getNativeRigidBody(), &ent));
 		}
 	}
 }
