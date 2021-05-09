@@ -22,13 +22,27 @@ void PhysicsEventsCallbacks::onContact(const PxContactPairHeader& pairHeader, co
 		PxActor* rb1 = pairHeader.actors[0];
 		PxActor* rb2 = pairHeader.actors[1];
 
+		Entity* ent1 = EngineContext::get()->physicsContext->actorEntitymap[rb1];
+		Entity* ent2 = EngineContext::get()->physicsContext->actorEntitymap[rb2];
+
 		if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND) {
-			EngineContext::get()->physicsContext->actorEntitymap[rb1] ->color = glm::vec3(1, 0, 0);
-			EngineContext::get()->physicsContext->actorEntitymap[rb2]->color = glm::vec3(1, 0, 0);
+			for (Script* script : ent1->scripts) {
+				script->onCollisionBegin(*ent2);
+			}
+
+			for (Script* script : ent2->scripts) {
+				script->onCollisionBegin(*ent1);
+			}
 		}
 		else if (cp.events & PxPairFlag::eNOTIFY_TOUCH_LOST) {
-			EngineContext::get()->physicsContext->actorEntitymap[rb1]->color = glm::vec3(1, 1, 1);
-			EngineContext::get()->physicsContext->actorEntitymap[rb2]->color = glm::vec3(1, 1, 1);
+
+			for (Script* script : ent1->scripts) {
+				script->onCollisionEnd(*ent2);
+			}
+
+			for (Script* script : ent2->scripts) {
+				script->onCollisionEnd(*ent1);
+			}
 		}
 	}
 }
