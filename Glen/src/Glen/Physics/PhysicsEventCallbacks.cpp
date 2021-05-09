@@ -16,6 +16,8 @@ void PhysicsEventsCallbacks::onSleep(PxActor** actors, PxU32 count)
 
 void PhysicsEventsCallbacks::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs)
 {
+
+	// TODO: Do this using event system
 	for (int i = 0; i < nbPairs; i++)
 	{	
 		const PxContactPair& cp = pairs[i];
