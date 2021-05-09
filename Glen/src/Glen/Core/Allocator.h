@@ -20,8 +20,14 @@ public:
 class StackAllocator : public IAllocator
 {
 public:
-	StackAllocator(size_t sizeInBytes) {
-		buffer = new std::byte[sizeInBytes];
+	StackAllocator(size_t sizeInBytes, IAllocator* parent = nullptr) {
+		if (parent == nullptr) {
+			buffer = new std::byte[sizeInBytes];
+		}
+		else {
+			void* bytes = parent->Alloc(sizeInBytes);
+			buffer = new(bytes) std::byte[sizeInBytes];
+		}
 		current = buffer;
 		totalSize = sizeInBytes;
 		marker = buffer;
@@ -78,6 +84,14 @@ private:
 namespace Mem {
 	template<typename T, typename ...Args>
 	T* Allocate(Args&& ... args) {
+		IAllocator* defaultAllocator = EngineContext::get()->sceneAllocator;
+		void* alloc = defaultAllocator->Alloc(sizeof(T));
+		return new(alloc) T(std::forward<Args>(args)...);
+
+	}
+
+	template<typename T, typename ...Args>
+	T* Allocate(IAllocator* allocator, Args&& ... args) {
 		IAllocator* defaultAllocator = EngineContext::get()->sceneAllocator;
 		void* alloc = defaultAllocator->Alloc(sizeof(T));
 		return new(alloc) T(std::forward<Args>(args)...);

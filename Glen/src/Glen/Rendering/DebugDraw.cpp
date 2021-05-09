@@ -68,8 +68,8 @@ void DebugDraw::update(float deltaTime) {
 		glm::mat4 rotationMatrix = glm::toMat4(rotationQuat);
 		transformationMAtrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z)) * transformationMAtrix;
 		transformationMAtrix = rotationMatrix * transformationMAtrix;
-		glm::vec3 meshCenter = ent.mesh != nullptr ? ent.collider->positionOffset : glm::vec3(0, 0, 0);
-		transformationMAtrix = glm::translate(glm::mat4(1.0f),meshCenter + ent.transfrom.getPosition()) * transformationMAtrix;
+		glm::vec3 meshCenter = ent.mesh != nullptr? ent.collider->positionOffset: glm::vec3(0, 0, 0);
+		transformationMAtrix = glm::translate(glm::mat4(1.0f), ent.transfrom.getPosition()) * transformationMAtrix;
 		basicShader->setFloat3("debugColor", ent.color.x, ent.color.y, ent.color.z);
 		basicShader->setMat4("modelMatrix", transformationMAtrix);
 
@@ -77,17 +77,6 @@ void DebugDraw::update(float deltaTime) {
 		glBindVertexArray(DebugCubeMesh->VAO);
 		SubMesh submesh = DebugCubeMesh->subMeshes[0];
 		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
-
-		/*PxRigidActor* rb = ent.rigidBody.getNativeRigidBody();
-		PxShape* shapes[1];
-		rb->getShapes(shapes, 1);
-		const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *rb));
-		GLuint loc = glGetUniformLocation(basicShader->getShaderID(), "modelMatrix");
-		glProgramUniformMatrix4fv(basicShader->getShaderID(), loc, 1, GL_FALSE, &shapePose.column0.x);
-
-		glBindVertexArray(DebugCubeMesh->VAO);
-		submesh = DebugCubeMesh->subMeshes[0];
-		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);*/
 	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

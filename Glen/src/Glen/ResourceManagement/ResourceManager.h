@@ -50,6 +50,8 @@ private:
 	Texture* loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType textureType, std::string directory);
 	void getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory, Material& material);
 
+	IAllocator* resourceAllocator;
+
 public:
 
 	//Resource Loaders
@@ -65,7 +67,7 @@ public:
 	Shader* getShader(const std::string& shaderName);
 	Texture* getTexture(const std::string& textureName);
 
-	ResourceManager() {};
+	ResourceManager();
 	void Release();
 };
 

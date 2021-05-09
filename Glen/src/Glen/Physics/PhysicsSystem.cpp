@@ -36,7 +36,7 @@ void PhysicsSystem::buildRigidBody()
 			PxTransform localTm(p, q);
 			if (ent.rigidBody.type == RigidBodyType::Dynamic) {
 				ent.rigidBody.actorRef = EngineContext::get()->physicsContext->physics->createRigidDynamic(localTm);
-				PxRigidBodyExt::updateMassAndInertia(*(PxRigidDynamic*)ent.rigidBody.actorRef, 10.0f);
+				PxRigidBodyExt::updateMassAndInertia(*(PxRigidDynamic*)ent.rigidBody.actorRef, 100.0f); // TODO: make this controllable from the rb component
 			}
 			else {
 				ent.rigidBody.actorRef = EngineContext::get()->physicsContext->physics->createRigidStatic(localTm);
@@ -93,6 +93,7 @@ void PhysicsSystem::updateTransforms()
 			double yaw = std::atan2(siny_cosp, cosy_cosp);
 
 			// Hacky fix to attach rigidbody at the center of the mesh
+
 			ent.transfrom.setPosition(position);
 			ent.transfrom.setRotation(glm::vec3(roll, pitch, yaw));
 		}
