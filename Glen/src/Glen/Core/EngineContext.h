@@ -4,6 +4,7 @@
 #ifndef ENGINE_CONTEXT_H
 
 #include "Core.h"
+#include <vector>
 
 class ResourceManager;
 class Window;
@@ -11,6 +12,7 @@ class InputStatus;
 class SceneManager;
 class PhysicsContext;
 class IAllocator;
+class IPanel;
 
 class GLN_API EngineContext {
 public:
@@ -20,6 +22,7 @@ public:
 	SceneManager* sceneManager = nullptr;
 	PhysicsContext* physicsContext = nullptr;
 	IAllocator* sceneAllocator = nullptr;
+	std::vector<IPanel*> UIPanels;
 
 	static EngineContext* instance;
 	static EngineContext* get();

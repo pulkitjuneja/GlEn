@@ -5,13 +5,14 @@
 #include "Glen/Scene/Scene.h"
 #include <imgui.h>
 #include "Glen/Core/EngineContext.h"
+#include "Panel.h"
 
 
 // TODO: Abstract this into a separate panel class
-class SceneHeirarchyPanel {
+class SceneHeirarchyPanel : public IPanel {
 private:
 public:
-	void update();
+	void update() override;
 };
 
 #endif // !SCENE_HEIRARCHY_PANEL_H

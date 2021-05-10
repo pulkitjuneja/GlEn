@@ -118,6 +118,7 @@
     <ClInclude Include="src\Glen\Core\Window.h" />
     <ClInclude Include="src\Glen\Editor\GuiSystem.h" />
     <ClInclude Include="src\Glen\Editor\LogWindowPanel.h" />
+    <ClInclude Include="src\Glen\Editor\Panel.h" />
     <ClInclude Include="src\Glen\Editor\SceneHeirarchyPanel.h" />
     <ClInclude Include="src\Glen\Events\Event.h" />
     <ClInclude Include="src\Glen\Globals.h" />
