@@ -1,9 +1,6 @@
 #include "CameraController.h"
 
-CameraController::CameraController(Camera* camera)
-{
-	this->camera = camera;
-}
+
 
 void CameraController::Update(float deltaTime)
 {
@@ -21,6 +18,11 @@ void CameraController::Update(float deltaTime)
 		std::cout << position.x << "  " << position.y << "  " << position.z << "\n";
 		std::cout << rotation.x << "  " << rotation.y << "  " << rotation.z << "\n";
 	}
+}
+
+void  CameraController::Start()
+{
+	this->camera = scene->getMainCamera();
 }
 
 void CameraController::handleRotation()

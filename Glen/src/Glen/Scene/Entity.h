@@ -43,7 +43,26 @@ public:
 	void attachCollider(ColliderType colliderType);
 	void attachBoxCollider(glm::vec3 halfExtents);
 	void attachRigidBody(RigidBodyType type);
-	void AddScript(Script* newScript);
+
+	template<typename T>
+	void AddScript();
 };
+
+template<typename T>
+inline void Entity::AddScript() {
+
+	// TODO: Use engine allocator for this 
+	T* script = new T();
+
+	if (!dynamic_cast<Script*>(script)) {
+		Logger::logError("Passed class is not a subclass of script");
+		delete script;
+		return;
+	}
+	script->attachParentEntity(this);
+	script->scene = EngineContext::get()->sceneManager;
+	script->Start();
+	scripts.push_back(script);
+}
 
 #endif // !ENTITY_H

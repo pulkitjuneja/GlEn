@@ -6,12 +6,15 @@
 #include "Glen/Globals.h"
 
 class Entity;
+class SceneManager;
 
 class Script
 {
+friend Entity;
 protected:
 
 	Entity* parent;
+	SceneManager* scene;
 
 public:
 	void attachParentEntity(Entity* entity) { parent = entity; }

@@ -52,10 +52,9 @@ void SceneManager::Release()
 {
 	this->Entities.clear();
 	this->pointLights.clear();
-	delete mainCamera;
 }
 
-void  SceneManager::setMainCamera(Camera* camera)
+void  SceneManager::setMainCamera(glm::vec3 position, glm::vec3 front, float fov, float aspect, float nearPlane, float farPlane)
 {
-	this->mainCamera = camera;
+	this->mainCamera = Mem::Allocate<Camera>(position, front, fov, aspect, nearPlane, farPlane);
 }

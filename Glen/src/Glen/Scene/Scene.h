@@ -28,7 +28,7 @@ public:
 	Entity& createEntity(std::string name, Mesh* mesh = nullptr, Material* overrideMat = nullptr);
 	PointLight& createPointLight(glm::vec4 position, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular);
 	DirectionalLight& createDirectionalLight(glm::vec4 direction, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular);
-	void setMainCamera(Camera* camera);
+	void setMainCamera(glm::vec3 position, glm::vec3 front, float fov, float aspect, float near, float far);
 
 	std::vector<Entity>& getEntities();
 	std::vector<PointLight>& getPointLIghts();

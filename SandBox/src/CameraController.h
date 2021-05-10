@@ -14,8 +14,8 @@ class CameraController : public Script {
 	void handleRotation();
 	bool firstMouseMove = true;
 public:
-	CameraController(Camera* camera);
 	void GLN_API Update(float deltaTimer) override;
+	void GLN_API Start() override;
 
 };
 

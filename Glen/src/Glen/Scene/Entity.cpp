@@ -53,10 +53,3 @@ void Entity::attachRigidBody(RigidBodyType type)
 		rigidBody.type = type;
 	}
 }
-
-void Entity::AddScript(Script* newScript)
-{
-	newScript->attachParentEntity(this);
-	newScript->Start();
-	scripts.push_back(newScript);
-}
