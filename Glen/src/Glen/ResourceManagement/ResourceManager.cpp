@@ -5,7 +5,7 @@
 #include "stb_image.h"
 
 ResourceManager::ResourceManager() {
-	resourceAllocator = Mem::Allocate<StackAllocator>(1024 * 1024 * 300);  // 300 mb reserved for resources
+	resourceAllocator = Mem::Allocate<StackAllocator>(1024 * 1024 * 300, EngineContext::get()->sceneAllocator);  // 300 mb reserved for resources
 }
 
 void ResourceManager::readFromFile(const std::string& fileName, char*& shaderContent)
