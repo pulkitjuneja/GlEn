@@ -71,7 +71,7 @@ Mesh* ResourceManager::loadMesh(std::string path, int loaderFlags)
 	bool hasTangents = true;
 	bool hasBiTangents = true;
 
-	submeshes.resize(scene->mNumMaterials - 1);
+	submeshes.resize(scene->mNumMaterials == 1 ? 1 : scene->mNumMaterials -1);
 
 	int currentSubmeshIndex = -1;
 	int currentRunningMaterialIndex = -1;

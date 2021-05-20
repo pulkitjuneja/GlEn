@@ -56,19 +56,19 @@ void DefferedRenderer::setupGBuffer()
 {
 	gBuffer.bind();
 
-	gBufferPositionTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::DIFFUSE,
+	gBufferPositionTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
 	gBufferPositionTexture->bind();
 	gBufferPositionTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer.attachRenderTarget(gBufferPositionTexture, 0, 0);
 
-	gBufferNormalTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_NORMAL_TEXTURE_NAME, TextureType::DIFFUSE,
+	gBufferNormalTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_NORMAL_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
 	gBufferNormalTexture->bind();
 	gBufferNormalTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer.attachRenderTarget(gBufferNormalTexture, 0, 1);
 
-	gBufferColorTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_COLOR_TEXTURE_NAME, TextureType::DIFFUSE,
+	gBufferColorTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_COLOR_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1);
 	gBufferColorTexture->bind();
 	gBufferColorTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
@@ -89,7 +89,7 @@ void DefferedRenderer::setupHDRBuffer()
 {
 	HDRBBuffer.bind();
 
-	HDRBUfferTexture = EngineContext::get()->resourceManager->generateTexture(HDR_BUFFER_TEXTURE_NAME, TextureType::DIFFUSE,
+	HDRBUfferTexture = EngineContext::get()->resourceManager->generateTexture(HDR_BUFFER_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
 	HDRBUfferTexture->bind();
 	HDRBUfferTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
@@ -98,7 +98,7 @@ void DefferedRenderer::setupHDRBuffer()
 	HDRBBuffer.unBind();
 
 	postProcessingBuffer.bind();
-	postProcessingTexture = EngineContext::get()->resourceManager->generateTexture(PP_BUFFER_TEXTURE_NAME, TextureType::DIFFUSE,
+	postProcessingTexture = EngineContext::get()->resourceManager->generateTexture(PP_BUFFER_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT, 1);
 	postProcessingTexture->bind();
 	postProcessingTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);

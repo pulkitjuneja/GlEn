@@ -16,6 +16,18 @@ public:
 	Texture* normalMap;
 	Texture* diffuseMap;
 	Texture* specularMap;
+	Texture* MetallicMap;
+	Texture* RoughnessMap;
+	Texture* OclussionMap;
+
+	Material() {
+		normalMap = nullptr;
+		diffuseMap = nullptr;
+		specularMap = nullptr;
+		MetallicMap = nullptr;
+		RoughnessMap = nullptr;
+		OclussionMap = nullptr;
+	}
 private:
 	Shader* shader;
 };

@@ -1,14 +1,19 @@
 #version 330 core
-layout (location = 0) out vec3 gPosition;
-layout (location = 1) out vec3 gNormal;
+layout (location = 0) out vec4 gPosition;
+layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
 
 struct Material {
 	sampler2D texture_diffuse;
 	sampler2D texture_specular;
 	sampler2D texture_normal;
+	sampler2D texture_metallic;
+	sampler2D texture_roughness;
+	sampler2D texture_oclussion;
 	int hasSpecularMap;
 	int hasNormalMap;
+	// Temp solution remove
+	int usePBRWorkflow;
 };
 
 struct PointLight {
@@ -59,7 +64,11 @@ void main()
 	if(diffuseColor.a == 0 && (material.hasSpecularMap ==0 || specularIntensity < 0)) {
 		discard;
 	}
-	gPosition = FragPos;
-    gNormal = vsOut.vertNormal;//mix(vsOut.vertNormal, normal, step(1.0f, material.hasNormalMap));
-	gAlbedoSpec = vec4(diffuseColor.xyz, mix(0.1f, specularIntensity, step(1.0f, material.hasSpecularMap)));
+	gPosition.xyz = FragPos;
+	gPosition.w = texture(material.texture_metallic, vsOut.texCoords).r;
+    gNormal.xyz = mix(vsOut.vertNormal, normal, step(1.0f, material.hasNormalMap));
+	gNormal.w = texture(material.texture_roughness, vsOut.texCoords).r;
+	gAlbedoSpec.xyz = diffuseColor.xyz;
+	gAlbedoSpec.w = mix(mix(0.1f, specularIntensity, step(1.0f, material.hasSpecularMap)), 
+	texture(material.texture_oclussion, vsOut.texCoords).r,step(1.0f, material.usePBRWorkflow));
 }

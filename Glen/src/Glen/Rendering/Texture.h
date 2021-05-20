@@ -11,7 +11,11 @@ enum class TextureType {
 	DIFFUSE,
 	SPECULAR,
 	NORMAL,
-	DEPTH
+	DEPTH,
+	RENDERTEXTURE,
+	METALLIC,
+	ROUGHNESS,
+	OCLUSSION
 };
 
 class GLN_API Texture {
