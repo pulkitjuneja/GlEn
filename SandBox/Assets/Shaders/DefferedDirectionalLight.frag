@@ -2,9 +2,9 @@
 
 out vec4 FragColor;
 
-uniform sampler2D positionTexture;
 uniform sampler2D normalTexture;
 uniform sampler2D albedoTexture;
+uniform sampler2D depthTexture;
 
 uniform sampler2DArrayShadow shadowMap;
 
@@ -27,6 +27,8 @@ layout (std140) uniform perFrameUniforms
 {
 	mat4 projectionMatrix;
 	mat4 viewMatrix;
+	mat4 inverseProjectionMatrix;
+	mat4 inverseViewMatrix;
 	mat4 lightSpaceMatrix;
 	DirectionalLight directionalLight;
 	PointLight pointLights[10];
@@ -98,13 +100,21 @@ float ShadowCalculation(vec3 worldPos, float fragDepth, vec3 normal, vec3 lightD
 
 void main()
 {   
-	vec2 texSize = textureSize(positionTexture, 0).xy;
+	vec2 texSize = textureSize(normalTexture, 0).xy;
 	vec2 texCoord = gl_FragCoord.xy / texSize;
-	vec3 worldPos = texture(positionTexture, texCoord).xyz;
+
+	float z = texture(depthTexture, texCoord).r * 2.0 - 1;
+	float x = texCoord.x * 2 - 1;
+    float y = texCoord.y * 2 - 1;
+	vec4 projectedPos = vec4(x, y, z, 1.0f);
+
+	vec4 viewPosition =	inverseProjectionMatrix * projectedPos;
+	viewPosition.xyz /= viewPosition.w;
+	vec4 worldPos = inverseViewMatrix * vec4(viewPosition.xyz, 1.0f);
+
 	vec3 worldNormal = texture(normalTexture, texCoord).xyz;
-	vec3 viewDir = normalize(vec3(cameraPosition) - worldPos);
-	vec4 clipPos = projectionMatrix * viewMatrix * vec4(worldPos, 1.0);
-	float fragDepth = (clipPos.z/ clipPos.w) * 0.5 + 0.5;
+	vec3 viewDir = normalize(vec3(cameraPosition) - worldPos.xyz);
+	float fragDepth = projectedPos.z * 0.5 + 0.5;
 	vec4 colorData = texture(albedoTexture,texCoord); 
 	vec3 diffuseColor = colorData.xyz;
 	float specularStrength = colorData.w;
@@ -113,7 +123,7 @@ void main()
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 	float spec = pow(max(dot(halfwayDir, worldNormal), 0.0),32);
 
-	float shadow = ShadowCalculation(worldPos, fragDepth, worldNormal, lightDir);
+	float shadow = ShadowCalculation(worldPos.xyz, fragDepth, worldNormal, lightDir);
 
 	vec3 ambient  = directionalLight.ambient.xyz  * diffuseColor;
 	vec3 diffuse  = (1.0 - shadow)*(directionalLight.diffuse.xyz  * diff) * diffuseColor;

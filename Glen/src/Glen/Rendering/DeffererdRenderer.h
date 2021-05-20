@@ -22,7 +22,7 @@
 class DefferedRenderer : public ISystem {
 	SceneManager* scene;
 
-	Texture* gBufferPositionTexture;
+	Texture* gBufferPBRInfoTexture;
 	Texture* gBufferColorTexture;
 	Texture* gBufferNormalTexture;
 	Texture* gBUfferDepthTexture;

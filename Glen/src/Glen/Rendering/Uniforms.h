@@ -12,6 +12,8 @@
 struct PerFrameUniforms {
 	ALIGNED(16) glm::mat4 projectionMatrix;
 	ALIGNED(16) glm::mat4 viewMatrix;
+	ALIGNED(16) glm::mat4 inverseProjectionMatrix;
+	ALIGNED(16) glm::mat4 inverseViewMatrix;
 	ALIGNED(16) glm::mat4 lightSpaceMatrix;
 	ALIGNED(16) DirectionalLight directionalLight;
 	ALIGNED(16) PointLight pointLights[MAX_POINT_LIGHTS];

@@ -5,6 +5,8 @@ void SceneRenderer::setGlobalUniforms(PerFrameUniforms& perFrameUniforms, SceneM
 	Camera* mainCamera = scene->getMainCamera();
 	perFrameUniforms.viewMatrix = mainCamera->getViewMatrix();
 	perFrameUniforms.projectionMatrix = mainCamera->getProjectionMatrix();
+	perFrameUniforms.inverseViewMatrix = glm::inverse(perFrameUniforms.viewMatrix);
+	perFrameUniforms.inverseProjectionMatrix = glm::inverse(perFrameUniforms.projectionMatrix);
 	glm::vec3 cameraPosition = mainCamera->transform.getPosition();
 	perFrameUniforms.cameraPosition = glm::vec4(cameraPosition.x, cameraPosition.y, cameraPosition.z, 1.0f);
 

@@ -12,12 +12,10 @@ class ObjectRotator : public Script {
 	}
 
 	void onCollisionBegin(Entity& other) {
-		Logger::logDebug("collision begin with " + other.name);
 		parent->color = glm::vec3(1, 0, 0);
 	}
 
 	void onCollisionEnd(Entity& other) {
-		Logger::logDebug("collision End with " + other.name);
 		parent->color = glm::vec3(1, 1, 1);
 	}
 };

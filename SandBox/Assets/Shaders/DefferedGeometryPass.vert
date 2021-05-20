@@ -35,6 +35,8 @@ layout (std140) uniform perFrameUniforms
 {
 	mat4 projectionMatrix;
 	mat4 viewMatrix;
+	mat4 inverseProjectionMatrix;
+	mat4 inverseViewMatrix;
 	mat4 lightSpaceMatrix;
 	DirectionalLight directionalLight;
 	PointLight pointLights[10];

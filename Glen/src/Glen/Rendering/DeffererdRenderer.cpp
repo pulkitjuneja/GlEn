@@ -56,23 +56,23 @@ void DefferedRenderer::setupGBuffer()
 {
 	gBuffer.bind();
 
-	gBufferPositionTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::RENDERTEXTURE,
-		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
-	gBufferPositionTexture->bind();
-	gBufferPositionTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
-	gBuffer.attachRenderTarget(gBufferPositionTexture, 0, 0);
-
 	gBufferNormalTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_NORMAL_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
 	gBufferNormalTexture->bind();
 	gBufferNormalTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
-	gBuffer.attachRenderTarget(gBufferNormalTexture, 0, 1);
+	gBuffer.attachRenderTarget(gBufferNormalTexture, 0, 0);
 
 	gBufferColorTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_COLOR_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1);
 	gBufferColorTexture->bind();
 	gBufferColorTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
-	gBuffer.attachRenderTarget(gBufferColorTexture, 0, 2);
+	gBuffer.attachRenderTarget(gBufferColorTexture, 0, 1);
+
+	gBufferPBRInfoTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::RENDERTEXTURE,
+	SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT, 1);
+	gBufferPBRInfoTexture->bind();
+	gBufferPBRInfoTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
+	gBuffer.attachRenderTarget(gBufferPBRInfoTexture, 0, 2);
 
 	gBUfferDepthTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_DEPTH_TEXTURE_NAME, TextureType::DEPTH, SCREEN_WIDTH, SCREEN_HEIGHT,
 		GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT, 1);
@@ -113,27 +113,23 @@ void DefferedRenderer::startup()
 {
 	setupGBuffer();
 	setupHDRBuffer();
-	//csm = Csm(0.3, 150.0f, 3, 4096);
-	//perFrameUbo = UniformBuffer(sizeof(PerFrameUniforms), 0);
-	//CsmUbo = UniformBuffer(sizeof(CSMUniforms), 1);
 
 	directionalLightShader = EngineContext::get()->resourceManager->getShader("defferedDirectionalLightPass");
 	pointLightShader = EngineContext::get()->resourceManager->getShader("defferedPointLightPass");
 	basicToneMappingShader = EngineContext::get()->resourceManager->getShader("basicToneMapping");
 	ssr = EngineContext::get()->resourceManager->getShader("ssrPass");
 
-	directionalLightShader->setInt("positionTexture", 11);
-	directionalLightShader->setInt("normalTexture", 12);
-	directionalLightShader->setInt("albedoTexture", 13);
+	directionalLightShader->setInt("normalTexture", 11);
+	directionalLightShader->setInt("albedoTexture", 12);
+	directionalLightShader->setInt("depthTexture", 13);
 	directionalLightShader->setInt("shadowMap", 10);
 
-	pointLightShader->setInt("positionTexture", 11);
-	pointLightShader->setInt("normalTexture", 12);
-	pointLightShader->setInt("albedoTexture", 13);
+	pointLightShader->setInt("normalTexture", 11);
+	pointLightShader->setInt("albedoTexture", 12);
+	pointLightShader->setInt("depthTexture", 13);
 
-	ssr->setInt("positionTexture", 11);
-	ssr->setInt("normalTexture", 12);
-	ssr->setInt("albedoTexture", 13);
+	ssr->setInt("normalTexture", 11);
+	ssr->setInt("albedoTexture", 12);
 
 	// Create an empoty VAO to be bound when rendering screen quad
 	glGenVertexArrays(1, &screenQuadVAO);
@@ -160,9 +156,11 @@ void DefferedRenderer::runGeometryPass()
 	sceneRenderer.renderScene(scene, gBufferMaterial, true);
 	gBuffer.unBind();
 
-	gBufferPositionTexture->bind(GL_TEXTURE0 + 11);
-	gBufferNormalTexture->bind(GL_TEXTURE0 + 12);
-	gBufferColorTexture->bind(GL_TEXTURE0 + 13);
+	gBufferNormalTexture->bind(GL_TEXTURE0 + 11);
+	gBufferColorTexture->bind(GL_TEXTURE0 + 12);
+	gBUfferDepthTexture->bind(GL_TEXTURE0 + 13);
+	gBufferPBRInfoTexture->bind(GL_TEXTURE0 + 14);
+
 }
 
 void DefferedRenderer::runDirectionalLightPass()
@@ -258,9 +256,9 @@ void DefferedRenderer::shutdown() {}
 
 void DefferedRenderer::toneMappingPass()
 {
-	basicToneMappingShader->setInt("hdrBuffer", 14);
+	basicToneMappingShader->setInt("hdrBuffer", 15);
 	basicToneMappingShader->setFloat("exposure", 0.7f);
-	HDRBUfferTexture->bind(GL_TEXTURE0 + 14);
+	HDRBUfferTexture->bind(GL_TEXTURE0 + 15);
 	basicToneMappingShader->use();
 	glBindVertexArray(screenQuadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
