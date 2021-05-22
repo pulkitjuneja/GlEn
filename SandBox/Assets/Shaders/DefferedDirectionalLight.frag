@@ -5,6 +5,7 @@ out vec4 FragColor;
 uniform sampler2D normalTexture;
 uniform sampler2D albedoTexture;
 uniform sampler2D depthTexture;
+uniform sampler2D PBRInfoTexture;
 
 uniform sampler2DArrayShadow shadowMap;
 
@@ -98,6 +99,47 @@ float ShadowCalculation(vec3 worldPos, float fragDepth, vec3 normal, vec3 lightD
 	return shadow;
 }
 
+float DistributionGGX(vec3 N, vec3 H, float roughness)
+{
+    float a      = roughness*roughness;
+    float a2     = a*a;
+    float NdotH  = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+	
+    float num   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = 3.1415 * denom * denom;
+	
+    return num / denom;
+}
+
+float GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float num   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+	
+    return num / denom;
+}
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2  = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1  = GeometrySchlickGGX(NdotL, roughness);
+	
+    return ggx1 * ggx2;
+}
+
+vec3 fresnelSchlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+}  
+
+
 void main()
 {   
 	vec2 texSize = textureSize(normalTexture, 0).xy;
@@ -110,25 +152,53 @@ void main()
 
 	vec4 viewPosition =	inverseProjectionMatrix * projectedPos;
 	viewPosition.xyz /= viewPosition.w;
+	
 	vec4 worldPos = inverseViewMatrix * vec4(viewPosition.xyz, 1.0f);
-
 	vec3 worldNormal = texture(normalTexture, texCoord).xyz;
 	vec3 viewDir = normalize(vec3(cameraPosition) - worldPos.xyz);
 	float fragDepth = projectedPos.z * 0.5 + 0.5;
 	vec4 colorData = texture(albedoTexture,texCoord); 
 	vec3 diffuseColor = colorData.xyz;
 	float specularStrength = colorData.w;
+	vec4 PBRInfo = texture(PBRInfoTexture, texCoord);
+
 	vec3 lightDir = normalize(-directionalLight.direction.xyz);
-	float diff = max(dot(worldNormal, lightDir), 0.0);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
-	float spec = pow(max(dot(halfwayDir, worldNormal), 0.0),32);
 
-	float shadow = ShadowCalculation(worldPos.xyz, fragDepth, worldNormal, lightDir);
+	vec3 result;
 
-	vec3 ambient  = directionalLight.ambient.xyz  * diffuseColor;
-	vec3 diffuse  = (1.0 - shadow)*(directionalLight.diffuse.xyz  * diff) * diffuseColor;
-	vec3 specular = (1.0 - shadow)*(directionalLight.specular.xyz * spec) * specularStrength;
+	if(PBRInfo.w == 1.0f) {
+		vec3 F0 = vec3(0.04); 
+		F0  = mix(F0, diffuseColor, PBRInfo.x);
+		vec3 F  = fresnelSchlick(max(dot(halfwayDir, viewDir), 0.0), F0);
 
-	vec3 result = (ambient + diffuse + specular);
+		float NDF = DistributionGGX(worldNormal, halfwayDir, PBRInfo.y);       
+		float G   = GeometrySmith(worldNormal, viewDir, lightDir, PBRInfo.y);  
+
+		vec3 numerator    = NDF * G * F;
+		float denominator = 4.0 * max(dot(worldNormal, viewDir), 0.0) * max(dot(worldNormal, lightDir), 0.0);
+		vec3 specular     = numerator / max(denominator, 0.001);  
+
+		vec3 kS = F;
+		vec3 kD = vec3(1.0) - kS;
+		kD *= 1.0 - PBRInfo.x;	
+
+		float NdotL = max(dot(worldNormal, lightDir), 0.0);
+		vec3 radiance = directionalLight.diffuse.xyz;
+		vec3 color = (kD * diffuseColor / 3.1415 + specular) * radiance * NdotL;
+		result = color + vec3(0.03) * diffuseColor * PBRInfo.z;	
+	} else {
+	
+		float diff = max(dot(worldNormal, lightDir), 0.0);
+		float spec = pow(max(dot(halfwayDir, worldNormal), 0.0),32);
+
+		float shadow = ShadowCalculation(worldPos.xyz, fragDepth, worldNormal, lightDir);
+
+		vec3 ambient  = directionalLight.ambient.xyz  * diffuseColor;
+		vec3 diffuse  = (1.0 - shadow)*(directionalLight.diffuse.xyz  * diff) * diffuseColor;
+		vec3 specular = (1.0 - shadow)*(directionalLight.specular.xyz * spec) * specularStrength;
+		result = (ambient + diffuse + specular);
+	}
+	
     FragColor = vec4(result, 1.0);
 }  

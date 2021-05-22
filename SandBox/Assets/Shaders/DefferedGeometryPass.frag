@@ -9,11 +9,11 @@ struct Material {
 	sampler2D texture_normal;
 	sampler2D texture_metallic;
 	sampler2D texture_roughness;
-	sampler2D texture_oclussion;
+	sampler2D texture_occlusion;
 	int hasSpecularMap;
 	int hasNormalMap;
 	// Temp solution remove
-	int usePBRWorkflow;
+	float usePBRWorkflow;
 };
 
 struct PointLight {
@@ -66,7 +66,7 @@ void main()
 
 	float metallic = texture(material.texture_metallic, vsOut.texCoords).r;
 	float roughness = texture(material.texture_roughness, vsOut.texCoords).r;
-	float oclussion = texture(material.texture_oclussion, vsOut.texCoords).r;
+	float oclussion = texture(material.texture_occlusion, vsOut.texCoords).r;
 
 	if(diffuseColor.a == 0 && (material.hasSpecularMap ==0 || specularIntensity < 0)) {
 		discard;

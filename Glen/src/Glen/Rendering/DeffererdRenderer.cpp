@@ -123,10 +123,12 @@ void DefferedRenderer::startup()
 	directionalLightShader->setInt("albedoTexture", 12);
 	directionalLightShader->setInt("depthTexture", 13);
 	directionalLightShader->setInt("shadowMap", 10);
+	directionalLightShader->setInt("PBRInfoTexture", 14);
 
 	pointLightShader->setInt("normalTexture", 11);
 	pointLightShader->setInt("albedoTexture", 12);
 	pointLightShader->setInt("depthTexture", 13);
+	pointLightShader->setInt("PBRInfoTexture", 14);
 
 	ssr->setInt("normalTexture", 11);
 	ssr->setInt("albedoTexture", 12);

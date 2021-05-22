@@ -85,18 +85,18 @@ void SceneRenderer::renderScene(SceneManager* scene, Material* overrideMaterial,
 				if (currentSubMesh.material.MetallicMap != NULL) {
 					currentSubMesh.material.MetallicMap->bind(GL_TEXTURE0 + 4);
 					currentShader->setInt("material.texture_metallic", 4);
-					currentShader->setInt("material.usePBRWorkFlow", 4);
-					hasNormalMap = 1;
+					currentShader->setFloat("material.usePBRWorkflow", 1.0f);
+				}
+				else {
+					currentShader->setFloat("material.usePBRWorkflow", 0.0f);
 				}
 				if (currentSubMesh.material.RoughnessMap != NULL) {
 					currentSubMesh.material.RoughnessMap->bind(GL_TEXTURE0 + 5);
 					currentShader->setInt("material.texture_roughness", 5);
-					hasNormalMap = 1;
 				}
 				if (currentSubMesh.material.OclussionMap != NULL) {
 					currentSubMesh.material.OclussionMap->bind(GL_TEXTURE0 + 6);
 					currentShader->setInt("material.texture_occlusion", 6);
-					hasNormalMap = 1;
 				}
 				currentShader->setInt("material.hasNormalMap", hasNormalMap);
 				currentShader->setInt("material.hasSpecularMap", hasSpecularMap);

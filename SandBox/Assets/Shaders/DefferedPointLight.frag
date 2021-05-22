@@ -5,6 +5,7 @@ out vec4 FragColor;
 uniform sampler2D normalTexture;
 uniform sampler2D albedoTexture;
 uniform sampler2D depthTexture;
+uniform sampler2D PBRInfoTexture;
 
 struct PointLight {
 	vec4 position;
@@ -38,6 +39,47 @@ in vec4 fragPos;
 
 flat in int lightIndex;
 
+float DistributionGGX(vec3 N, vec3 H, float roughness)
+{
+    float a      = roughness*roughness;
+    float a2     = a*a;
+    float NdotH  = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+	
+    float num   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = 3.1415 * denom * denom;
+	
+    return num / denom;
+}
+
+float GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float num   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+	
+    return num / denom;
+}
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2  = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1  = GeometrySchlickGGX(NdotL, roughness);
+	
+    return ggx1 * ggx2;
+}
+
+vec3 fresnelSchlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+}  
+
+
 void main () {
 	vec2 texSize = textureSize(normalTexture, 0).xy;
 	vec2 texCoord = gl_FragCoord.xy / texSize;
@@ -61,23 +103,49 @@ void main () {
 	float radius = pointLights[lightIndex].radius;
 	vec4 lightDiffuse = pointLights[lightIndex].diffuse;
 	vec4 lightSpecular = pointLights[lightIndex].specular;
-
 	vec3 lightToPosVector = lightPosition - worldPos.xyz;
 	float lightDist = length(lightToPosVector);
-
-	// use normalize instead ?
 	vec3 lightDir = lightToPosVector / (lightDist);
 	float ztest = step(0.0, radius - lightDist);
+	vec4 PBRInfo = texture(PBRInfoTexture, texCoord);
 
-	float attenuation = 1.0 - lightDist / radius;
 	vec3 viewDir = normalize(cameraPosition.xyz - worldPos.xyz);
 	vec3 halfDir = normalize(lightDir + viewDir);
+	vec3 result;
 
-	float diff = max(dot(worldNormal,lightDir),0.0);
-	float spec = pow(max(dot(halfDir, worldNormal), 0.0),32);
+	if(PBRInfo.w == 1.0f) {
+		float attenuation = 1.0 - lightDist / radius;
+		vec3 F0 = vec3(0.04); 
+		F0  = mix(F0, diffuseColor, PBRInfo.x);
+		vec3 F  = fresnelSchlick(max(dot(halfDir, viewDir), 0.0), F0);
 
-	vec3 diffuse = diff*diffuseColor*lightDiffuse.xyz;
-	vec3 specular = spec*lightSpecular.xyz*specularStrength;
+		float NDF = DistributionGGX(worldNormal, halfDir, PBRInfo.y);       
+		float G   = GeometrySmith(worldNormal, viewDir, lightDir, PBRInfo.y);  
 
-	FragColor = vec4((diffuse + specular)*ztest*attenuation, 1.0);
+		vec3 numerator    = NDF * G * F;
+		float denominator = 4.0 * max(dot(worldNormal, viewDir), 0.0) * max(dot(worldNormal, lightDir), 0.0);
+		vec3 specular     = numerator / max(denominator, 0.001);  
+
+		vec3 kS = F;
+		vec3 kD = vec3(1.0) - kS;
+		kD *= 1.0 - PBRInfo.x;	
+
+		float NdotL = max(dot(worldNormal, lightDir), 0.0);
+		vec3 radiance = lightDiffuse.xyz * attenuation;
+		vec3 color = (kD * diffuseColor / 3.1415 + specular) * radiance * NdotL;
+		result = color + vec3(0.03) * diffuseColor * PBRInfo.z;	
+	
+	} else {
+
+		float attenuation = 1.0 - lightDist / radius;
+
+		float diff = max(dot(worldNormal,lightDir),0.0);
+		float spec = pow(max(dot(halfDir, worldNormal), 0.0),32);
+
+		vec3 diffuse = diff*diffuseColor*lightDiffuse.xyz;
+		vec3 specular = spec*lightSpecular.xyz*specularStrength;	
+		result = (diffuse + specular)*ztest*attenuation;
+	}
+
+	FragColor = vec4(result, 1.0);
 }
