@@ -12,16 +12,14 @@ uniform sampler2DArrayShadow shadowMap;
 struct PointLight {
 	vec4 position;
 	vec4 diffuse;
-	vec4 specular;
-	vec4 ambient;
 	float radius;
+	float intensity;
 };
 
 struct DirectionalLight {
 	vec4 direction;
 	vec4 diffuse;
-	vec4 specular;
-	vec4 ambient;
+	float intensity;
 };
 
 layout (std140) uniform perFrameUniforms
@@ -184,20 +182,23 @@ void main()
 		kD *= 1.0 - PBRInfo.x;	
 
 		float NdotL = max(dot(worldNormal, lightDir), 0.0);
-		vec3 radiance = directionalLight.diffuse.xyz;
+		vec3 radiance = directionalLight.diffuse.xyz * directionalLight.intensity;
 		vec3 color = (kD * diffuseColor / 3.1415 + specular) * radiance * NdotL;
 		result = color + vec3(0.03) * diffuseColor * PBRInfo.z;	
 	} else {
-	
+		
+		float Ka = 0.04f;
+		float Ks = specularStrength;
+		float Kd = 1.0f - Ks;
 		float diff = max(dot(worldNormal, lightDir), 0.0);
 		float spec = pow(max(dot(halfwayDir, worldNormal), 0.0),32);
 
 		float shadow = ShadowCalculation(worldPos.xyz, fragDepth, worldNormal, lightDir);
 
-		vec3 ambient  = directionalLight.ambient.xyz  * diffuseColor;
-		vec3 diffuse  = (1.0 - shadow)*(directionalLight.diffuse.xyz  * diff) * diffuseColor;
-		vec3 specular = (1.0 - shadow)*(directionalLight.specular.xyz * spec) * specularStrength;
-		result = (ambient + diffuse + specular);
+		float ambient  = Ka;
+		float diffuse  = (1.0 - shadow)* directionalLight.intensity * diff * Kd;
+		float specular = (1.0 - shadow)* directionalLight.intensity * spec * Ks;
+		result = (ambient + diffuse) * diffuseColor * directionalLight.diffuse.xyz + specular * directionalLight.diffuse.xyz;
 	}
 	
     FragColor = vec4(result, 1.0);

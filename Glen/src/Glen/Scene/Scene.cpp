@@ -2,26 +2,24 @@
 
 #include "Scene.h"
 
-PointLight& SceneManager::createPointLight(glm::vec4 position, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular)
+PointLight& SceneManager::createPointLight(glm::vec4 position, glm::vec4 diffuse, float intensity)
 {
 	PointLight light;
 	light.position = position;
-	light.ambient = ambient;
 	light.diffuse = diffuse;
-	light.specular = specular;
+	light.intensity = intensity;
 
 	pointLights.push_back(light);
 	return pointLights[pointLights.size()-1];
 }
 
-DirectionalLight& SceneManager::createDirectionalLight(glm::vec4 direction, glm::vec4 ambient, glm::vec4 diffuse, glm::vec4 specular)
+DirectionalLight& SceneManager::createDirectionalLight(glm::vec4 direction, glm::vec4 diffuse, float intensity)
 {
 	DirectionalLight light;
 
-	light.ambient = ambient;
 	light.diffuse = diffuse;
-	light.specular = specular;
 	light.direction = direction;
+	light.intensity = intensity;
 
 	this->directionalLight = light;
 	return light;

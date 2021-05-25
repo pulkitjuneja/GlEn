@@ -12,17 +12,15 @@ struct GLN_API DirectionalLight : public Light {
 public:
 	ALIGNED(16) glm::vec4 direction;
 	ALIGNED(16) glm::vec4 diffuse;
-	ALIGNED(16) glm::vec4 specular;
-	ALIGNED(16) glm::vec4 ambient;
+	ALIGNED(16) float intensity;
 };
 
 struct GLN_API PointLight : public Light {
 public:
 	ALIGNED(16) glm::vec4 position;
 	ALIGNED(16) glm::vec4 diffuse;
-	ALIGNED(16) glm::vec4 specular;
-	ALIGNED(16) glm::vec4 ambient;
-	ALIGNED(16) float radius;
+	 float radius;
+	 float intensity;
 	PointLight() {
 		float constant = 1.0;
 		float linear = 0.0025f;

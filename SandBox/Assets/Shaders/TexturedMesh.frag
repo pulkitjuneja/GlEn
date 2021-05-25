@@ -11,16 +11,14 @@ struct Material {
 struct PointLight {
 	vec4 position;
 	vec4 diffuse;
-	vec4 specular;
-	vec4 ambient;
 	float radius;
+	float intensity;
 };
 
 struct DirectionalLight {
 	vec4 direction;
 	vec4 diffuse;
-	vec4 specular;
-	vec4 ambient;
+	float intensity;
 };
 
 layout (std140) uniform perFrameUniforms
@@ -69,11 +67,11 @@ vec3 calculatePointLight (PointLight pointLight, vec3 normal, vec3 viewDir, vec3
 
 	float attenuation = 1.0/(1.0 + 0.0025f *distance + 0.00007f * (distance*distance));
 
-	vec3 ambient  = pointLight.ambient.xyz  * diffuseColor * attenuation;
+	//vec3 ambient  = pointLight.ambient.xyz  * diffuseColor * attenuation;
 	vec3 diffuse  = pointLight.diffuse.xyz  * diff * diffuseColor * attenuation;
-	vec3 specular = pointLight.specular.xyz * spec * specularStrength * attenuation;
+//	vec3 specular = pointLight.specular.xyz * spec * specularStrength * attenuation;
 
-	return (ambient + diffuse + specular);
+	return vec3(1.0f);//(ambient + diffuse + specular);
 }
 
 
@@ -142,11 +140,11 @@ vec3 calculateDirectionalLight (vec3 normal, vec3 viewDir, vec3 diffuseColor, fl
 
 	float shadow = ShadowCalculation(fragDepth, normal, lightDir);
 
-	vec3 ambient  = directionalLight.ambient.xyz  * diffuseColor;
-	vec3 diffuse  = (1.0 - shadow)*(directionalLight.diffuse.xyz  * diff) * diffuseColor;
-	vec3 specular = (1.0 - shadow)*(directionalLight.specular.xyz * spec) * specularStrength;
+	//vec3 ambient  = directionalLight.ambient.xyz  * diffuseColor;
+	//vec3 diffuse  = (1.0 - shadow)*(directionalLight.diffuse.xyz  * diff) * diffuseColor;
+	//vec3 specular = (1.0 - shadow)*(directionalLight.specular.xyz * spec) * specularStrength;
 
-	return (ambient + diffuse + specular);
+	return vec3(1.0);//return (ambient + diffuse + specular);
 }
 
 void main()

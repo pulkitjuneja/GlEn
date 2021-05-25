@@ -7,16 +7,14 @@ flat out int lightIndex;
 struct PointLight {
 	vec4 position;
 	vec4 diffuse;
-	vec4 specular;
-	vec4 ambient;
 	float radius;
+	float intensity;
 };
 
 struct DirectionalLight {
 	vec4 direction;
 	vec4 diffuse;
-	vec4 specular;
-	vec4 ambient;
+	float intensity;
 };
 
 layout (std140) uniform perFrameUniforms

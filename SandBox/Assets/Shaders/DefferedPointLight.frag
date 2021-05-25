@@ -10,16 +10,14 @@ uniform sampler2D PBRInfoTexture;
 struct PointLight {
 	vec4 position;
 	vec4 diffuse;
-	vec4 specular;
-	vec4 ambient;
 	float radius;
+	float intensity;
 };
 
 struct DirectionalLight {
 	vec4 direction;
 	vec4 diffuse;
-	vec4 specular;
-	vec4 ambient;
+	float intensity;
 };
 
 layout (std140) uniform perFrameUniforms
@@ -102,7 +100,7 @@ void main () {
 	vec3 lightPosition = pointLights[lightIndex].position.xyz;
 	float radius = pointLights[lightIndex].radius;
 	vec4 lightDiffuse = pointLights[lightIndex].diffuse;
-	vec4 lightSpecular = pointLights[lightIndex].specular;
+	//vec4 lightSpecular = pointLights[lightIndex].specular;
 	vec3 lightToPosVector = lightPosition - worldPos.xyz;
 	float lightDist = length(lightToPosVector);
 	vec3 lightDir = lightToPosVector / (lightDist);
@@ -131,20 +129,25 @@ void main () {
 		kD *= 1.0 - PBRInfo.x;	
 
 		float NdotL = max(dot(worldNormal, lightDir), 0.0);
-		vec3 radiance = lightDiffuse.xyz * attenuation;
+		vec3 radiance = lightDiffuse.xyz * attenuation * pointLights[lightIndex].intensity;
 		vec3 color = (kD * diffuseColor / 3.1415 + specular) * radiance * NdotL;
 		result = color + vec3(0.03) * diffuseColor * PBRInfo.z;	
+		result *= ztest;
 	
 	} else {
 
+		float Ka = 0.04f;
+		float Ks = specularStrength;
+		float Kd = 1.0f - Ks;
 		float attenuation = 1.0 - lightDist / radius;
 
 		float diff = max(dot(worldNormal,lightDir),0.0);
 		float spec = pow(max(dot(halfDir, worldNormal), 0.0),32);
 
-		vec3 diffuse = diff*diffuseColor*lightDiffuse.xyz;
-		vec3 specular = spec*lightSpecular.xyz*specularStrength;	
-		result = (diffuse + specular)*ztest*attenuation;
+		float diffuse  = pointLights[lightIndex].intensity * diff * Kd;
+		float specular = pointLights[lightIndex].intensity * spec * Ks;
+		result = (diffuse) * diffuseColor * pointLights[lightIndex].diffuse.xyz + specular * pointLights[lightIndex].diffuse.xyz;
+		result*= ztest * attenuation;
 	}
 
 	FragColor = vec4(result, 1.0);
