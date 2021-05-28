@@ -57,28 +57,28 @@ void DefferedRenderer::setupGBuffer()
 	gBuffer.bind();
 
 	gBufferNormalTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_NORMAL_TEXTURE_NAME, TextureType::RENDERTEXTURE,
-		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
+		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
 	gBufferNormalTexture->bind();
 	gBufferNormalTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer.attachRenderTarget(gBufferNormalTexture, 0, 0);
 
 	gBufferColorTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_COLOR_TEXTURE_NAME, TextureType::RENDERTEXTURE,
-		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1);
+		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
 	gBufferColorTexture->bind();
 	gBufferColorTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer.attachRenderTarget(gBufferColorTexture, 0, 1);
 
 	gBufferPBRInfoTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::RENDERTEXTURE,
-	SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT, 1);
+	SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT);
 	gBufferPBRInfoTexture->bind();
 	gBufferPBRInfoTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer.attachRenderTarget(gBufferPBRInfoTexture, 0, 2);
 
 	gBUfferDepthTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_DEPTH_TEXTURE_NAME, TextureType::DEPTH, SCREEN_WIDTH, SCREEN_HEIGHT,
-		GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT, 1);
+		GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
 	gBUfferDepthTexture->bind();
 	gBUfferDepthTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
-	gBUfferDepthTexture->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	gBUfferDepthTexture->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 
 	gBuffer.attachDepthTarget(gBUfferDepthTexture, 0);
 	gBuffer.checkStatus();
@@ -90,7 +90,7 @@ void DefferedRenderer::setupHDRBuffer()
 	HDRBBuffer.bind();
 
 	HDRBUfferTexture = EngineContext::get()->resourceManager->generateTexture(HDR_BUFFER_TEXTURE_NAME, TextureType::RENDERTEXTURE,
-		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT, 1);
+		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
 	HDRBUfferTexture->bind();
 	HDRBUfferTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	HDRBBuffer.attachRenderTarget(HDRBUfferTexture, 0, 0);
@@ -99,7 +99,7 @@ void DefferedRenderer::setupHDRBuffer()
 
 	postProcessingBuffer.bind();
 	postProcessingTexture = EngineContext::get()->resourceManager->generateTexture(PP_BUFFER_TEXTURE_NAME, TextureType::RENDERTEXTURE,
-		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT, 1);
+		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT);
 	postProcessingTexture->bind();
 	postProcessingTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	postProcessingBuffer.attachRenderTarget(postProcessingTexture, 0, 0);

@@ -25,7 +25,7 @@ struct FrustumSplit
 };
 
 class Csm {
-    Texture* shadowMaps;
+    Texture3D* shadowMaps;
     FrameBuffer shadowFbos[CSM_MAX_SPLIT_COUNT];
     float lambda;
     float nearOffset;

@@ -41,11 +41,11 @@ public:
 		Entity& pbrSphere = scene->createEntity("PBRSphere", EngineContext::get()->resourceManager->loadMesh(pbrSphereLoc));
 
 		// because the sphere fbx model does not export textures or because my importer does not work with fbx models , IDK 
-		Texture* PbrSphereDiffuse = EngineContext::get()->resourceManager->loadTexture("sphere_Base_Color.png", "Assets/Meshes/PBRSphere/source", TextureType::DIFFUSE);
-		Texture* PbrSphereMetallic = EngineContext::get()->resourceManager->loadTexture("sphere_Metallic.png", "Assets/Meshes/PBRSphere/source", TextureType::METALLIC);
-		Texture* PbrSphereAO = EngineContext::get()->resourceManager->loadTexture("sphere_Mixed_AO.png", "Assets/Meshes/PBRSphere/source", TextureType::OCLUSSION);
-		Texture* PbrSphereNormal = EngineContext::get()->resourceManager->loadTexture("sphere_Normal.png", "Assets/Meshes/PBRSphere/source", TextureType::NORMAL);
-		Texture* PbrSphereRoughness = EngineContext::get()->resourceManager->loadTexture("sphere_Roughness.png", "Assets/Meshes/PBRSphere/source", TextureType::ROUGHNESS);
+		Texture2D* PbrSphereDiffuse = EngineContext::get()->resourceManager->loadTexture("sphere_Base_Color.png", "Assets/Meshes/PBRSphere/source", TextureType::DIFFUSE);
+		Texture2D* PbrSphereMetallic = EngineContext::get()->resourceManager->loadTexture("sphere_Metallic.png", "Assets/Meshes/PBRSphere/source", TextureType::METALLIC);
+		Texture2D* PbrSphereAO = EngineContext::get()->resourceManager->loadTexture("sphere_Mixed_AO.png", "Assets/Meshes/PBRSphere/source", TextureType::OCLUSSION);
+		Texture2D* PbrSphereNormal = EngineContext::get()->resourceManager->loadTexture("sphere_Normal.png", "Assets/Meshes/PBRSphere/source", TextureType::NORMAL);
+		Texture2D* PbrSphereRoughness = EngineContext::get()->resourceManager->loadTexture("sphere_Roughness.png", "Assets/Meshes/PBRSphere/source", TextureType::ROUGHNESS);
 		Material& mat = pbrSphere.mesh->subMeshes[0].material;
 		mat.diffuseMap = PbrSphereDiffuse;
 		mat.MetallicMap = PbrSphereMetallic;

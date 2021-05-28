@@ -18,13 +18,13 @@ void ResourceManager::readFromFile(const std::string& fileName, char*& shaderCon
 	strcpy(shaderContent, &buffer.str()[0]);
 }
 
-Texture* ResourceManager::loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType aiTextureType, std::string directory)
+Texture2D* ResourceManager::loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType aiTextureType, std::string directory)
 {
 	aiString texturePath;
 	if (aiMaterial->GetTextureCount(aiTextureType) > 0) {
 		aiMaterial->GetTexture(aiTextureType, 0, &texturePath);
 		TextureType textureType = textureTypeMap[aiTextureType];
-		Texture* tex = loadTexture(texturePath.C_Str(), directory, textureType);
+		Texture2D* tex = loadTexture(texturePath.C_Str(), directory, textureType);
 		return tex;
 	}
 	else {
@@ -241,7 +241,7 @@ Shader* ResourceManager::getShader(const std::string& shaderName)
 	}
 }
 
-Texture* ResourceManager::loadTexture(const std::string& texturePath, const std::string& directory, TextureType type)
+Texture2D* ResourceManager::loadTexture(const std::string& texturePath, const std::string& directory, TextureType type)
 {
 
 	std::string filename = std::string(texturePath);
@@ -249,13 +249,13 @@ Texture* ResourceManager::loadTexture(const std::string& texturePath, const std:
 
 	if (textures.find(texturePath) != textures.end())
 	{
-		return textures.find(texturePath)->second;
+		return dynamic_cast<Texture2D*>(textures.find(texturePath)->second);
 	}
 
 	int width, height, nrComponents;
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 
-	Texture* tex;
+	Texture2D* tex;
 
 	if (data)
 	{
@@ -267,11 +267,11 @@ Texture* ResourceManager::loadTexture(const std::string& texturePath, const std:
 		else if (nrComponents == 4)
 			format = GL_RGBA;
 		
-		tex = Mem::Allocate<Texture>(resourceAllocator, type, 1, width, height, format, GL_UNSIGNED_BYTE, format);
+		tex = Mem::Allocate<Texture2D>(resourceAllocator, type, width, height, format, GL_UNSIGNED_BYTE, format);
 		tex->bind();
-		tex->setData(data, 0);
+		tex->setData(data);
 		tex->generateMipMaps();
-		tex->setWrapping(GL_REPEAT, GL_REPEAT);
+		tex->setWrapping(GL_REPEAT, GL_REPEAT, GL_REPEAT);
 		tex->setMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 		tex->Unbind();
 	}
@@ -282,7 +282,7 @@ Texture* ResourceManager::loadTexture(const std::string& texturePath, const std:
 	stbi_image_free(data);
 	textures.emplace(make_pair(texturePath, tex));
 	Logger::logInfo("Texture Loaded " + texturePath);
-	return textures.find(texturePath)->second;
+	return dynamic_cast<Texture2D*>(textures.find(texturePath)->second);
 }
 
 CubeMap* ResourceManager::loadCubeMap(std::vector<std::string> paths, const std::string& directory)
@@ -295,7 +295,7 @@ CubeMap* ResourceManager::loadCubeMap(std::vector<std::string> paths, const std:
 		unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrComponents, 0);
 
 		if (cubemap == nullptr) {
-			cubemap = Mem::Allocate<CubeMap>(width, height);
+			cubemap = Mem::Allocate<CubeMap>(resourceAllocator, width, height);
 			cubemap->bind();
 		}
 
@@ -315,24 +315,41 @@ CubeMap* ResourceManager::loadCubeMap(std::vector<std::string> paths, const std:
 			loadFailed = true;
 			break;
 		}
+		stbi_image_free(data);
 	}
 
+	cubemap->Unbind();
 	if (loadFailed) {
 		Logger::logError("failed to load cubemap");
 		return nullptr;
 	}
 	else {
-		return cubemap;
+		textures.emplace(make_pair(directory, cubemap));
+		Logger::logInfo("Cubemap Loaded " + directory);
+		return dynamic_cast<CubeMap*>(textures.find(directory)->second);
 	}
 }
 
-Texture* ResourceManager::generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
+Texture3D* ResourceManager::generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
 	const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize) {
 	if (textures.find(identifier) != textures.end())
 	{
-		return textures.find(identifier)->second;
+		return dynamic_cast<Texture3D*>(textures.find(identifier)->second);
 	}
-	Texture* tex = Mem::Allocate<Texture>(resourceAllocator, textureType, arraySize, w, h, format, dataType, internalFormat);
+	Texture3D* tex = Mem::Allocate<Texture3D>(resourceAllocator, textureType, arraySize, w, h, format, dataType, internalFormat);
+
+	textures.emplace(make_pair(identifier, tex));
+	return tex;
+}
+
+Texture2D* ResourceManager::generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w, const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType)
+{
+	if (textures.find(identifier) != textures.end())
+	{
+		return dynamic_cast<Texture2D*>(textures.find(identifier)->second);
+	}
+
+	Texture2D* tex = Mem::Allocate<Texture2D>(resourceAllocator, textureType, w, h, format, dataType, internalFormat);
 	textures.emplace(make_pair(identifier, tex));
 	return tex;
 }

@@ -228,7 +228,7 @@ Csm::Csm(float lambda, float nearOffset, int splitCount, int shadowMapSize) : la
 	shadowMaps->bind();
 	shadowMaps->bind(GL_TEXTURE0 + 10);
 	shadowMaps->setMinMagFilter(GL_LINEAR, GL_LINEAR);
-	shadowMaps->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	shadowMaps->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_COMPARE_FUNC, GL_GEQUAL);
 

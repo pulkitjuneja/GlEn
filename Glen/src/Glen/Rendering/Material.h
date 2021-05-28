@@ -13,12 +13,12 @@ public:
 	std::string name;
 	Shader* getShader() { return shader; };
 	void setShader(Shader* shader) { this->shader = shader; };
-	Texture* normalMap;
-	Texture* diffuseMap;
-	Texture* specularMap;
-	Texture* MetallicMap;
-	Texture* RoughnessMap;
-	Texture* OclussionMap;
+	Texture2D* normalMap;
+	Texture2D* diffuseMap;
+	Texture2D* specularMap;
+	Texture2D* MetallicMap;
+	Texture2D* RoughnessMap;
+	Texture2D* OclussionMap;
 
 	Material() {
 		normalMap = nullptr;

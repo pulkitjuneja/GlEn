@@ -19,7 +19,7 @@ void FrameBuffer::attachDepthTarget(Texture* texture, uint32_t mipLevel, int lay
 		bind();
 	}
 
-	if (texture->arraySize > 1) {
+	if (dynamic_cast<Texture3D*>(texture)) {
 		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture->textureId, mipLevel, layer);
 	}
 	else {
@@ -39,12 +39,13 @@ void FrameBuffer::attachRenderTarget(Texture* texture, uint32_t mipLevel, int at
 		bind();
 	}
 
-	if (texture->arraySize > 1) {
+	if (dynamic_cast<Texture3D*>(texture)) {
 		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentIndex, texture->textureId, mipLevel, layer);
 	}
 	else {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentIndex, texture->target, texture->textureId, mipLevel);
 	}
+
 	if (shouldBind) {
 		unBind();
 		texture->Unbind();
