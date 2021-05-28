@@ -15,7 +15,8 @@ enum class TextureType {
 	RENDERTEXTURE,
 	METALLIC,
 	ROUGHNESS,
-	OCLUSSION
+	OCLUSSION,
+	CUBEMAP
 };
 
 class GLN_API Texture {
@@ -39,6 +40,22 @@ public:
 	void setMinMagFilter(GLenum minFilter, GLenum magFilter, bool bind = false);
 	void setWrapping(GLenum s, GLenum t, bool bind = false);
 
+};
+
+// TODO: Merge this with the main texture class
+class GLN_API CubeMap {
+public: 
+	GLuint textureId;
+	uint32_t w;
+	uint32_t h;
+
+	CubeMap(uint32_t w, uint32_t h);
+	void setFaceData(int faceIndex, void* data, GLenum format,
+	GLenum internalFormat, GLenum dataType, bool bind = false);
+	void bind(int textureUnit = GL_TEXTURE0);
+	void unBind();
+	void setMinMagFilter(GLenum minFilter, GLenum magFilter, bool bind = false);
+	void setWrapping(GLenum s, GLenum t, GLenum r, bool bind = false);
 };
 
 #endif

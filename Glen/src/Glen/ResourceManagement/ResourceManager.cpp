@@ -285,6 +285,47 @@ Texture* ResourceManager::loadTexture(const std::string& texturePath, const std:
 	return textures.find(texturePath)->second;
 }
 
+CubeMap* ResourceManager::loadCubeMap(std::vector<std::string> paths, const std::string& directory)
+{
+	CubeMap* cubemap = nullptr;
+	int width, height, nrComponents;
+	bool loadFailed = false;
+	for (int i = 0; i < paths.size(); i++) {
+		std::string fullPath = directory + '/' + paths[i];
+		unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrComponents, 0);
+
+		if (cubemap == nullptr) {
+			cubemap = Mem::Allocate<CubeMap>(width, height);
+			cubemap->bind();
+		}
+
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+
+		if (data) {
+			cubemap->setFaceData(i, data, format, format, GL_UNSIGNED_BYTE);
+		}
+		else {
+			loadFailed = true;
+			break;
+		}
+	}
+
+	if (loadFailed) {
+		Logger::logError("failed to load cubemap");
+		return nullptr;
+	}
+	else {
+		return cubemap;
+	}
+}
+
 Texture* ResourceManager::generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
 	const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize) {
 	if (textures.find(identifier) != textures.end())

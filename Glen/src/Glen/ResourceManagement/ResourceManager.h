@@ -57,6 +57,7 @@ public:
 	//Resource Loaders
 	void loadShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const std::string& shaderName);
 	Texture* loadTexture(const std::string& texturePath, const std::string& directory, TextureType textureType);
+	CubeMap* loadCubeMap(std::vector<std::string> paths, const std::string& directory);
 	Mesh* loadMesh(std::string path, int loaderFlags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	Mesh* CreateMesh(std::string identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, 
 		std::vector<SubMesh>& subMeshes, bool hasNormals, bool hasTextCoords, bool hasTangents);

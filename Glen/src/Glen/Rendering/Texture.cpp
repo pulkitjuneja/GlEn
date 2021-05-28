@@ -90,3 +90,62 @@ void Texture::setWrapping(GLenum s, GLenum t, bool bind) {
 		Unbind();
 	}
 }
+
+CubeMap::CubeMap(uint32_t w, uint32_t h)
+{
+	glGenTextures(1, &textureId);
+	this->w = w;
+	this->h = h;
+}
+
+void CubeMap::setFaceData(int faceIndex, void* data, GLenum format,
+	GLenum internalFormat, GLenum dataType, bool bind)
+{
+	if (bind) {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+	}
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, 0, internalFormat, w, h, 0, format, dataType, data);
+	if (bind) {
+		unBind();
+	}
+}
+
+void CubeMap::bind(int textureUnit)
+{
+	glActiveTexture(textureUnit);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+}
+
+void CubeMap::unBind()
+{
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
+
+void CubeMap::setMinMagFilter(GLenum minFilter, GLenum magFilter, bool bind)
+{
+	if (bind) {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minFilter);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, magFilter);
+
+	if (bind) {
+		unBind();
+	}
+}
+
+void CubeMap::setWrapping(GLenum s, GLenum t, GLenum r, bool bind)
+{
+	if (bind) {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, s);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, t);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, r);
+
+	if (bind) {
+		unBind();
+	}
+}
