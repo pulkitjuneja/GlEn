@@ -118,7 +118,18 @@ void DefferedRenderer::startup()
 	pointLightShader = EngineContext::get()->resourceManager->getShader("defferedPointLightPass");
 	basicToneMappingShader = EngineContext::get()->resourceManager->getShader("basicToneMapping");
 	ssr = EngineContext::get()->resourceManager->getShader("ssrPass");
+	std::vector<std::string> facePaths = {
+			"right.jpg",
+			"left.jpg",
+			"top.jpg",
+			"bottom.jpg",
+			"front.jpg",
+			"back.jpg"
+	};
 
+	skybox = EngineContext::get()->resourceManager->loadCubeMap(facePaths, "Assets/Textures/skybox");
+
+	
 	directionalLightShader->setInt("normalTexture", 11);
 	directionalLightShader->setInt("albedoTexture", 12);
 	directionalLightShader->setInt("depthTexture", 13);
@@ -169,6 +180,9 @@ void DefferedRenderer::runDirectionalLightPass()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	skybox->bind(GL_TEXTURE0 + 16);
+	directionalLightShader->setInt("skybox", 16);
 
 	directionalLightShader->use();
 

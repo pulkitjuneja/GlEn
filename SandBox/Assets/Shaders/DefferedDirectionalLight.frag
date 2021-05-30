@@ -7,6 +7,8 @@ uniform sampler2D albedoTexture;
 uniform sampler2D depthTexture;
 uniform sampler2D PBRInfoTexture;
 
+uniform samplerCube skybox;
+
 uniform sampler2DArrayShadow shadowMap;
 
 struct PointLight {
@@ -143,7 +145,8 @@ void main()
 	vec2 texSize = textureSize(normalTexture, 0).xy;
 	vec2 texCoord = gl_FragCoord.xy / texSize;
 
-	float z = texture(depthTexture, texCoord).r * 2.0 - 1;
+	float depth = texture(depthTexture, texCoord).r;
+	float z = depth * 2.0 - 1;
 	float x = texCoord.x * 2 - 1;
     float y = texCoord.y * 2 - 1;
 	vec4 projectedPos = vec4(x, y, z, 1.0f);
@@ -200,6 +203,8 @@ void main()
 		float specular = (1.0 - shadow)* directionalLight.intensity * spec * Ks;
 		result = (ambient + diffuse) * diffuseColor * directionalLight.diffuse.xyz + specular * directionalLight.diffuse.xyz;
 	}
+
+	result = mix(result, texture(skybox, viewPosition.xyz).rgb, step(1.0, depth));
 	
     FragColor = vec4(result, 1.0);
 }  

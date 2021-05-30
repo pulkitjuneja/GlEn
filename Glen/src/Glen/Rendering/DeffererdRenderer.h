@@ -28,6 +28,8 @@ class DefferedRenderer : public ISystem {
 	Texture2D* gBUfferDepthTexture;
 	Texture2D* HDRBUfferTexture;
 	Texture2D* postProcessingTexture;
+	CubeMap* skybox;
+
 	FrameBuffer HDRBBuffer;
 	FrameBuffer postProcessingBuffer;
 	FrameBuffer gBuffer;
@@ -60,7 +62,6 @@ public:
 	void runGeometryPass();
 	void runDirectionalLightPass();
 	void runPointLightPass();
-	//void runLightingPass();
 
 	virtual void startup() override;
 	virtual void update(float deltaTimer) override;

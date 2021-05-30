@@ -54,7 +54,7 @@ public:
 		mat.normalMap = PbrSphereNormal;	
 
 		Entity& crysisEntity = scene->createEntity("Crysis Entity", EngineContext::get()->resourceManager->loadMesh(crysisMeshLocation));
-		Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
+		//Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
 		Time testTime = timer.restart();
 		Logger::logInfo("Resource load time" + std::to_string(testTime.getAsMilliSeconds()));
 
@@ -62,7 +62,7 @@ public:
 		groundPLaneEntity.attachBoxCollider(glm::vec3(100, 1, 100));
 		groundPLaneEntity.attachRigidBody(RigidBodyType::Static);
 
-		sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
+		//sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
 		crysisEntity.transfrom.setScale(glm::vec3(2, 2, 2));
 		crysisEntity.attachCollider(ColliderType::Box);
 		crysisEntity.transfrom.setPosition(glm::vec3(0, 80, 0));
@@ -71,17 +71,6 @@ public:
 		pbrSphere.transfrom.setScale(glm::vec3(10, 10, 10));
 		pbrSphere.transfrom.setPosition(glm::vec3(0, 10, 0));
 		//pbrSphere.attachCollider(ColliderType::Box);
-
-		std::vector<std::string> facePaths = {
-			"right.jpg",
-			"left.jpg",
-			"top.jpg",
-			"bottom.jpg",
-			"front.jpg",
-			"back.jpg"
-		};
-
-		CubeMap* skybox = EngineContext::get()->resourceManager->loadCubeMap(facePaths, "Assets/Textures/skybox");
 
 		scene->setMainCamera(glm::vec3(-4.31142f, 55.923f, 191.538f), glm::vec3(-16.8f, -89.1506f, 0), 90.0f, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 8.0f, 1000.0f);
 		scene->createPointLight(glm::vec4(-20, 10, 5, 1.0), glm::vec4(2, 0, 0, 1.0), 1.0f);

@@ -317,7 +317,8 @@ CubeMap* ResourceManager::loadCubeMap(std::vector<std::string> paths, const std:
 		}
 		stbi_image_free(data);
 	}
-
+	cubemap->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	cubemap->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	cubemap->Unbind();
 	if (loadFailed) {
 		Logger::logError("failed to load cubemap");
