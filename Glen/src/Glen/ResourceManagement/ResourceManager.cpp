@@ -5,7 +5,7 @@
 #include "stb_image.h"
 
 ResourceManager::ResourceManager() {
-	resourceAllocator = Mem::Allocate<StackAllocator>(1024 * 1024 * 300, EngineContext::get()->sceneAllocator);  // 300 mb reserved for resources
+	resourceAllocator = Mem::Allocate<StackAllocator>(1024 * 1024 * 400, EngineContext::get()->sceneAllocator);  // 300 mb reserved for resources
 }
 
 void ResourceManager::readFromFile(const std::string& fileName, char*& shaderContent)
@@ -147,6 +147,19 @@ Mesh* ResourceManager::CreateMesh(std::string identifier, std::vector<Vertex>& v
 	return loadedMeshes.find(identifier)->second;
 }
 
+Mesh* ResourceManager::getMesh(const std::string& meshName)
+{
+	if (loadedMeshes.find(meshName) != loadedMeshes.end())
+	{
+		return loadedMeshes.find(meshName)->second;
+	}
+	else
+	{
+		Logger::logWarn("Mesh " + meshName + " is not loaded");
+		return nullptr;
+	}
+}
+
 void ResourceManager::getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory, Material& material)
 {
 	material.name = std::string(directory);
@@ -241,6 +254,45 @@ Shader* ResourceManager::getShader(const std::string& shaderName)
 	}
 }
 
+void ResourceManager::loadPrimitives()
+{
+	createCubePrimitive();
+}
+
+void ResourceManager::createCubePrimitive()
+{
+	std::vector<Vertex> vertices = {
+	Vertex(glm::vec3(-1,-1,-1), glm::vec3(0,0,0), glm::vec2(0,0.66)),
+	Vertex(glm::vec3(1,-1,-1), glm::vec3(0,0,0), glm::vec2(0.25f, 0.66f)),
+	Vertex(glm::vec3(1,1,-1), glm::vec3(0,0,0), glm::vec2(0.0f, 0.33f)),
+	Vertex(glm::vec3(-1,1,-1), glm::vec3(0,0,0), glm::vec2(0.25f, 0.66f)),
+
+	Vertex(glm::vec3(-1,-1,1), glm::vec3(0,0,0), glm::vec2(0.5f, 0.66f)),
+	Vertex(glm::vec3(1,-1,1), glm::vec3(0,0,0), glm::vec2(0.5f, 0.33f)),
+	Vertex(glm::vec3(1,1,1), glm::vec3(0,0,0), glm::vec2(0.75f, 0.66f)),
+	Vertex(glm::vec3(-1,1,1), glm::vec3(0,0,0), glm::vec2(0.75f, 0.33f))
+	};
+
+	std::vector<unsigned int> indices = {
+		0, 1, 3, 3, 1, 2,
+		1, 5, 2, 2, 5, 6,
+		5, 4, 6, 6, 4, 7,
+		4, 0, 7, 7, 0, 3,
+		3, 2, 7, 7, 2, 6,
+		4, 5, 0, 0, 5, 1
+	};
+
+	Material cubeMaterial;
+	cubeMaterial.setShader(EngineContext::get()->resourceManager->getShader("texturedMeshUnlit"));
+	cubeMaterial.diffuseMap = EngineContext::get()->resourceManager->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
+
+	std::vector<SubMesh> cubeSubmeshes = {
+		SubMesh(cubeMaterial,0,36,0)
+	};
+
+	CreateMesh("CUBE", vertices, indices, cubeSubmeshes, false, false, false);
+}
+
 Texture2D* ResourceManager::loadTexture(const std::string& texturePath, const std::string& directory, TextureType type)
 {
 
@@ -252,6 +304,7 @@ Texture2D* ResourceManager::loadTexture(const std::string& texturePath, const st
 		return dynamic_cast<Texture2D*>(textures.find(texturePath)->second);
 	}
 
+	stbi_set_flip_vertically_on_load(false);
 	int width, height, nrComponents;
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 
@@ -290,6 +343,12 @@ CubeMap* ResourceManager::loadCubeMap(std::vector<std::string> paths, const std:
 	CubeMap* cubemap = nullptr;
 	int width, height, nrComponents;
 	bool loadFailed = false;
+
+	// pointer to release memory in case load fails
+	std::byte* marker = resourceAllocator->Push();
+
+	stbi_set_flip_vertically_on_load(false);
+
 	for (int i = 0; i < paths.size(); i++) {
 		std::string fullPath = directory + '/' + paths[i];
 		unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrComponents, 0);
@@ -322,6 +381,7 @@ CubeMap* ResourceManager::loadCubeMap(std::vector<std::string> paths, const std:
 	cubemap->Unbind();
 	if (loadFailed) {
 		Logger::logError("failed to load cubemap");
+		resourceAllocator->Pop(marker);
 		return nullptr;
 	}
 	else {
@@ -353,6 +413,82 @@ Texture2D* ResourceManager::generateTexture(const std::string& identifier, Textu
 	Texture2D* tex = Mem::Allocate<Texture2D>(resourceAllocator, textureType, w, h, format, dataType, internalFormat);
 	textures.emplace(make_pair(identifier, tex));
 	return tex;
+}
+
+CubeMap* ResourceManager::loadHdriMap(const std::string& texturePath, const std::string& directory)
+{
+	std::string filename = std::string(texturePath);
+	filename = directory + '/' + filename;
+
+	if (textures.find(texturePath) != textures.end())
+	{
+		return dynamic_cast<CubeMap*>(textures.find(texturePath)->second);
+	}
+	FrameBuffer captureFBO;
+	captureFBO.bind();
+	captureFBO.attachRenderBuffer(GL_DEPTH_COMPONENT24, GL_DEPTH_ATTACHMENT, 2048, 2048);
+	captureFBO.unBind();
+	stbi_set_flip_vertically_on_load(true);
+	int width, height, nrComponents;
+	float* data = stbi_loadf(filename.c_str(), &width, &height, &nrComponents, 0);
+	Texture2D* hdrtexture;
+	if (data) {
+		hdrtexture = Mem::Allocate<Texture2D>(resourceAllocator, TextureType::DIFFUSE, width, height, GL_RGB, GL_FLOAT, GL_RGB16F);
+		hdrtexture->bind();
+		hdrtexture->setData(data);
+		hdrtexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+		hdrtexture->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+		hdrtexture->Unbind();
+
+		stbi_image_free(data);
+	}
+	else {
+		Logger::logError("Failed to load HDR textrure");
+	}
+
+	CubeMap* cubemap = Mem::Allocate<CubeMap>(resourceAllocator, 2048, 2048);
+	cubemap->bind();
+	for (int i = 0; i < 6; i++) {
+		cubemap->setFaceData(i, nullptr, GL_RGB, GL_RGB16F, GL_FLOAT);
+	}
+	cubemap->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	cubemap->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+
+	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+	glm::mat4 captureViews[] =
+	{	
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+	};
+
+	Shader* EqToCm = EngineContext::get()->resourceManager->getShader("EqToCm");
+	EqToCm->use();
+	EqToCm->setInt("equirectangularMap", 0);
+	EqToCm->setMat4("projection", captureProjection);
+	hdrtexture->bind();
+	glViewport(0, 0, 2048, 2048);
+	captureFBO.bind();
+	Mesh* cubeMesh = getMesh("CUBE");
+	//glDisable(GL_CULL_FACE);
+	for (int i = 0; i < 6; i++) {
+		EqToCm->setMat4("view", captureViews[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cubemap->textureId, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glBindVertexArray(cubeMesh->VAO);
+		SubMesh submesh = cubeMesh->subMeshes[0];
+		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
+	}
+
+	std::cout << glGetError() << std::endl;
+	captureFBO.unBind();
+	hdrtexture->Unbind();
+	cubemap->Unbind();
+	return cubemap;
 }
 
 Texture* ResourceManager::getTexture(const std::string& textureName)

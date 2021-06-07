@@ -23,6 +23,7 @@
 #include "Glen/Core/Logger.h"
 #include "Glen/Core/EngineContext.h"
 #include "Glen/Core/Allocator.h"
+#include "Glen/Rendering/FrameBuffer.h"
 
 struct EnumClassHash
 {
@@ -50,16 +51,15 @@ private:
 	Texture2D* loadMaterialTexture(aiMaterial* aiMaterial, aiTextureType textureType, std::string directory);
 	void getAiSceneMaterial(const aiScene* scene, int materialIndex, std::string directory, Material& material);
 
-	IAllocator* resourceAllocator;
+	StackAllocator* resourceAllocator;
 
 public:
 
 	//Resource Loaders
-	void loadShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const std::string& shaderName);
-
 	Mesh* loadMesh(std::string path, int loaderFlags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	Mesh* CreateMesh(std::string identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, 
 		std::vector<SubMesh>& subMeshes, bool hasNormals, bool hasTextCoords, bool hasTangents);
+	Mesh* getMesh(const std::string& meshName);
 
 	Texture2D* loadTexture(const std::string& texturePath, const std::string& directory, TextureType textureType);
 	CubeMap* loadCubeMap(std::vector<std::string> paths, const std::string& directory);
@@ -67,10 +67,14 @@ public:
 		const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize);
 	Texture2D* generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
 		const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType);
-
-	//Getters
-	Shader* getShader(const std::string& shaderName);
+	CubeMap* loadHdriMap(const std::string& texturePath, const std::string& directory);
 	Texture* getTexture(const std::string& textureName);
+
+	void loadShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const std::string& shaderName);
+	Shader* getShader(const std::string& shaderName);
+
+	void loadPrimitives();
+	void createCubePrimitive();
 
 	ResourceManager();
 	void Release();

@@ -25,7 +25,6 @@ public:
 
 	// TODO : Dont know if these functions belong here, re-evaluate
 	// Debug mesh creators
-	void createDebugMesh();
 	void createSphereMesh() {};
 	void createCylinderMesh() {};
 

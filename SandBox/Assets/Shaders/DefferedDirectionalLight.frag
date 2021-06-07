@@ -204,7 +204,8 @@ void main()
 		result = (ambient + diffuse) * diffuseColor * directionalLight.diffuse.xyz + specular * directionalLight.diffuse.xyz;
 	}
 
-	result = mix(result, texture(skybox, viewPosition.xyz).rgb, step(1.0, depth));
+	vec3 cameraRelativePostion = worldPos.xyz - cameraPosition.xyz;
+	result = mix(result, texture(skybox, cameraRelativePostion).rgb, step(1.0, depth));
 	
     FragColor = vec4(result, 1.0);
 }  

@@ -90,8 +90,9 @@ namespace Mem {
 
 	}
 
+
 	template<typename T, typename ...Args>
-	T* Allocate(IAllocator* allocator, Args&& ... args) {
+	T* Allocate(StackAllocator* allocator, Args&& ... args) {
 		IAllocator* defaultAllocator = EngineContext::get()->sceneAllocator;
 		void* alloc = defaultAllocator->Alloc(sizeof(T));
 		return new(alloc) T(std::forward<Args>(args)...);

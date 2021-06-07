@@ -4,7 +4,7 @@ Time Engine::deltaTime;
 
 void Engine::start() {
 
-    EngineContext::get()->sceneAllocator = new StackAllocator(1024 * 1024 * 500); // 500 mb
+    EngineContext::get()->sceneAllocator = new StackAllocator(1024 * 1024 * 800); // 800 mb
 
     // engine specific initializations
     if (!setupWindow()) {
@@ -20,6 +20,7 @@ void Engine::start() {
     EngineContext::get()->physicsContext = Mem::Allocate<PhysicsContext>();
 
     loadDefaultShaders();
+    EngineContext::get()->resourceManager->loadPrimitives();
 
     systemManager.registerSystem<ScriptingSystem>();
     systemManager.registerSystem<PhysicsSystem>();
@@ -28,7 +29,6 @@ void Engine::start() {
     systemManager.registerSystem<GuiSystem>();
 
     systemManager.initialize();
-
 
     if (!init()) {
         isEngineRunning = false;
@@ -70,6 +70,7 @@ void Engine::loadDefaultShaders()
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedPointLight.vert", "Assets/Shaders/DefferedPointLight.frag", "defferedPointLightPass");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/HDRToneMapping.frag", "basicToneMapping");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/SSRPass.frag", "ssrPass");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/EquirectangularToCubeMap.frag", "EqToCm");
 }
 
 bool Engine::setupWindow() {

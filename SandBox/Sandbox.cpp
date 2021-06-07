@@ -85,6 +85,7 @@ public:
 		cameraControllerParent.AddScript<CameraController>();
 		crysisEntity.AddScript<Bouncer>();
 		pbrSphere.AddScript<ObjectRotator>();
+
 		return true;
 	}
 

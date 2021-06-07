@@ -3,42 +3,8 @@
 
 void DebugDraw::startup()
 {
-	createDebugMesh();
+	DebugCubeMesh = EngineContext::get()->resourceManager->getMesh("CUBE");
 	this->scene = EngineContext::get()->sceneManager;
-}
-
-void DebugDraw::createDebugMesh()
-{
-	std::vector<Vertex> vertices = {
-	Vertex(glm::vec3(-1,-1,-1), glm::vec3(0,0,0), glm::vec2(0,0.66)),
-	Vertex(glm::vec3(1,-1,-1), glm::vec3(0,0,0), glm::vec2(0.25f, 0.66f)),
-	Vertex(glm::vec3(1,1,-1), glm::vec3(0,0,0), glm::vec2(0.0f, 0.33f)),
-	Vertex(glm::vec3(-1,1,-1), glm::vec3(0,0,0), glm::vec2(0.25f, 0.66f)),
-
-	Vertex(glm::vec3(-1,-1,1), glm::vec3(0,0,0), glm::vec2(0.5f, 0.66f)),
-	Vertex(glm::vec3(1,-1,1), glm::vec3(0,0,0), glm::vec2(0.5f, 0.33f)),
-	Vertex(glm::vec3(1,1,1), glm::vec3(0,0,0), glm::vec2(0.75f, 0.66f)),
-	Vertex(glm::vec3(-1,1,1), glm::vec3(0,0,0), glm::vec2(0.75f, 0.33f))
-	};
-
-	std::vector<unsigned int> indices = {
-		0, 1, 3, 3, 1, 2,
-		1, 5, 2, 2, 5, 6,
-		5, 4, 6, 6, 4, 7,
-		4, 0, 7, 7, 0, 3,
-		3, 2, 7, 7, 2, 6,
-		4, 5, 0, 0, 5, 1
-	};
-
-	Material cubeMaterial;
-	cubeMaterial.setShader(EngineContext::get()->resourceManager->getShader("texturedMeshUnlit"));
-	cubeMaterial.diffuseMap = EngineContext::get()->resourceManager->loadTexture("Assets/Textures/crate_1.jpg", ".", TextureType::DIFFUSE);
-
-	std::vector<SubMesh> cubeSubmeshes = {
-		SubMesh(cubeMaterial,0,36,0)
-	};
-
-	DebugCubeMesh = EngineContext::get()->resourceManager->CreateMesh("CUBE", vertices, indices, cubeSubmeshes, false, false, false);
 }
 
 void DebugDraw::update(float deltaTime) {
@@ -58,7 +24,8 @@ void DebugDraw::update(float deltaTime) {
 
 		Shader* basicShader = EngineContext::get()->resourceManager->getShader("texturedMeshUnlit");
 		basicShader->use();
-
+		//basicShader->setInt("skybox", 16);
+		
 		// TODO : add debug draw fro sphere colliders
 		BoxCollider* boxCollider = (BoxCollider*)ent.collider;
 

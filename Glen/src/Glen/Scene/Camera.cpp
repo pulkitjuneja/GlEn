@@ -39,7 +39,7 @@ glm::mat4 Camera::getViewMatrix()
 
 glm::mat4 Camera::getProjectionMatrix()
 {
-	return glm::perspective(glm::radians(30.0f), aspect, nearPlane, farPlane);
+	return glm::perspective(glm::radians(80.0f), aspect, nearPlane, farPlane);
 }
 
 glm::vec3* Camera::getFrustumCorners()

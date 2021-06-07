@@ -15,8 +15,10 @@ struct Material {
 
 uniform Material material;
 uniform vec3 debugColor;
+uniform samplerCube skybox;
 
 void main()
 {
+	vec3 color = texture(skybox, vsOut.worldPos).rgb;
 	FragColor = vec4(debugColor,1);
 }
