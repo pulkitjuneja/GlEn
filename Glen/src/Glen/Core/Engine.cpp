@@ -24,7 +24,7 @@ void Engine::start() {
 
     systemManager.registerSystem<ScriptingSystem>();
     systemManager.registerSystem<PhysicsSystem>();
-    systemManager.registerSystem<DefferedRenderer>();
+    systemManager.registerSystem<ForwardRenderer>();
     systemManager.registerSystem<DebugDraw>();
     systemManager.registerSystem<GuiSystem>();
 

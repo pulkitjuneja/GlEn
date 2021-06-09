@@ -3,7 +3,7 @@
 
 
 DefferedRenderer::DefferedRenderer() : csm(0.3, 150.0f, 3, 4096), 
-	perFrameUbo(sizeof(PerFrameUniforms), 0), CsmUbo(sizeof(CSMUniforms), 1){}
+	perFrameUbo(sizeof(PerFrameUniforms), 0, BufferType::UBO), CsmUbo(sizeof(CSMUniforms), 1, BufferType::UBO){}
 
 void DefferedRenderer::createUVSphere()
 {
@@ -103,7 +103,6 @@ void DefferedRenderer::setupHDRBuffer()
 	postProcessingTexture->bind();
 	postProcessingTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	postProcessingBuffer.attachRenderTarget(postProcessingTexture, 0, 0);
-	std::cout << "pptt" << postProcessingTexture->textureId << "\n";
 	postProcessingBuffer.checkStatus();
 	postProcessingBuffer.unBind();
 

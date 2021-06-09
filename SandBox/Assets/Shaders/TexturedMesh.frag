@@ -4,8 +4,13 @@ struct Material {
 	sampler2D texture_diffuse;
 	sampler2D texture_specular;
 	sampler2D texture_normal;
+	sampler2D texture_metallic;
+	sampler2D texture_roughness;
+	sampler2D texture_occlusion;
 	int hasSpecularMap;
 	int hasNormalMap;
+	// Temp solution remove
+	float usePBRWorkflow;
 };
 
 struct PointLight {
@@ -59,19 +64,23 @@ vec3 calculatePointLight (PointLight pointLight, vec3 normal, vec3 viewDir, vec3
 
 	float specularStrength = mix(0.1, specularIntensity, step(1.0f, material.hasSpecularMap));
 
+	float Ka = 0.04f;
+	float Ks = specularStrength;
+	float Kd = 1.0f - Ks;
+
 	vec3 lightDir = normalize(pointLight.position.xyz - vsOut.worldPos);
 	float diff = max(dot(normal, lightDir), 0.0);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(halfwayDir, normal), 0.0),32);
 	float distance = length(pointLight.position.xyz - vsOut.worldPos);
 
-	float attenuation = 1.0/(1.0 + 0.0025f *distance + 0.00007f * (distance*distance));
+	float attenuation = 1.0/(1.0 + 0.022f *distance + 0.0019f * (distance*distance));
 
 	//vec3 ambient  = pointLight.ambient.xyz  * diffuseColor * attenuation;
-	vec3 diffuse  = pointLight.diffuse.xyz  * diff * diffuseColor * attenuation;
-//	vec3 specular = pointLight.specular.xyz * spec * specularStrength * attenuation;
+	float diffuse  = pointLight.intensity  * diff * Kd;
+    float specular = pointLight.intensity * spec * Ks;
 
-	return vec3(1.0f);//(ambient + diffuse + specular);
+	return (diffuse * diffuseColor * pointLight.diffuse.xyz + specular*pointLight.diffuse.xyz) * attenuation;
 }
 
 
@@ -133,6 +142,10 @@ vec3 calculateDirectionalLight (vec3 normal, vec3 viewDir, vec3 diffuseColor, fl
 	//vec3 diffuseColor = debug_color(fragDepth);
 	float specularStrength = mix(0.1, specularIntensity, step(1.0f, material.hasSpecularMap));
 
+	float Ka = 0.04f;
+	float Ks = specularStrength;
+	float Kd = 1.0f - Ks;
+
 	vec3 lightDir = normalize(-directionalLight.direction.xyz);
     float diff = max(dot(normal, lightDir), 0.0);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
@@ -140,11 +153,11 @@ vec3 calculateDirectionalLight (vec3 normal, vec3 viewDir, vec3 diffuseColor, fl
 
 	float shadow = ShadowCalculation(fragDepth, normal, lightDir);
 
-	//vec3 ambient  = directionalLight.ambient.xyz  * diffuseColor;
-	//vec3 diffuse  = (1.0 - shadow)*(directionalLight.diffuse.xyz  * diff) * diffuseColor;
-	//vec3 specular = (1.0 - shadow)*(directionalLight.specular.xyz * spec) * specularStrength;
+	float ambient  = Ka;
+	float diffuse  = (1.0 - shadow)* directionalLight.intensity * diff * Kd;
+	float specular = (1.0 - shadow)* directionalLight.intensity * spec * Ks;
 
-	return vec3(1.0);//return (ambient + diffuse + specular);
+	return (ambient + diffuse) * diffuseColor * directionalLight.diffuse.xyz + specular * directionalLight.diffuse.xyz;
 }
 
 void main()

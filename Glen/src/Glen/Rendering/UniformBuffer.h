@@ -5,10 +5,16 @@
 
 #include <GL/glew.h>
 
-class UniformBuffer {
+enum BufferType {
+	UBO = GL_UNIFORM_BUFFER,
+	SSBO = GL_SHADER_STORAGE_BUFFER
+};
+
+class Buffer {
 	GLuint id;
+	GLuint target;
 public:
-	UniformBuffer(GLsizeiptr bufferSize, GLuint bindIndex);
+	Buffer(GLsizeiptr bufferSize, GLuint bindIndex, BufferType bufferType);
 	void bind();
 	void unBind();
 	void setData(GLintptr offset, GLsizeiptr size, void* data, bool bind = false);

@@ -10,7 +10,6 @@
 static int currentShaderProgramInUse;
 
 class GLN_API Shader {
-    void readFromFile(const std::string& fileName, char*& shaderContent);
     GLuint shaderProgram;
     std::unordered_map<std::string, GLuint> uniformLocations;
 public:
@@ -25,6 +24,13 @@ public:
     void setMat4(const std::string& name, glm::mat4& matrix);
     void setUniformBlockBinding(const std::string& name, int index);
     GLuint getUniformLocation(const std::string& name) const;
+};
+
+class GLN_API ComputeShader : public Shader {
+public:
+    ComputeShader(const GLuint shaderProgram, const std::string& shaderName, int uniformCount) : 
+        Shader(shaderProgram, shaderName, uniformCount) {}
+    void dispatch(int numGroupsX, int numGroupsY = 1, int numGroupsZ = 1);
 };
 
 

@@ -1,54 +1,55 @@
 #include "UniformBuffer.h"
 
-UniformBuffer::UniformBuffer(GLsizeiptr bufferSize, GLuint bindIndex)
+Buffer::Buffer(GLsizeiptr bufferSize, GLuint bindIndex, BufferType bufferType)
 {
 	glGenBuffers(1, &id);
-	glBindBuffer(GL_UNIFORM_BUFFER, id);
-	glBufferData(GL_UNIFORM_BUFFER, bufferSize, nullptr, GL_STATIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	target = bufferType;
+	glBindBuffer(target, id);
+	glBufferData(target, bufferSize, nullptr, GL_STATIC_DRAW);
+	glBindBuffer(target, 0);
 
-	glBindBufferBase(GL_UNIFORM_BUFFER, bindIndex, id);
+	glBindBufferBase(target, bindIndex, id);
 }
 
-void UniformBuffer::bind()
+void Buffer::bind()
 {
-	glBindBuffer(GL_UNIFORM_BUFFER, id);
+	glBindBuffer(target, id);
 }
 
-void UniformBuffer::unBind()
+void Buffer::unBind()
 {
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glBindBuffer(target, 0);
 }
 
-void UniformBuffer::setData(GLintptr offset, GLsizeiptr size, void* data, bool bind)
+void Buffer::setData(GLintptr offset, GLsizeiptr size, void* data, bool bind)
 {
 	if (bind) {
-		glBindBuffer(GL_UNIFORM_BUFFER, id);
+		glBindBuffer(target, id);
 	}
-	glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
+	glBufferSubData(target, offset, size, data);
 	if (bind) {
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBuffer(target, 0);
 	}
 }
 
-void* UniformBuffer::mapToMemory(GLenum access, bool bind) {
+void* Buffer::mapToMemory(GLenum access, bool bind) {
 	if (bind) {
-		glBindBuffer(GL_UNIFORM_BUFFER, id);
+		glBindBuffer(target, id);
 	}
-	void* ptr = glMapBuffer(GL_UNIFORM_BUFFER, access);
+	void* ptr = glMapBuffer(target, access);
 	if (bind) {
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBuffer(target, 0);
 	}
 	return ptr;
 }
 
-void UniformBuffer::unmapFromMemroy(bool bind)
+void Buffer::unmapFromMemroy(bool bind)
 {
 	if (bind) {
-		glBindBuffer(GL_UNIFORM_BUFFER, id);
+		glBindBuffer(target, id);
 	}
-	glUnmapBuffer(GL_UNIFORM_BUFFER);
+	glUnmapBuffer(target);
 	if (bind) {
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBuffer(target, 0);
 	}
 }

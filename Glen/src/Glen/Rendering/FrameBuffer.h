@@ -10,8 +10,8 @@
 #define FRAMEBUFFER_H
 
 class FrameBuffer {
-	unsigned int fboId;
 public:
+	unsigned int fboId;
 	FrameBuffer();
 	void attachDepthTarget(Texture* texture, uint32_t mipLevel, int layer = 0, bool shouldBind = false);
 	void attachRenderTarget(Texture* texture, uint32_t mipLevel, int attachmentIndex, int layer = 0, bool shouldBind = false);

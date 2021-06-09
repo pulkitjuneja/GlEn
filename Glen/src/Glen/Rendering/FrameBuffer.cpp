@@ -5,7 +5,7 @@ FrameBuffer::FrameBuffer() {
 }
 
 void FrameBuffer::bind(int bindTarget) {
-	glBindFramebuffer(bindTarget, fboId);
+	glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 }
 
 void FrameBuffer::unBind() {

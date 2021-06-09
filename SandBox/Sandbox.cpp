@@ -23,7 +23,7 @@ class Bouncer : public Script {
 class ObjectRotator : public Script {
 
 	void Update(float deltaTime) override {
-		parent->transfrom.rotate(glm::vec3(0, 2 * deltaTime, 0));
+		parent->transfrom.rotate(glm::vec3(0, 0.2 * deltaTime, 0));
 	}
 };
 
@@ -52,9 +52,10 @@ public:
 		mat.OclussionMap = PbrSphereAO;
 		mat.RoughnessMap = PbrSphereRoughness;
 		mat.normalMap = PbrSphereNormal;	
+		mat.setShader(EngineContext::get()->resourceManager->getShader("texturedMeshPBR"));
 
 		Entity& crysisEntity = scene->createEntity("Crysis Entity", EngineContext::get()->resourceManager->loadMesh(crysisMeshLocation));
-		//Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
+		Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
 		Time testTime = timer.restart();
 		Logger::logInfo("Resource load time" + std::to_string(testTime.getAsMilliSeconds()));
 
@@ -62,7 +63,7 @@ public:
 		groundPLaneEntity.attachBoxCollider(glm::vec3(100, 1, 100));
 		groundPLaneEntity.attachRigidBody(RigidBodyType::Static);
 
-		//sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
+		sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
 		crysisEntity.transfrom.setScale(glm::vec3(2, 2, 2));
 		crysisEntity.attachCollider(ColliderType::Box);
 		crysisEntity.transfrom.setPosition(glm::vec3(0, 80, 0));
@@ -93,6 +94,7 @@ public:
 		EngineContext::get()->resourceManager->loadShader("Assets/Shaders/basic.vert", "Assets/Shaders/basic.frag", "defaultShader");
 		EngineContext::get()->resourceManager->loadShader("Assets/Shaders/TexturedMeshUnlit.vert", "Assets/Shaders/TexturedMeshUnlit.frag", "texturedMeshUnlit");
 		EngineContext::get()->resourceManager->loadShader("Assets/Shaders/TexturedMesh.vert", "Assets/Shaders/TexturedMesh.frag", "texturedMeshShader");
+		EngineContext::get()->resourceManager->loadShader("Assets/Shaders/TexturedMesh.vert", "Assets/Shaders/TexturedMeshPBR.frag", "texturedMeshPBR");
 	}
 };
 

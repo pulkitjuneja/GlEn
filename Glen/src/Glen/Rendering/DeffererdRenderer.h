@@ -39,8 +39,8 @@ class DefferedRenderer : public ISystem {
 	CSMUniforms csmUniforms;
 
 	//UniformBUffers
-	UniformBuffer perFrameUbo;
-	UniformBuffer CsmUbo;
+	Buffer perFrameUbo;
+	Buffer CsmUbo;
 
 	SceneRenderer sceneRenderer;
 	Csm csm;

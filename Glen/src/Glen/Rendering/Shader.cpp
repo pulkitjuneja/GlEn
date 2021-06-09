@@ -21,13 +21,13 @@ Shader::Shader(const GLuint shaderProgram, const std::string& shaderName, int un
 
 }
 
-void Shader::readFromFile(const std::string& fileName, char*& shaderContent) {
-	std::ifstream shaderFile(fileName);
-	std::stringstream buffer;
-	buffer << shaderFile.rdbuf();
-	shaderContent = new char[buffer.str().length()];
-	strcpy(shaderContent, &buffer.str()[0]);
-}
+//void Shader::readFromFile(const std::string& fileName, char*& shaderContent) {
+//	std::ifstream shaderFile(fileName);
+//	std::stringstream buffer;
+//	buffer << shaderFile.rdbuf();
+//	shaderContent = new char[buffer.str().length()];
+//	strcpy(shaderContent, &buffer.str()[0]);
+//}
 
 void Shader::use() {
 	if (getShaderID() != currentShaderProgramInUse) {
@@ -90,4 +90,10 @@ GLuint Shader::getUniformLocation(const std::string& name) const
 		return -1;
 	else
 		return uniformLocations.find(name)->second;
+}
+
+void ComputeShader::dispatch(int numGroupsX, int numGroupsY, int numGroupsZ)
+{
+	use();
+	glDispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
 }

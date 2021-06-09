@@ -34,6 +34,8 @@ struct EnumClassHash
 	}
 };
 
+// TODO: Split up this class into multiple managers
+
 class GLN_API ResourceManager {
 private:
 
