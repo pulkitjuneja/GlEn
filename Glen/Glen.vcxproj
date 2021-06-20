@@ -138,7 +138,7 @@
     <ClInclude Include="src\Glen\Rendering\SceneRenderer.h" />
     <ClInclude Include="src\Glen\Rendering\Shader.h" />
     <ClInclude Include="src\Glen\Rendering\Texture.h" />
-    <ClInclude Include="src\Glen\Rendering\UniformBuffer.h" />
+    <ClInclude Include="src\Glen\Rendering\Buffer.h" />
     <ClInclude Include="src\Glen\Rendering\Uniforms.h" />
     <ClInclude Include="src\Glen\Rendering\Vertex.h" />
     <ClInclude Include="src\Glen\ResourceManagement\ResourceManager.h" />
@@ -180,7 +180,7 @@
     <ClCompile Include="src\Glen\Rendering\SceneRenderer.cpp" />
     <ClCompile Include="src\Glen\Rendering\Shader.cpp" />
     <ClCompile Include="src\Glen\Rendering\Texture.cpp" />
-    <ClCompile Include="src\Glen\Rendering\UniformBuffer.cpp" />
+    <ClCompile Include="src\Glen\Rendering\Buffer.cpp" />
     <ClCompile Include="src\Glen\ResourceManagement\ResourceManager.cpp" />
     <ClCompile Include="src\Glen\Scene\BoundingBox.cpp" />
     <ClCompile Include="src\Glen\Scene\Camera.cpp" />

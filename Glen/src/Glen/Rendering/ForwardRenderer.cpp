@@ -2,9 +2,9 @@
 
 ForwardRenderer::ForwardRenderer()
 {
-	csm = new Csm(0.3, 350.0f, 4, 4096);
-	perFrameUbo = new Buffer(sizeof(PerFrameUniforms), 0, BufferType::UBO);
-	CsmUbo = new Buffer(sizeof(CSMUniforms), 1, BufferType::UBO);
+	csm = Mem::Allocate<Csm>(0.3, 350.0f, 4, 4096);
+	perFrameUbo = Mem::Allocate<Buffer>(sizeof(PerFrameUniforms), 0, BufferType::UBO);
+	CsmUbo = Mem::Allocate<Buffer>(sizeof(CSMUniforms), 1, BufferType::UBO);
 }
 
 void ForwardRenderer::setupHDRBuffer()
@@ -25,6 +25,8 @@ void ForwardRenderer::setupHDRBuffer()
 	HDRBBuffer.attachRenderTarget(HDRBUfferTexture, 0, 0);
 	HDRBBuffer.attachDepthTarget(depthTexture, 0);
 
+	CsmUbo = Mem::Allocate<Buffer>(sizeof(CSMUniforms), 1, BufferType::UBO);
+
 	HDRBBuffer.checkStatus();
 	HDRBBuffer.unBind();
 }
@@ -32,9 +34,20 @@ void ForwardRenderer::setupHDRBuffer()
 void ForwardRenderer::startup()
 {
 	basicToneMappingShader = EngineContext::get()->resourceManager->getShader("basicToneMapping");
+	depthPassMaterial.setShader(EngineContext::get()->resourceManager->getShader("depthPass"));
+	LightCullingCompute = dynamic_cast<ComputeShader*>(EngineContext::get()->resourceManager->getShader("LightCullingCompute"));
+	LightCullingDebugShader = EngineContext::get()->resourceManager->getShader("lightDebugShader");
+
 	scene = EngineContext::get()->sceneManager;
 	setupHDRBuffer();
 	glGenVertexArrays(1, &screenQuadVAO);
+
+	int workGroupsX = (SCREEN_WIDTH + (SCREEN_WIDTH % 16)) / 16;
+	int workGroupsY = (SCREEN_HEIGHT + (SCREEN_HEIGHT % 16)) / 16;
+	size_t numberOfTiles = workGroupsX * workGroupsY;
+
+	visibleLightBuffer = Mem::Allocate<Buffer>(numberOfTiles * sizeof(int) * MAX_LIGHTS_PER_TILE, 3, BufferType::SSBO);
+	DebugDepthBuffer = Mem::Allocate<Buffer>(numberOfTiles * sizeof(float) , 4, BufferType::SSBO);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -71,18 +84,41 @@ void ForwardRenderer::update(float deltaTimer)
 	}
 
 	csm->render(scene);
-
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, HDRBBuffer.fboId);
+	HDRBBuffer.bind();
 	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, attachments);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// Depth Prepass;
+	glDepthFunc(GL_LESS); 
+	sceneRenderer.renderScene(scene, &depthPassMaterial, true);
+	depthTexture->bind(GL_TEXTURE0 + 12);
+
+	// light culling
+	int workGroupsX = (SCREEN_WIDTH + (SCREEN_WIDTH % 16)) / 16;
+	int workGroupsY = (SCREEN_HEIGHT + (SCREEN_HEIGHT % 16)) / 16;
+	LightCullingCompute->setInt("depthMap", 12);
+	LightCullingCompute->dispatch(workGroupsX, workGroupsY);
+	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+
+	// final render pass
+	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_FALSE); // Disable depth write for the main render pass
 	sceneRenderer.renderScene(scene);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDepthMask(GL_TRUE);
+	HDRBBuffer.unBind();
 
 	toneMappingPass();
+
+	LightCullingDebugShader->use();
+	LightCullingDebugShader->setInt("depthMap", 12);
+	LightCullingDebugShader->setInt("numberOfTilesX", workGroupsX);
+	LightCullingDebugShader->setInt("totalLightCount", scene->getPointLIghts().size());
+	glBindVertexArray(screenQuadVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	HDRBBuffer.bind(GL_READ_FRAMEBUFFER);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -94,7 +130,7 @@ void ForwardRenderer::update(float deltaTimer)
 void ForwardRenderer::toneMappingPass()
 {
 	basicToneMappingShader->setInt("hdrBuffer", 11);
-	basicToneMappingShader->setFloat("exposure", 0.9f);
+	basicToneMappingShader->setFloat("exposure", 0.6f);
 	HDRBUfferTexture->bind(GL_TEXTURE0 + 11);
 	basicToneMappingShader->use();
 	glBindVertexArray(screenQuadVAO);

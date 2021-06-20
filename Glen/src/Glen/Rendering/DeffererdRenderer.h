@@ -15,7 +15,7 @@
 #include "Glen/ResourceManagement/ResourceManager.h"
 #include "Uniforms.h"
 #include "SceneRenderer.h"
-#include "UniformBuffer.h"
+#include "Buffer.h"
 #include "Csm.h"
 #include "Glen/Core/System.h"
 

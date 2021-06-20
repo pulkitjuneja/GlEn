@@ -19,14 +19,14 @@ struct GLN_API PointLight : public Light {
 public:
 	ALIGNED(16) glm::vec4 position;
 	ALIGNED(16) glm::vec4 diffuse;
-	 float radius;
-	 float intensity;
+	ALIGNED(16) float radius;
+	float intensity;
 	PointLight() {
 		float constant = 1.0;
 		float linear = 0.0025f;
 		float quadratic = 0.00007f;
 		float lightMax = std::fmaxf(std::fmaxf(diffuse.r, diffuse.g), diffuse.b);
-		radius = 100;
+		radius = 20;
 	}
 };
 

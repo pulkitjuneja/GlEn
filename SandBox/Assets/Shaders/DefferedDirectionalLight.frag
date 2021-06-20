@@ -160,7 +160,7 @@ void main()
 	float fragDepth = projectedPos.z * 0.5 + 0.5;
 	vec4 colorData = texture(albedoTexture,texCoord); 
 	vec3 diffuseColor = colorData.xyz;
-	float specularStrength = colorData.w;
+	float specularStrength = colorData.w;\
 	vec4 PBRInfo = texture(PBRInfoTexture, texCoord);
 
 	vec3 lightDir = normalize(-directionalLight.direction.xyz);

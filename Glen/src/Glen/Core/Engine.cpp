@@ -22,6 +22,8 @@ void Engine::start() {
     loadDefaultShaders();
     EngineContext::get()->resourceManager->loadPrimitives();
 
+
+    // register core systems
     systemManager.registerSystem<ScriptingSystem>();
     systemManager.registerSystem<PhysicsSystem>();
     systemManager.registerSystem<ForwardRenderer>();
@@ -37,10 +39,8 @@ void Engine::start() {
     Timer timer;
     while (isEngineRunning) {
         deltaTime = timer.restart();
-
-        // update step
+        EngineContext::get()->stats.lastFrameTime = deltaTime.getAsMilliSeconds();
         systemManager.update(deltaTime.getAsSeconds());
-
         window->Display();
     }
 }
@@ -64,13 +64,16 @@ Engine::~Engine()
 
 void Engine::loadDefaultShaders()
 {
-    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DepthMap.vert", "Assets/Shaders/DepthMap.frag", "depthMap");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/basic.vert", "Assets/Shaders/basic.frag", "depthPass");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DepthMap.vert", "Assets/Shaders/DepthMap.frag", "shadowMap");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedGeometryPass.vert", "Assets/Shaders/DefferedGeometryPass.frag", "defferedGeometryPass");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/DefferedDirectionalLight.frag", "defferedDirectionalLightPass");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedPointLight.vert", "Assets/Shaders/DefferedPointLight.frag", "defferedPointLightPass");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/HDRToneMapping.frag", "basicToneMapping");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/SSRPass.frag", "ssrPass");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/EquirectangularToCubeMap.frag", "EqToCm");
+    EngineContext::get()->resourceManager->loadComputeShader("Assets/Shaders/LightCulling.comp", "LightCullingCompute");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/LightCullingDebug.frag", "lightDebugShader");
 }
 
 bool Engine::setupWindow() {

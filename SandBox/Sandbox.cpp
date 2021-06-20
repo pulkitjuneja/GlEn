@@ -77,11 +77,11 @@ public:
 		scene->createPointLight(glm::vec4(-20, 10, 5, 1.0), glm::vec4(2, 0, 0, 1.0), 1.0f);
 		scene->createPointLight(glm::vec4(20, 10, 5, 1.0), glm::vec4(0, 2, 0, 1.0), 1.0f);
 		//scene->createPointLight(glm::vec4(-10, 10, 80, 1.0), glm::vec4(0.01, 0.5f, 0.01, 1.0), glm::vec4(2, 2, 2, 1.0), glm::vec4(0.1, 0.1, 0.1, 1.0));
-		scene->createPointLight(glm::vec4(-10, 10, -80, 1.0), glm::vec4(0, 2, 0, 1.0), 1.0f);
-		scene->createPointLight(glm::vec4(300, 10, 5, 1.0), glm::vec4(0, 2, 0, 1.0), 1.0f);
-		scene->createPointLight(glm::vec4(-300, 10, -10, 1.0), glm::vec4(0, 0, 2, 1.0), 1.0f);
-		scene->createPointLight(glm::vec4(-300, 10, 10, 1.0), glm::vec4(2, 0, 0, 1.0), 1.0f);
-		scene->createDirectionalLight(glm::vec4(0.5f, -1.0f, 0, 1.0),  glm::vec4(3.8f, 3.8f, 3.8f, 1.0f), 1.0f);
+		scene->createPointLight(glm::vec4(-10, 10, -80, 1.0), glm::vec4(0, 2, 0, 1.0), 0.4f);
+		scene->createPointLight(glm::vec4(300, 10, 5, 1.0), glm::vec4(0, 2, 0, 1.0), 0.4f);
+		scene->createPointLight(glm::vec4(-300, 10, -10, 1.0), glm::vec4(0, 0, 2, 1.0), 0.4f);
+		scene->createPointLight(glm::vec4(-300, 10, 10, 1.0), glm::vec4(2, 0, 0, 1.0), 0.4f);
+		scene->createDirectionalLight(glm::vec4(0.5f, -1.0f, 0, 1.0),  glm::vec4(3.8f, 3.8f, 3.8f, 1.0f), 2.0f);
 		Entity& cameraControllerParent = scene->createEntity("cameraController");
 		cameraControllerParent.AddScript<CameraController>();
 		crysisEntity.AddScript<Bouncer>();

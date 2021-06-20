@@ -5,13 +5,14 @@
 
 #include "SceneRenderer.h"
 #include "Uniforms.h"
-#include "UniformBuffer.h"
+#include "Buffer.h"
 #include "Glen/Scene/Scene.h"
 #include "CSM.h"
 #include "Glen/Constants.h"
 
 #define HDR_BUFFER_TEXTURE_NAME "hdr_buffer_texture"
 #define DEPTH_TEXTURE_NAME "depth_texture"
+#define MAX_LIGHTS_PER_TILE 1024
 
 class GLN_API ForwardRenderer : public ISystem {
 	//Uniforms
@@ -22,12 +23,18 @@ class GLN_API ForwardRenderer : public ISystem {
 	Texture2D* HDRBUfferTexture;
 	Texture2D* depthTexture;
 	FrameBuffer HDRBBuffer;
-	Shader* basicToneMappingShader;
 	GLuint screenQuadVAO;
 
 	//UniformBUffers
 	Buffer* perFrameUbo;
 	Buffer* CsmUbo;
+	Buffer* visibleLightBuffer;
+	Buffer* DebugDepthBuffer;
+
+	Material depthPassMaterial;
+	Shader* basicToneMappingShader;
+	ComputeShader* LightCullingCompute;
+	Shader* LightCullingDebugShader;
 
 	SceneManager* scene;
 	SceneRenderer sceneRenderer;

@@ -24,6 +24,8 @@ public:
     void setMat4(const std::string& name, glm::mat4& matrix);
     void setUniformBlockBinding(const std::string& name, int index);
     GLuint getUniformLocation(const std::string& name) const;
+
+    virtual ~Shader() {};
 };
 
 class GLN_API ComputeShader : public Shader {

@@ -5,6 +5,7 @@
 #include <imgui.h>
 #include "Glen/Core/Logger.h"
 #include "Panel.h"
+#include "Glen/Core/EngineContext.h"
 
 class LogWindowPanel : public IPanel {
 	ImGuiTextFilter     filter;

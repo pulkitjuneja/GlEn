@@ -74,6 +74,7 @@ public:
 
 	void loadShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const std::string& shaderName);
 	Shader* getShader(const std::string& shaderName);
+	void loadComputeShader(const std::string& shaderPath, const std::string& shaderName);
 
 	void loadPrimitives();
 	void createCubePrimitive();

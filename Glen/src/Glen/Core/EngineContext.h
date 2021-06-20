@@ -14,6 +14,11 @@ class PhysicsContext;
 class IAllocator;
 class IPanel;
 
+struct engineStats {
+	float lastFrameTime;
+};
+
+
 class GLN_API EngineContext {
 public:
 	ResourceManager* resourceManager = nullptr;
@@ -23,6 +28,7 @@ public:
 	PhysicsContext* physicsContext = nullptr;
 	IAllocator* sceneAllocator = nullptr;
 	std::vector<IPanel*> UIPanels;
+	engineStats stats;
 
 	static EngineContext* instance;
 	static EngineContext* get();

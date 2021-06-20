@@ -21,5 +21,4 @@ public:
 	void* mapToMemory(GLenum access, bool bind = false);
 	void unmapFromMemroy(bool bind = false);
 };
-
 #endif // !UNIFORM_BUFFER_H

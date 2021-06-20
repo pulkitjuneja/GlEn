@@ -241,6 +241,47 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 }
 
 
+void ResourceManager::loadComputeShader(const std::string& shaderPath, const std::string& shaderName)
+{
+	if (loadedShaders.find(shaderName) != loadedShaders.end())
+	{
+		Logger::logInfo("Shader already loaded, to get the shader use the getShader function");
+		return;
+	}
+
+	char* computeSource;
+	readFromFile(shaderPath, computeSource);
+	GLuint computeShader = glCreateShader(GL_COMPUTE_SHADER);
+	glShaderSource(computeShader, 1, &computeSource, nullptr);
+	glCompileShader(computeShader);
+	int success;
+	char infoLog[512];
+	glGetShaderiv(computeShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(computeShader, 512, nullptr, infoLog);
+		Logger::logError("ERROR " + shaderName + " ::COMPUTE::COMPILATION_FAILED" + infoLog);
+	}
+	GLuint shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, computeShader);
+	glLinkProgram(shaderProgram);
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+		Logger::logError("ERROR " + shaderName + " ::PROGRAM::LINKING_FAILED" + infoLog);
+	}
+	int uniformCount = 0;
+	glGetProgramiv(shaderProgram, GL_ACTIVE_UNIFORMS, &uniformCount);
+	glDeleteShader(computeShader);
+	Shader* newShader = Mem::Allocate<ComputeShader>(resourceAllocator, shaderProgram, shaderName, uniformCount);
+	newShader->setUniformBlockBinding("perFrameUniforms", 0);
+	newShader->setUniformBlockBinding("csmUniforms", 1);
+	Logger::logInfo("Shader loaded : " + shaderName + " id : " + std::to_string(newShader->getShaderID()));
+	loadedShaders.insert(make_pair(shaderName, newShader));
+}
+
+
 Shader* ResourceManager::getShader(const std::string& shaderName)
 {
 	if (loadedShaders.find(shaderName) != loadedShaders.end())
@@ -253,6 +294,7 @@ Shader* ResourceManager::getShader(const std::string& shaderName)
 		return nullptr;
 	}
 }
+
 
 void ResourceManager::loadPrimitives()
 {

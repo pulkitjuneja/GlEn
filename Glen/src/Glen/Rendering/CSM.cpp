@@ -240,7 +240,7 @@ Csm::Csm(float lambda, float nearOffset, int splitCount, int shadowMapSize) : la
 		0.0f, 0.5f, 0.0f, 0.0f,
 		0.0f, 0.0f, 0.5f, 0.0f,
 		0.5f, 0.5f, 0.5f, 1.0f);
-	depthMapMaterial.setShader(EngineContext::get()->resourceManager->getShader("depthMap"));
+	depthMapMaterial.setShader(EngineContext::get()->resourceManager->getShader("shadowMap"));
 }
 
 void Csm::update(Camera* camera, glm::vec3 lightDir)

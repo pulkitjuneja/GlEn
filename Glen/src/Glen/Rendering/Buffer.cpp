@@ -1,18 +1,20 @@
-#include "UniformBuffer.h"
+#include "Buffer.h"
 
 Buffer::Buffer(GLsizeiptr bufferSize, GLuint bindIndex, BufferType bufferType)
 {
 	glGenBuffers(1, &id);
 	target = bufferType;
 	glBindBuffer(target, id);
-	glBufferData(target, bufferSize, nullptr, GL_STATIC_DRAW);
+	GLuint drawType = target == BufferType::UBO ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW;
+	glBufferData(target, bufferSize, nullptr, drawType);
 	glBindBuffer(target, 0);
 
 	glBindBufferBase(target, bindIndex, id);
 }
 
 void Buffer::bind()
-{
+{ 
+
 	glBindBuffer(target, id);
 }
 

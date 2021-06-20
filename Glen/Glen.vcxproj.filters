@@ -130,7 +130,7 @@
     <ClInclude Include="src\Glen\Rendering\Texture.h">
       <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Glen\Rendering\UniformBuffer.h">
+    <ClInclude Include="src\Glen\Rendering\Buffer.h">
       <Filter>src\Glen\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Glen\Rendering\Uniforms.h">
@@ -246,7 +246,7 @@
     <ClCompile Include="src\Glen\Rendering\Texture.cpp">
       <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Glen\Rendering\UniformBuffer.cpp">
+    <ClCompile Include="src\Glen\Rendering\Buffer.cpp">
       <Filter>src\Glen\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Glen\ResourceManagement\ResourceManager.cpp">
