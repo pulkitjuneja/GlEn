@@ -4,12 +4,17 @@
 
 PointLight& SceneManager::createPointLight(glm::vec4 position, glm::vec4 diffuse, float intensity)
 {
-	PointLight light;
-	light.position = position;
-	light.diffuse = diffuse;
-	light.intensity = intensity;
+	if (pointLights.size() < MAXPOINTLIGHTS) {
+		PointLight light;
+		light.position = position;
+		light.diffuse = diffuse;
+		light.intensity = intensity;
 
-	pointLights.push_back(light);
+		pointLights.push_back(light);
+	}
+	else {
+		Logger::logInfo("Cannot add more point lights to the scene");
+	}
 	return pointLights[pointLights.size()-1];
 }
 

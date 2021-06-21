@@ -9,7 +9,7 @@
 #include "Camera.h"
 
 #define MAXENTITIES 5000
-#define MAXPOINTLIGHTS 1000
+#define MAXPOINTLIGHTS 4096
 
 class GLN_API SceneManager {
 protected:

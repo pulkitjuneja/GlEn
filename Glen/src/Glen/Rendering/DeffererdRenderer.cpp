@@ -116,6 +116,8 @@ void DefferedRenderer::startup()
 	directionalLightShader = EngineContext::get()->resourceManager->getShader("defferedDirectionalLightPass");
 	pointLightShader = EngineContext::get()->resourceManager->getShader("defferedPointLightPass");
 	basicToneMappingShader = EngineContext::get()->resourceManager->getShader("basicToneMapping");
+	pointLightBuffer = Mem::Allocate<Buffer>(sizeof(PointLight) * MAXPOINTLIGHTS, 5, BufferType::SSBO);
+
 	ssr = EngineContext::get()->resourceManager->getShader("ssrPass");
 	std::vector<std::string> facePaths = {
 			"right.jpg",
@@ -212,24 +214,13 @@ void DefferedRenderer::update(float deltaTime)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	csm.update(EngineContext::get()->sceneManager->getMainCamera(), scene->getDirectionalLight().direction);
-	sceneRenderer.setGlobalUniforms(perFrameUniforms, scene);
+
 	csm.updateUniforms(csmUniforms);
+	sceneRenderer.setGlobalUniforms(perFrameUniforms, scene);
+	pointLightBuffer->setData(&scene->getPointLIghts()[0], sizeof(PointLight) * scene->getPointLIghts().size(), true);
 
-	perFrameUbo.bind();
-	void* mem = perFrameUbo.mapToMemory(GL_WRITE_ONLY);
-
-	if (mem) {
-		memcpy(mem, &perFrameUniforms, sizeof(PerFrameUniforms));
-		perFrameUbo.unmapFromMemroy();
-	}
-
-	CsmUbo.bind();
-	auto siz = sizeof(int);
-	void* mem2 = CsmUbo.mapToMemory(GL_WRITE_ONLY);
-	if (mem2) {
-		memcpy(mem2, &csmUniforms, sizeof(CSMUniforms));
-		CsmUbo.unmapFromMemroy();
-	}
+	perFrameUbo.setData(&perFrameUniforms, sizeof(perFrameUniforms), true);
+	CsmUbo.setData(&csmUniforms, sizeof(csmUniforms), true);
 
 	csm.render(scene);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);

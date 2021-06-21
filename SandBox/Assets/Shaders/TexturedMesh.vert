@@ -27,7 +27,6 @@ layout (std140) uniform perFrameUniforms
 	mat4 inverseViewMatrix;
 	mat4 lightSpaceMatrix;
 	DirectionalLight directionalLight;
-	PointLight pointLights[10];
 	vec4 cameraPosition;
 	int pointLightCount;
 };

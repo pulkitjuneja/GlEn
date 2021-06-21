@@ -23,29 +23,34 @@ void Buffer::unBind()
 	glBindBuffer(target, 0);
 }
 
-void Buffer::setData(GLintptr offset, GLsizeiptr size, void* data, bool bind)
-{
+
+void Buffer::setData(void* data, size_t size, bool bind)
+{ 
 	if (bind) {
 		glBindBuffer(target, id);
 	}
-	glBufferSubData(target, offset, size, data);
+	void* ptr = glMapBuffer(target, GL_WRITE_ONLY);
+	if (ptr) {
+		std::memcpy(ptr, data, size);
+		glUnmapBuffer(target);
+	}
 	if (bind) {
 		glBindBuffer(target, 0);
 	}
 }
 
-void* Buffer::mapToMemory(GLenum access, bool bind) {
+void* Buffer::mapForRead(bool bind) {
 	if (bind) {
 		glBindBuffer(target, id);
 	}
-	void* ptr = glMapBuffer(target, access);
+	void* ptr = glMapBuffer(target, GL_READ_ONLY);
 	if (bind) {
 		glBindBuffer(target, 0);
 	}
 	return ptr;
 }
 
-void Buffer::unmapFromMemroy(bool bind)
+void Buffer::unmap(bool bind)
 {
 	if (bind) {
 		glBindBuffer(target, id);

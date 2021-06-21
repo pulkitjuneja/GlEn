@@ -4,6 +4,7 @@
 #define TILE_SIZE 16
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
+#define MAX_POINT_LIGHTS 4096
 
 struct PointLight {
 	vec4 position;
@@ -26,7 +27,6 @@ layout (std140) uniform perFrameUniforms
 	mat4 inverseViewMatrix;
 	mat4 lightSpaceMatrix;
 	DirectionalLight directionalLight;
-	PointLight pointLights[10];
 	vec4 cameraPosition;
 	int pointLightCount;
 };
@@ -39,6 +39,10 @@ layout(std430, binding = 3) writeonly buffer visible_lights_indices {
 
 layout(std430, binding = 4) writeonly buffer debug_depth_buffer {
 	float depth_buffer[];
+};
+
+layout(std430, binding = 5) readonly buffer point_light_buffer {
+	PointLight point_lights[MAX_POINT_LIGHTS];
 };
 
 shared uint minDepthInt;
@@ -137,7 +141,7 @@ void main(){
 			break;
 		}
 
-		PointLight p = pointLights[lightIndex];
+		PointLight p = point_lights[lightIndex];
 		vec4 position = viewMatrix * p.position;
 
 		if(group_light_count < MAX_LIGHTS_PER_TILE) {

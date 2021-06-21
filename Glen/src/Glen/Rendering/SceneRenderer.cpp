@@ -15,9 +15,9 @@ void SceneRenderer::setGlobalUniforms(PerFrameUniforms& perFrameUniforms, SceneM
 
 	// set pointlight(s) into shader
 	auto pointLights = scene->getPointLIghts();
-	for (int i = 0; i < pointLights.size(); i++) {
-		perFrameUniforms.pointLights[i] = pointLights[i];
-	}
+	//for (int i = 0; i < pointLights.size(); i++) {
+	//	perFrameUniforms.pointLights[i] = pointLights[i];
+	//}
 	perFrameUniforms.pointLightCount = pointLights.size();
 }
 

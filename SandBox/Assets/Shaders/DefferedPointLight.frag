@@ -1,4 +1,6 @@
-#version 330 core
+#version 430 core
+
+#define MAX_POINT_LIGHTS 4096
 
 out vec4 FragColor;
 
@@ -28,9 +30,12 @@ layout (std140) uniform perFrameUniforms
 	mat4 inverseViewMatrix;
 	mat4 lightSpaceMatrix;
 	DirectionalLight directionalLight;
-	PointLight pointLights[10];
 	vec4 cameraPosition;
 	int pointLightCount;
+};
+
+layout(std430, binding = 5) readonly buffer point_light_buffer {
+	PointLight point_lights[MAX_POINT_LIGHTS];
 };
 
 in vec4 fragPos;
@@ -97,9 +102,9 @@ void main () {
 	vec3 diffuseColor = colorData.xyz;
 	float specularStrength = colorData.w;
 
-	vec3 lightPosition = pointLights[lightIndex].position.xyz;
-	float radius = pointLights[lightIndex].radius;
-	vec4 lightDiffuse = pointLights[lightIndex].diffuse;
+	vec3 lightPosition = point_lights[lightIndex].position.xyz;
+	float radius = point_lights[lightIndex].radius;
+	vec4 lightDiffuse = point_lights[lightIndex].diffuse;
 	//vec4 lightSpecular = pointLights[lightIndex].specular;
 	vec3 lightToPosVector = lightPosition - worldPos.xyz;
 	float lightDist = length(lightToPosVector);
@@ -129,7 +134,7 @@ void main () {
 		kD *= 1.0 - PBRInfo.x;	
 
 		float NdotL = max(dot(worldNormal, lightDir), 0.0);
-		vec3 radiance = lightDiffuse.xyz * attenuation * pointLights[lightIndex].intensity;
+		vec3 radiance = lightDiffuse.xyz * attenuation * point_lights[lightIndex].intensity;
 		vec3 color = (kD * diffuseColor / 3.1415 + specular) * radiance * NdotL;
 		result = color + vec3(0.03) * diffuseColor * PBRInfo.z;	
 		result *= ztest;
@@ -144,9 +149,9 @@ void main () {
 		float diff = max(dot(worldNormal,lightDir),0.0);
 		float spec = pow(max(dot(halfDir, worldNormal), 0.0),32);
 
-		float diffuse  = pointLights[lightIndex].intensity * diff * Kd;
-		float specular = pointLights[lightIndex].intensity * spec * Ks;
-		result = (diffuse) * diffuseColor * pointLights[lightIndex].diffuse.xyz + specular * pointLights[lightIndex].diffuse.xyz;
+		float diffuse  = point_lights[lightIndex].intensity * diff * Kd;
+		float specular = point_lights[lightIndex].intensity * spec * Ks;
+		result = (diffuse) * diffuseColor * point_lights[lightIndex].diffuse.xyz + specular * point_lights[lightIndex].diffuse.xyz;
 		result*= ztest * attenuation;
 	}
 

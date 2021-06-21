@@ -48,6 +48,7 @@ void ForwardRenderer::startup()
 
 	visibleLightBuffer = Mem::Allocate<Buffer>(numberOfTiles * sizeof(int) * MAX_LIGHTS_PER_TILE, 3, BufferType::SSBO);
 	DebugDepthBuffer = Mem::Allocate<Buffer>(numberOfTiles * sizeof(float) , 4, BufferType::SSBO);
+	pointLightBuffer = Mem::Allocate<Buffer>(sizeof(PointLight) * MAXPOINTLIGHTS, 5, BufferType::SSBO);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -61,28 +62,18 @@ void ForwardRenderer::update(float deltaTimer)
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// update shadow frustums
 	csm->update(scene->getMainCamera(), scene->getDirectionalLight().direction);
-	csm->updateUniforms(csmUniforms);
 
 	//Update Global Uniform blocks
+	csm->updateUniforms(csmUniforms);
 	sceneRenderer.setGlobalUniforms(perFrameUniforms, scene);
+	pointLightBuffer->setData(&scene->getPointLIghts()[0], sizeof(PointLight) * scene->getPointLIghts().size(), true);
 
-	perFrameUbo->bind();
-	void* mem = perFrameUbo->mapToMemory(GL_WRITE_ONLY);
+	perFrameUbo->setData(&perFrameUniforms, sizeof(perFrameUniforms), true);
+	CsmUbo->setData(&csmUniforms, sizeof(csmUniforms), true);
 
-	if (mem) {
-		memcpy(mem, &perFrameUniforms, sizeof(PerFrameUniforms));
-		perFrameUbo->unmapFromMemroy();
-	}
-
-	CsmUbo->bind();
-	auto siz = sizeof(int);
-	void* mem2 = CsmUbo->mapToMemory(GL_WRITE_ONLY);
-	if (mem2) {
-		memcpy(mem2, &csmUniforms, sizeof(CSMUniforms));
-		CsmUbo->unmapFromMemroy();
-	}
-
+	// render shadow maps
 	csm->render(scene);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 

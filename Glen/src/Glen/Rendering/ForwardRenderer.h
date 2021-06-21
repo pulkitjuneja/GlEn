@@ -29,6 +29,8 @@ class GLN_API ForwardRenderer : public ISystem {
 	Buffer* perFrameUbo;
 	Buffer* CsmUbo;
 	Buffer* visibleLightBuffer;
+	Buffer* pointLightBuffer;
+	// temp remove
 	Buffer* DebugDepthBuffer;
 
 	Material depthPassMaterial;

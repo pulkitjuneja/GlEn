@@ -41,6 +41,7 @@ class DefferedRenderer : public ISystem {
 	//UniformBUffers
 	Buffer perFrameUbo;
 	Buffer CsmUbo;
+	Buffer* pointLightBuffer;
 
 	SceneRenderer sceneRenderer;
 	Csm csm;

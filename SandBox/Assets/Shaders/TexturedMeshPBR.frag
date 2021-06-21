@@ -1,4 +1,6 @@
-#version 330 core
+#version 430 core
+
+#define MAX_POINT_LIGHTS 4096
 
 struct Material {
 	sampler2D texture_diffuse;
@@ -34,7 +36,6 @@ layout (std140) uniform perFrameUniforms
 	mat4 inverseViewMatrix;
 	mat4 lightSpaceMatrix;
 	DirectionalLight directionalLight;
-	PointLight pointLights[10];
 	vec4 cameraPosition;
 	int pointLightCount;
 };
@@ -44,6 +45,10 @@ layout (std140) uniform csmUniforms
 	int splitCount;
 	mat4 textureMatrices[8];
 	float farBounds[8];
+};
+
+layout(std430, binding = 5) readonly buffer point_light_buffer {
+	PointLight point_lights[MAX_POINT_LIGHTS];
 };
 
 in VS_OUT {
@@ -234,7 +239,7 @@ void main()
 	result += calculateDirectionalLight(normal, viewDir, diffuseColor.xyz, PBRInfo);
 
 	for(int i = 0; i < pointLightCount; i++) {
-		result += calculatePointLight(pointLights[i], normal, viewDir,  diffuseColor.xyz, PBRInfo);
+		result += calculatePointLight(point_lights[i], normal, viewDir,  diffuseColor.xyz, PBRInfo);
 	}
 
 	FragColor = vec4(result,1.0);
