@@ -1,6 +1,7 @@
 #version 430 core
 
 #define MAX_POINT_LIGHTS 4096
+#define MAX_LIGHTS_PER_TILE 1024
 
 struct Material {
 	sampler2D texture_diffuse;
@@ -47,6 +48,10 @@ layout (std140) uniform csmUniforms
 	float farBounds[8];
 };
 
+layout(std430, binding = 3) readonly buffer visible_lights_indices {
+	int lights_indices[];
+};
+
 layout(std430, binding = 5) readonly buffer point_light_buffer {
 	PointLight point_lights[MAX_POINT_LIGHTS];
 };
@@ -79,7 +84,7 @@ vec3 calculatePointLight (PointLight pointLight, vec3 normal, vec3 viewDir, vec3
     float spec = pow(max(dot(halfwayDir, normal), 0.0),32);
 	float distance = length(pointLight.position.xyz - vsOut.worldPos);
 
-	float attenuation = 1.0/(1.0 + 0.022f *distance + 0.0019f * (distance*distance));
+	float attenuation = clamp(1.0 - distance * distance / (pointLight.radius * pointLight.radius), 0.0, 1.0);
 
 	//vec3 ambient  = pointLight.ambient.xyz  * diffuseColor * attenuation;
 	float diffuse  = pointLight.intensity  * diff * Kd;
@@ -181,8 +186,15 @@ void main()
 
 	result += calculateDirectionalLight(normal, viewDir, diffuseColor.xyz, specularIntensity);
 
-	for(int i = 0; i < pointLightCount; i++) {
-		result += calculatePointLight(point_lights[i], normal, viewDir,  diffuseColor.xyz, specularIntensity);
+	ivec2 location = ivec2(gl_FragCoord.xy);
+	ivec2 tileID = location / ivec2(16, 16);
+	uint index = tileID.y * 120 + tileID.x;
+	uint offset = index * MAX_LIGHTS_PER_TILE;
+
+	for(int i = 0; i < MAX_LIGHTS_PER_TILE && lights_indices[offset + i] != -1; i++) {
+		int index = lights_indices[offset + i];
+		PointLight p = point_lights[index];
+		result += calculatePointLight(p, normal, viewDir,  diffuseColor.xyz, specularIntensity);
 	}
 
 	FragColor = vec4(result,1.0);

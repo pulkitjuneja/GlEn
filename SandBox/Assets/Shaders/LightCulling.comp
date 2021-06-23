@@ -32,6 +32,8 @@ layout (std140) uniform perFrameUniforms
 };
 
 uniform sampler2D depthMap;
+uniform float near;
+uniform float far;
 
 layout(std430, binding = 3) writeonly buffer visible_lights_indices {
 	int lights_indices[];
@@ -51,6 +53,32 @@ shared uint group_light_count;
 shared vec4 frustumPlanes[6];
 // Shared local storage for visible indices, will be written out to the global buffer at the end
 shared int visibleLightIndices[MAX_LIGHTS_PER_TILE];
+
+// compute planes from three points, first point simplified to be origin
+vec4 CreatePlaneEquation( vec4 b, vec4 c )
+{
+    vec4 n;
+ 
+    // normalize(cross( b.xyz-a.xyz, c.xyz-a.xyz )), except we know "a" is the origin
+    n.xyz = normalize(cross( c.xyz, b.xyz ));
+    n.w = 0;
+ 
+    return n;
+}
+
+vec4 ConvertProjToView( vec4 p )
+{
+    p = inverseProjectionMatrix * p;
+    p /= p.w;
+    return p;
+}
+
+float ConvertProjDepthToView( float z )
+{
+    float newZ = 2.0f * z - 1;
+    newZ = 1.f / (newZ*inverseProjectionMatrix[2][3] + inverseProjectionMatrix[3][3]);
+    return newZ;
+}
 
 layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main(){
@@ -78,7 +106,7 @@ void main(){
 	float depth = texture(depthMap, text).r;
 
 	// Linearize the depth value from depth buffer (must do this because we created it using projection)
-	depth = (0.5 * projectionMatrix[3][2]) / (depth + 0.5 * projectionMatrix[2][2] - 0.5);
+	// depth = (2 * near) / (far + near - depth * (far - near));
 
 	uint depthInt = floatBitsToUint(depth);
 	atomicMin(minDepthInt, depthInt);
@@ -91,8 +119,9 @@ void main(){
 		float maxDepth = uintBitsToFloat(maxDepthInt);
 
 		uint index = gl_WorkGroupID.y * gl_NumWorkGroups.x + gl_WorkGroupID.x;
-		depth_buffer[index] = maxDepth;
 
+		depth_buffer[index] = maxDepth;
+		
 		vec4 vs_min_depth = (inverseProjectionMatrix * vec4(0.0, 0.0, (2.0 * minDepth - 1.0), 1.0));
 		vec4 vs_max_depth = (inverseProjectionMatrix * vec4(0.0, 0.0, (2.0 * maxDepth - 1.0), 1.0));
 		vs_min_depth /= vs_min_depth.w;
@@ -100,6 +129,9 @@ void main(){
 		minDepth = vs_min_depth.z;
 		maxDepth = vs_max_depth.z;
 
+//		minDepth = (2 * near) / (far + near - minDepth * (far - near));
+//		maxDepth = (2 * near) / (far + near - maxDepth * (far - near));
+//
 		vec2 tileScale = screenSize * (1.0f / float(2*TILE_SIZE));
 		vec2 tileBias = tileScale - vec2(gl_WorkGroupID.xy);
 
@@ -116,7 +148,7 @@ void main(){
 		//bottom plane
 		frustumPlanes[3] = col4 + col2;
 		//near
-		frustumPlanes[4] =vec4(0.0f, 0.0f, -1.0f,  -minDepth);
+		frustumPlanes[4] =vec4(0.0f, 0.0f, 1.0f,  -minDepth);
 		//far
 		frustumPlanes[5] = vec4(0.0f, 0.0f, -1.0f,  maxDepth);
 
@@ -134,14 +166,14 @@ void main(){
 	// Can handle 256 simultaniously. Anymore lights than that and additional passes are performed
 	uint threadCount = TILE_SIZE * TILE_SIZE;
 	uint passCount = (pointLightCount + threadCount - 1) / threadCount;
-	for (uint i = 0; i < passCount; i++) {
+	for (uint i = gl_LocalInvocationIndex; i < pointLightCount; i += threadCount){
 
-		uint lightIndex = i * threadCount + gl_LocalInvocationIndex;
-		if (lightIndex >= pointLightCount) {
-			break;
-		}
+		//uint lightIndex = i * threadCount + gl_LocalInvocationIndex;
+//		if (lightIndex >= pointLightCount) {
+//			break;
+//		}
 
-		PointLight p = point_lights[lightIndex];
+		PointLight p = point_lights[i];
 		vec4 position = viewMatrix * p.position;
 
 		if(group_light_count < MAX_LIGHTS_PER_TILE) {
@@ -153,7 +185,7 @@ void main(){
 			}
 			if (inFrustum) {
 				uint id = atomicAdd(group_light_count, 1);
-				visibleLightIndices[id] = int(lightIndex);
+				visibleLightIndices[id] = int(i);
 			}
 		}
 	}

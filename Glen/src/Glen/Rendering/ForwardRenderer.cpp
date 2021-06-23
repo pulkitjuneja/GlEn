@@ -1,4 +1,5 @@
 #include "ForwardRenderer.h"
+#include "Glen/Core/Input.h"
 
 ForwardRenderer::ForwardRenderer()
 {
@@ -19,8 +20,8 @@ void ForwardRenderer::setupHDRBuffer()
 	depthTexture = EngineContext::get()->resourceManager->generateTexture(DEPTH_TEXTURE_NAME, TextureType::DEPTH, SCREEN_WIDTH, SCREEN_HEIGHT,
 		GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
 	depthTexture->bind();
-	depthTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
-	depthTexture->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	depthTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
+	depthTexture->setWrapping(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
 
 	HDRBBuffer.attachRenderTarget(HDRBUfferTexture, 0, 0);
 	HDRBBuffer.attachDepthTarget(depthTexture, 0);
@@ -59,6 +60,10 @@ void ForwardRenderer::shutdown() {}
 
 void ForwardRenderer::update(float deltaTimer)
 {
+	if (EngineContext::get()->inputStatus->isKeyPressed(Keys::C)) {
+		debug = !debug;
+	}
+
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -92,6 +97,8 @@ void ForwardRenderer::update(float deltaTimer)
 	int workGroupsX = (SCREEN_WIDTH + (SCREEN_WIDTH % 16)) / 16;
 	int workGroupsY = (SCREEN_HEIGHT + (SCREEN_HEIGHT % 16)) / 16;
 	LightCullingCompute->setInt("depthMap", 12);
+	LightCullingCompute->setFloat("far", scene->getMainCamera()->farPlane);
+	LightCullingCompute->setFloat("near", scene->getMainCamera()->nearPlane);
 	LightCullingCompute->dispatch(workGroupsX, workGroupsY);
 	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 
@@ -104,12 +111,16 @@ void ForwardRenderer::update(float deltaTimer)
 
 	toneMappingPass();
 
-	LightCullingDebugShader->use();
-	LightCullingDebugShader->setInt("depthMap", 12);
-	LightCullingDebugShader->setInt("numberOfTilesX", workGroupsX);
-	LightCullingDebugShader->setInt("totalLightCount", scene->getPointLIghts().size());
-	glBindVertexArray(screenQuadVAO);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	if (debug) {
+		LightCullingDebugShader->use();
+		LightCullingDebugShader->setFloat("far", scene->getMainCamera()->farPlane);
+		LightCullingDebugShader->setFloat("near", scene->getMainCamera()->nearPlane);
+		LightCullingDebugShader->setInt("depthMap", 12);
+		LightCullingDebugShader->setInt("numberOfTilesX", workGroupsX);
+		LightCullingDebugShader->setInt("totalLightCount", scene->getPointLIghts().size());
+		glBindVertexArray(screenQuadVAO);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
 
 	HDRBBuffer.bind(GL_READ_FRAMEBUFFER);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

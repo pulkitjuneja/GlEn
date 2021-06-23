@@ -41,6 +41,8 @@ class GLN_API ForwardRenderer : public ISystem {
 	SceneManager* scene;
 	SceneRenderer sceneRenderer;
 
+	bool debug;
+
 public:
 	ForwardRenderer();
 	void toneMappingPass();

@@ -33,6 +33,8 @@ uniform int totalLightCount;
 uniform sampler2D depthMap;
 
 out vec4 fragColor;
+uniform float near;
+uniform float far;
 
 layout(std430, binding = 3) readonly buffer visible_lights_indices {
 	int lights_indices[];
@@ -52,7 +54,8 @@ void main () {
 //	vec2 screenSize = vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 //	vec2 text = vec2(location) / screenSize;
 //	float depth = texture(depthMap, text).r;
-//
+//	depth = (2 * near) / (far + near - depth * (far - near));
+
 	uint offset = index * MAX_LIGHTS_PER_TILE;
 	uint i;
 	for (i = 0; i < MAX_LIGHTS_PER_TILE && lights_indices[offset + i]!= -1; i++);
@@ -60,6 +63,7 @@ void main () {
 	float ratio = float(i) / float(totalLightCount);
 	vec3 ratioColor = vec3(ratio, ratio, ratio);
 	vec3 borderColor = vec3(0.4, 0, 0);
+	// fragColor = vec4(depth, depth, depth, 1.0);
 	if(edge.x == 0 || edge.y == 0) {
 		fragColor = vec4(borderColor, 0.7);
 	} else {
