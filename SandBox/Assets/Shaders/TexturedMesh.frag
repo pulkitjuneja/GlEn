@@ -184,7 +184,7 @@ void main()
 	vec3 viewDir = normalize(vec3(cameraPosition) - vsOut.worldPos);
 	vec3 result = vec3(0,0,0);
 
-	result += calculateDirectionalLight(normal, viewDir, diffuseColor.xyz, specularIntensity);
+	// result += calculateDirectionalLight(normal, viewDir, diffuseColor.xyz, specularIntensity);
 
 	ivec2 location = ivec2(gl_FragCoord.xy);
 	ivec2 tileID = location / ivec2(16, 16);

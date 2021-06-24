@@ -32,8 +32,6 @@ void LogWindowPanel::update()
 	std::string windowTitle = "Log";
 	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 	bool show = true;
-	ImGui::Begin(windowTitle.c_str() , &show);
-	ImGui::End();
 	if (!ImGui::Begin(windowTitle.c_str(), &show))
 	{
 		ImGui::End();

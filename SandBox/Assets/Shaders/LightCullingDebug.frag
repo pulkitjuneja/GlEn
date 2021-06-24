@@ -51,8 +51,8 @@ void main () {
 	uint index = tileID.y * numberOfTilesX + tileID.x;
 	float depth = depth_buffer[index];
 	ivec2 edge = location % ivec2(16, 16);
-//	vec2 screenSize = vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
-//	vec2 text = vec2(location) / screenSize;
+	vec2 screenSize = vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+	vec2 text = vec2(location) / screenSize;
 //	float depth = texture(depthMap, text).r;
 //	depth = (2 * near) / (far + near - depth * (far - near));
 
@@ -63,7 +63,7 @@ void main () {
 	float ratio = float(i) / float(totalLightCount);
 	vec3 ratioColor = vec3(ratio, ratio, ratio);
 	vec3 borderColor = vec3(0.4, 0, 0);
-	// fragColor = vec4(depth, depth, depth, 1.0);
+	// fragColor = vec4(text, 0.0, 1.0);
 	if(edge.x == 0 || edge.y == 0) {
 		fragColor = vec4(borderColor, 0.7);
 	} else {

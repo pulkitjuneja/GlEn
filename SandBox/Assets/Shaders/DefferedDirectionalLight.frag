@@ -206,5 +206,5 @@ void main()
 	vec3 cameraRelativePostion = worldPos.xyz - cameraPosition.xyz;
 	result = mix(result, texture(skybox, cameraRelativePostion).rgb, step(1.0, depth));
 	
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(0,0,0, 1.0);
 }  

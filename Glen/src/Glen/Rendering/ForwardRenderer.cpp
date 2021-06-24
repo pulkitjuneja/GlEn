@@ -110,17 +110,18 @@ void ForwardRenderer::update(float deltaTimer)
 	HDRBBuffer.unBind();
 
 	toneMappingPass();
-
-	if (debug) {
-		LightCullingDebugShader->use();
-		LightCullingDebugShader->setFloat("far", scene->getMainCamera()->farPlane);
-		LightCullingDebugShader->setFloat("near", scene->getMainCamera()->nearPlane);
-		LightCullingDebugShader->setInt("depthMap", 12);
-		LightCullingDebugShader->setInt("numberOfTilesX", workGroupsX);
-		LightCullingDebugShader->setInt("totalLightCount", scene->getPointLIghts().size());
-		glBindVertexArray(screenQuadVAO);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	}
+	
+	// Uncomment to enable culling debug shader.
+	//if (debug) {
+	//	LightCullingDebugShader->use();
+	//	LightCullingDebugShader->setFloat("far", scene->getMainCamera()->farPlane);
+	//	LightCullingDebugShader->setFloat("near", scene->getMainCamera()->nearPlane);
+	//	LightCullingDebugShader->setInt("depthMap", 12);
+	//	LightCullingDebugShader->setInt("numberOfTilesX", workGroupsX);
+	//	LightCullingDebugShader->setInt("totalLightCount", scene->getPointLIghts().size());
+	//	glBindVertexArray(screenQuadVAO);
+	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	//}
 
 	HDRBBuffer.bind(GL_READ_FRAMEBUFFER);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
