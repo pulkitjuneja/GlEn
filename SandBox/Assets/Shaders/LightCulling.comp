@@ -186,7 +186,8 @@ void main(){
 				bool inFrustum = true;
 				for (uint j = 0; j < 4 && inFrustum; j++) {
 					float d = dot(frustumPlanes[j].xyz, position.xyz);
-					inFrustum = !(d >= p.radius || d <= -p.radius);
+					inFrustum = (d >= -p.radius);
+					//inFrustum = !(d >= p.radius || d <= -p.radius);
 				}
 				if (inFrustum) {
 					uint id = atomicAdd(group_light_count, 1);

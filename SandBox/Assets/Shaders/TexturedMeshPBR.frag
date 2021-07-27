@@ -109,7 +109,18 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
     return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
-}  
+} 
+
+float getAttenuation(float light_radius, float dist) {
+
+    float cutoff = 0.3;
+    float denom = dist / light_radius + 1.0;
+    float attenuation = 1.0 / (denom * denom);
+
+    attenuation = (attenuation - cutoff) / (1 - cutoff);
+    attenuation = max(attenuation, 0.0);
+    return (attenuation);
+}
 
 
 vec3 calculatePointLight (PointLight pointLight, vec3 normal, vec3 viewDir, vec3 diffuseColor, vec3 PBRInfo) {
@@ -119,7 +130,7 @@ vec3 calculatePointLight (PointLight pointLight, vec3 normal, vec3 viewDir, vec3
 	vec3 halfDir = normalize(lightDir + viewDir);
 	float distance = length(pointLight.position.xyz - vsOut.worldPos);
 
-		float attenuation = 1.0 - distance / pointLight.radius;
+		float attenuation = getAttenuation(pointLight.radius, distance);
 		vec3 F0 = vec3(0.04); 
 		F0  = mix(F0, diffuseColor, PBRInfo.x);
 		vec3 F  = fresnelSchlick(max(dot(halfDir, viewDir), 0.0), F0);
