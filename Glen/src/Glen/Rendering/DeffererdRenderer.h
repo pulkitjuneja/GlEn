@@ -7,6 +7,7 @@
 #define G_BUFFER_NORMAL_TEXTURE_NAME "gb_normal_texture"
 #define G_BUFFER_COLOR_TEXTURE_NAME "gb_color_texture"
 #define G_BUFFER_DEPTH_TEXTURE_NAME "gb_depth_texture"
+#define G_BUFFER_VELOCITY_TEXTURE_NAME "gb_velocity_texture"
 #define HDR_BUFFER_TEXTURE_NAME "hdr_buffer_texture"
 #define PP_BUFFER_TEXTURE_NAME "pp_buffer_texture"
 
@@ -28,6 +29,7 @@ class DefferedRenderer : public ISystem {
 	Texture2D* gBUfferDepthTexture;
 	Texture2D* HDRBUfferTexture;
 	Texture2D* postProcessingTexture;
+	Texture2D* gBufferVelocityTexture;
 	CubeMap* skybox;
 
 	FrameBuffer HDRBBuffer;
@@ -37,10 +39,12 @@ class DefferedRenderer : public ISystem {
 	//Uniforms
 	PerFrameUniforms perFrameUniforms;
 	CSMUniforms csmUniforms;
+	TAAUniforms taaUniforms;
 
 	//UniformBUffers
 	Buffer perFrameUbo;
 	Buffer CsmUbo;
+	Buffer TAAUbo;
 	Buffer* pointLightBuffer;
 
 	SceneRenderer sceneRenderer;
@@ -58,6 +62,7 @@ class DefferedRenderer : public ISystem {
 	void setupGBuffer();
 	void setupHDRBuffer();
 public:
+
 	DefferedRenderer();
 	void toneMappingPass();
 	void runGeometryPass();

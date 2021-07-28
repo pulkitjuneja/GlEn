@@ -5,7 +5,7 @@ layout (location = 2) in vec2 texCoords;
 layout (location = 3) in vec4 tangent;
 
 uniform mat4 modelMatrix;
-//uniform mat4 normalMatrix;
+uniform mat4 prevModelMatrix;
 
 struct PointLight {
 	vec4 position;
@@ -21,9 +21,12 @@ struct DirectionalLight {
 };
 
 out VS_OUT {
-    vec3 worldPos;
+    vec4 worldPos;
+	vec4 prevPos;
     vec3 vertNormal;
     vec2 texCoords;
+	vec4 previousClipPostion;
+	vec4 clipPosition;
 	mat3 TBN;
 } vsOut;
 
@@ -41,6 +44,10 @@ layout (std140) uniform perFrameUniforms
 	int pointLightCount;
 };
 
+layout (std140) uniform taaUniforms {
+	mat4 prevViewMatrix;
+	mat4 prevProjectionMatrix;
+};
  
 
 out vec3 FragPos;
@@ -48,7 +55,7 @@ out vec3 FragPos;
 void main() {
 	vec4 homogenousVertexPosition = vec4(position, 1.0);
 	vsOut.texCoords = texCoords;
-	vsOut.worldPos = vec3(modelMatrix* homogenousVertexPosition);
+	vsOut.worldPos = modelMatrix* homogenousVertexPosition;
 	mat3 normalMatrix = mat3(modelMatrix);
 	vec3 T = normalize(vec3(modelMatrix * vec4(tangent.xyz,1.0)));
 	vec3 N = normalize(normalMatrix * normal);
@@ -59,4 +66,9 @@ void main() {
 	vsOut.TBN = mat3(T, B, N);
 	FragPos = (modelMatrix*homogenousVertexPosition).xyz;
 	gl_Position = projectionMatrix * viewMatrix * modelMatrix * homogenousVertexPosition;
+
+	// velocity calculation
+	vsOut.clipPosition = gl_Position;
+	vsOut.previousClipPostion = (prevProjectionMatrix* prevViewMatrix * prevModelMatrix * homogenousVertexPosition);
+	vsOut.prevPos = prevModelMatrix * homogenousVertexPosition;
 }

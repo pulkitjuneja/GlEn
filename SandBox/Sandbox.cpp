@@ -55,7 +55,7 @@ public:
 		mat.setShader(EngineContext::get()->resourceManager->getShader("texturedMeshPBR"));
 
 		Entity& crysisEntity = scene->createEntity("Crysis Entity", EngineContext::get()->resourceManager->loadMesh(crysisMeshLocation));
-		Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
+		//Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
 		Time testTime = timer.restart();
 		Logger::logInfo("Resource load time" + std::to_string(testTime.getAsMilliSeconds()));
 
@@ -63,7 +63,7 @@ public:
 		groundPLaneEntity.attachBoxCollider(glm::vec3(100, 1, 100));
 		groundPLaneEntity.attachRigidBody(RigidBodyType::Static);
 
-		sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
+		//sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
 		crysisEntity.transfrom.setScale(glm::vec3(2, 2, 2));
 		crysisEntity.attachCollider(ColliderType::Box);
 		crysisEntity.transfrom.setPosition(glm::vec3(0, 80, 0));
@@ -81,9 +81,9 @@ public:
 		scene->createPointLight(glm::vec4(300, 10, 5, 1.0), glm::vec4(0, 2	, 0, 1.0), 0.8f);
 		scene->createPointLight(glm::vec4(-300, 10, -10, 1.0), glm::vec4(0, 0, 2, 1.0), 0.8f);
 		scene->createPointLight(glm::vec4(-300, 10, 10, 1.0), glm::vec4(2, 0, 0, 1.0), 0.8f);
-		for (int i = 0; i < 8000; i++) {
-			scene->createPointLight(glm::vec4((std::rand() - RAND_MAX/2) % 400, std::rand()% 300 + 10, (std::rand() - RAND_MAX / 2) %200, 1.0), glm::vec4((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX, 1.0), 1.0f);
-		}
+		//for (int i = 0; i < 8000; i++) {
+		//	scene->createPointLight(glm::vec4((std::rand() - RAND_MAX/2) % 400, std::rand()% 300 + 10, (std::rand() - RAND_MAX / 2) %200, 1.0), glm::vec4((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX, 1.0), 1.0f);
+		//}
 		scene->createDirectionalLight(glm::vec4(0.5f, -1.0f, 0, 1.0),  glm::vec4(3.8f, 3.8f, 3.8f, 1.0f), 1.1f);
 		Entity& cameraControllerParent = scene->createEntity("cameraController");
 		cameraControllerParent.AddScript<CameraController>();

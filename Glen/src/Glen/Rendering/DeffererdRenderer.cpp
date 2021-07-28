@@ -1,9 +1,9 @@
 #include "DeffererdRenderer.h"
 
-
-
 DefferedRenderer::DefferedRenderer() : csm(0.3, 150.0f, 3, 4096), 
-	perFrameUbo(sizeof(PerFrameUniforms), 0, BufferType::UBO), CsmUbo(sizeof(CSMUniforms), 1, BufferType::UBO){}
+	perFrameUbo(sizeof(PerFrameUniforms), 0, BufferType::UBO), 
+	CsmUbo(sizeof(CSMUniforms), 1, BufferType::UBO),
+	TAAUbo(sizeof(TAAUbo),2, BufferType::UBO){}
 
 void DefferedRenderer::createUVSphere()
 {
@@ -79,6 +79,13 @@ void DefferedRenderer::setupGBuffer()
 	gBUfferDepthTexture->bind();
 	gBUfferDepthTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
 	gBUfferDepthTexture->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+
+	gBufferVelocityTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_VELOCITY_TEXTURE_NAME, TextureType::RENDERTEXTURE,
+		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RG, GL_RG16F, GL_FLOAT);
+	gBufferVelocityTexture->bind();
+	gBufferVelocityTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	gBufferVelocityTexture->setWrapping(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
+	gBuffer.attachRenderTarget(gBufferVelocityTexture, 0, 3);
 
 	gBuffer.attachDepthTarget(gBUfferDepthTexture, 0);
 	gBuffer.checkStatus();
@@ -160,8 +167,8 @@ void DefferedRenderer::runGeometryPass()
 {
 	gBuffer.bind();
 
-	unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-	glDrawBuffers(3, attachments);
+	unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+	glDrawBuffers(4, attachments);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Material* gBufferMaterial = new Material();
@@ -173,6 +180,7 @@ void DefferedRenderer::runGeometryPass()
 	gBufferColorTexture->bind(GL_TEXTURE0 + 12);
 	gBUfferDepthTexture->bind(GL_TEXTURE0 + 13);
 	gBufferPBRInfoTexture->bind(GL_TEXTURE0 + 14);
+	gBufferVelocityTexture->bind(GL_TEXTURE0 + 17);
 
 }
 
@@ -217,10 +225,20 @@ void DefferedRenderer::update(float deltaTime)
 
 	csm.updateUniforms(csmUniforms);
 	sceneRenderer.setGlobalUniforms(perFrameUniforms, scene);
-	pointLightBuffer->setData(&scene->getPointLIghts()[0], sizeof(PointLight) * scene->getPointLIghts().size(), true);
 
+	if (EngineContext::get()->stats.isFirstFame) {
+		scene->prevViewMatrix = scene->getMainCamera()->getViewMatrix();
+		scene->prevProjectionMatrix = scene->getMainCamera()->getProjectionMatrix();
+	}
+	taaUniforms.prevViewMatrix = scene->prevViewMatrix;
+	taaUniforms.prevProjectionMatrix = scene->prevProjectionMatrix;
+	scene->prevViewMatrix = scene->getMainCamera()->getViewMatrix();
+	scene->prevProjectionMatrix = scene->getMainCamera()->getProjectionMatrix();
+
+	pointLightBuffer->setData(&scene->getPointLIghts()[0], sizeof(PointLight) * scene->getPointLIghts().size(), true);
 	perFrameUbo.setData(&perFrameUniforms, sizeof(perFrameUniforms), true);
 	CsmUbo.setData(&csmUniforms, sizeof(csmUniforms), true);
+	TAAUbo.setData(&taaUniforms, sizeof(taaUniforms), true);
 
 	csm.render(scene);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -241,6 +259,9 @@ void DefferedRenderer::update(float deltaTime)
 
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+	if (EngineContext::get()->stats.isFirstFame)
+		EngineContext::get()->stats.isFirstFame = false;
 	
 	/*postProcessingTexture->bind(GL_TEXTURE0 + 15);
 	ssr->setInt("finalImageBuffer", 15);

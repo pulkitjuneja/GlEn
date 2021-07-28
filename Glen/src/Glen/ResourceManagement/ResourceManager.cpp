@@ -235,6 +235,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 	Shader* newShader = Mem::Allocate<Shader>(resourceAllocator, shaderProgram, shaderName, uniformCount);
 	newShader->setUniformBlockBinding("perFrameUniforms", 0);
 	newShader->setUniformBlockBinding("csmUniforms", 1);
+	newShader->setUniformBlockBinding("taaUniforms", 2);
 
 	Logger::logInfo("Shader loaded : " + shaderName + " id : " + std::to_string(newShader->getShaderID()));
 	loadedShaders.insert(make_pair(shaderName, newShader));

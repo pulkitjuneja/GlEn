@@ -32,4 +32,9 @@ struct CSMUniforms {
 
 };
 
+struct TAAUniforms {
+	ALIGNED(16) glm::mat4 prevViewMatrix;
+	ALIGNED(16) glm::mat4 prevProjectionMatrix;
+};
+
 #endif
