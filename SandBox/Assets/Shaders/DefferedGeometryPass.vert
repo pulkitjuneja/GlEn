@@ -50,7 +50,7 @@ layout (std140) uniform taaUniforms {
 };
  
 
-out vec3 FragPos;
+out vec4 FragPos;
 
 void main() {
 	vec4 homogenousVertexPosition = vec4(position, 1.0);
@@ -64,7 +64,7 @@ void main() {
 //	T = normalize(T - dot(T, N) * N);
 	vec3 B = cross(N,T) * tangent.w;
 	vsOut.TBN = mat3(T, B, N);
-	FragPos = (modelMatrix*homogenousVertexPosition).xyz;
+	FragPos = (modelMatrix*homogenousVertexPosition);
 	gl_Position = projectionMatrix * viewMatrix * modelMatrix * homogenousVertexPosition;
 
 	// velocity calculation

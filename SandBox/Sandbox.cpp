@@ -23,7 +23,7 @@ class Bouncer : public Script {
 class ObjectRotator : public Script {
 
 	void Update(float deltaTime) override {
-		parent->transfrom.rotate(glm::vec3(0, 0.6 * deltaTime, 0));
+		parent->transfrom.rotate(glm::vec3(0, 10.6 * deltaTime, 0));
 	}
 };
 
@@ -55,7 +55,7 @@ public:
 		mat.setShader(EngineContext::get()->resourceManager->getShader("texturedMeshPBR"));
 
 		Entity& crysisEntity = scene->createEntity("Crysis Entity", EngineContext::get()->resourceManager->loadMesh(crysisMeshLocation));
-		//Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
+		Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
 		Time testTime = timer.restart();
 		Logger::logInfo("Resource load time" + std::to_string(testTime.getAsMilliSeconds()));
 
@@ -63,7 +63,7 @@ public:
 		groundPLaneEntity.attachBoxCollider(glm::vec3(100, 1, 100));
 		groundPLaneEntity.attachRigidBody(RigidBodyType::Static);
 
-		//sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
+		sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
 		crysisEntity.transfrom.setScale(glm::vec3(2, 2, 2));
 		crysisEntity.attachCollider(ColliderType::Box);
 		crysisEntity.transfrom.setPosition(glm::vec3(0, 80, 0));

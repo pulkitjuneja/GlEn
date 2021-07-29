@@ -57,6 +57,7 @@ class DefferedRenderer : public ISystem {
 	Shader* pointLightShader;
 	Shader* basicToneMappingShader;
 	Shader* ssr;
+	Shader* textureDebugShader;
 
 	void createUVSphere();
 	void setupGBuffer();

@@ -1,4 +1,9 @@
 #include "DeffererdRenderer.h"
+#include <imgui.h>
+#define IMGUI_IMPL_OPENGL_LOADER_GLEW
+#include "examples/imgui_impl_opengl3.h"
+#include "examples/imgui_impl_glfw.h"
+#include "Glen/Core/Window.h"
 
 DefferedRenderer::DefferedRenderer() : csm(0.3, 150.0f, 3, 4096), 
 	perFrameUbo(sizeof(PerFrameUniforms), 0, BufferType::UBO), 
@@ -124,6 +129,7 @@ void DefferedRenderer::startup()
 	pointLightShader = EngineContext::get()->resourceManager->getShader("defferedPointLightPass");
 	basicToneMappingShader = EngineContext::get()->resourceManager->getShader("basicToneMapping");
 	pointLightBuffer = Mem::Allocate<Buffer>(sizeof(PointLight) * MAXPOINTLIGHTS, 5, BufferType::SSBO);
+	textureDebugShader = EngineContext::get()->resourceManager->getShader("TextureDebugShader");
 
 	ssr = EngineContext::get()->resourceManager->getShader("ssrPass");
 	std::vector<std::string> facePaths = {
@@ -262,6 +268,39 @@ void DefferedRenderer::update(float deltaTime)
 
 	if (EngineContext::get()->stats.isFirstFame)
 		EngineContext::get()->stats.isFirstFame = false;
+
+	// ------------------------  Temp setup to debug textures ---------------------------
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+
+	// Add UI panels here
+	static bool show = true;
+
+	ImGui::Begin("Velocity buffer");
+	ImGui::BeginChild("Texture");
+
+	ImVec2 wsize = ImGui::GetWindowSize();
+	ImGui::Image((ImTextureID)gBufferVelocityTexture->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::EndChild();
+	ImGui::End();
+
+	ImGuiIO& io = ImGui::GetIO();
+	Window* window = EngineContext::get()->window;
+	io.DisplaySize = ImVec2(window->getWindowData().width, window->getWindowData().height);
+
+	// Rendering
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(backup_current_context);
+	}
+	// --------------------------------- Ends Here --------------------------------------
 	
 	/*postProcessingTexture->bind(GL_TEXTURE0 + 15);
 	ssr->setInt("finalImageBuffer", 15);

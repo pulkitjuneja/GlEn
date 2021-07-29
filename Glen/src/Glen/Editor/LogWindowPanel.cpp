@@ -90,5 +90,6 @@ void LogWindowPanel::update()
 	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH - 160, 40));
 	ImGui::Begin("Stats");
 	ImGui::TextColored(ImVec4(1, 1, 1, 1), "Frame time :%f", EngineContext::get()->stats.lastFrameTime);
+	ImGui::TextColored(ImVec4(1, 1, 1, 1), "Frame Count :%f", EngineContext::get()->stats.frameCount);
 	ImGui::End();
 }

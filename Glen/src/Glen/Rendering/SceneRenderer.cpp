@@ -46,11 +46,7 @@ void SceneRenderer::renderScene(SceneManager* scene, Material* overrideMaterial,
 
 		glm::mat4 modelMatrix = ent.getTransform()->getTransformationMatrix();
 
-		if (EngineContext::get()->stats.isFirstFame)
-			ent.prevModelMatrix = ent.getTransform()->getTransformationMatrix();
-
 		glm::mat4 prevModelMatrix = ent.prevModelMatrix;
-		ent.prevModelMatrix = ent.getTransform()->getTransformationMatrix();
 
 		Shader* currentShader = nullptr;
 

@@ -7,10 +7,14 @@ void ScriptingSystem::startup()
 
 void ScriptingSystem::update(float deltaTime)
 {
-	std::vector<Entity> entities = EngineContext::get()->sceneManager->getEntities();
-	std::vector<Entity>::iterator it = entities.begin();
-	for (; it != entities.end(); it++) {
-		for (auto script : (*it).scripts) {
+	std::vector<Entity>& entities = EngineContext::get()->sceneManager->getEntities();
+	for (int i = 0; i < entities.size(); i++) {
+		Entity& ent = entities[i];
+		// Store previous Model Matrix before updates
+		// TODO: move this to a better place
+		ent.prevModelMatrix = ent.getTransform()->getTransformationMatrix();
+
+		for (auto script : ent.scripts) {
 			script->Update(deltaTime);
 		}
 	}

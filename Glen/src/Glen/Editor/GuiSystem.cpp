@@ -28,31 +28,31 @@ void GuiSystem::startup()
 
 void GuiSystem::update(float deltaTime)
 {
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
+	//ImGui_ImplOpenGL3_NewFrame();
+	//ImGui_ImplGlfw_NewFrame();
+	//ImGui::NewFrame();
 
-	// Add UI panels here
-	static bool show = true;
-	//ImGui::ShowDemoWindow(&show);
-	sceneHeirarchyPanel.update();
-	logWindowPanel.update();
+	//// Add UI panels here
+	//static bool show = true;
+	////ImGui::ShowDemoWindow(&show);
+	//sceneHeirarchyPanel.update();
+	//logWindowPanel.update();
 
-	ImGuiIO& io = ImGui::GetIO();
-	Window* window = EngineContext::get()->window;
-	io.DisplaySize = ImVec2(window->getWindowData().width, window->getWindowData().height);
+	//ImGuiIO& io = ImGui::GetIO();
+	//Window* window = EngineContext::get()->window;
+	//io.DisplaySize = ImVec2(window->getWindowData().width, window->getWindowData().height);
 
-	// Rendering
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	//// Rendering
+	//ImGui::Render();
+	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		GLFWwindow* backup_current_context = glfwGetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		glfwMakeContextCurrent(backup_current_context);
-	}
+	//if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	//{
+	//	GLFWwindow* backup_current_context = glfwGetCurrentContext();
+	//	ImGui::UpdatePlatformWindows();
+	//	ImGui::RenderPlatformWindowsDefault();
+	//	glfwMakeContextCurrent(backup_current_context);
+	//}
 }
 
 void GuiSystem::shutdown()

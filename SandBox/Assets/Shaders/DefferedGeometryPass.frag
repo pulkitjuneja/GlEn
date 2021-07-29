@@ -58,7 +58,7 @@ in VS_OUT {
 } vsOut;
 
 
-in vec3 FragPos;
+in vec4 FragPos;
 
 uniform Material material;
 
@@ -84,8 +84,9 @@ void main()
 	gAlbedoSpec.w = mix(0.1f, specularIntensity, step(1.0f, material.hasSpecularMap));
 	gPBRInfo = vec4(metallic, roughness, oclussion, material.usePBRWorkflow);
 
-	vec2 a = (vsOut.clipPosition.xy / vsOut.clipPosition.w);
-    vec2 b = (vsOut.previousClipPostion.xy / vsOut.previousClipPostion.w);
+	vec2 a = (vsOut.clipPosition.xy / vsOut.clipPosition.w) * 0.5f + 0.5f;
+    vec2 b = (vsOut.previousClipPostion.xy / vsOut.previousClipPostion.w) * 0.5f + 0.5f;
 
-	gVelocity = a - b;
+	vec2 velocity = b - a;
+	gVelocity = velocity;
 }
