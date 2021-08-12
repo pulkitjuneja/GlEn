@@ -76,6 +76,7 @@ void Engine::loadDefaultShaders()
     EngineContext::get()->resourceManager->loadComputeShader("Assets/Shaders/LightCulling.comp", "LightCullingCompute");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/LightCullingDebug.frag", "lightDebugShader");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/TextureDebug.frag", "TextureDebugShader");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/TAA.frag", "TAA");
 }
 
 bool Engine::setupWindow() {

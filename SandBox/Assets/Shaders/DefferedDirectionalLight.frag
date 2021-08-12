@@ -43,6 +43,15 @@ layout (std140) uniform csmUniforms
 	float farBounds[8];
 };
 
+layout (std140) uniform taaUniforms {
+	mat4 prevViewMatrix;
+	mat4 prevProjectionMatrix;
+	mat4 jitteredProjMatrix;
+	mat4 inverseJitteredProjMatrix;
+	vec2 jitter;
+	float feedback;
+};
+
 in vec2 fragTexcoords;
 in vec4 fragPos;
 
@@ -150,7 +159,7 @@ void main()
     float y = texCoord.y * 2 - 1;
 	vec4 projectedPos = vec4(x, y, z, 1.0f);
 
-	vec4 viewPosition =	inverseProjectionMatrix * projectedPos;
+	vec4 viewPosition =	inverseJitteredProjMatrix * projectedPos;
 	viewPosition.xyz /= viewPosition.w;
 	
 	vec4 worldPos = inverseViewMatrix * vec4(viewPosition.xyz, 1.0f);

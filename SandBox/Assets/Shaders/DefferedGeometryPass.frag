@@ -45,6 +45,10 @@ layout (std140) uniform perFrameUniforms
 layout (std140) uniform taaUniforms {
 	mat4 prevViewMatrix;
 	mat4 prevProjectionMatrix;
+	mat4 jitteredProjMatrix;
+	mat4 inverseJitteredProjMatrix;
+	vec2 jitter;
+	float feedback;
 };
 
 in VS_OUT {

@@ -23,7 +23,7 @@ class Bouncer : public Script {
 class ObjectRotator : public Script {
 
 	void Update(float deltaTime) override {
-		parent->transfrom.rotate(glm::vec3(0, 10.6 * deltaTime, 0));
+		parent->transfrom.rotate(glm::vec3(0, 1.6 * deltaTime, 0));
 	}
 };
 

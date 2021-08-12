@@ -150,6 +150,7 @@
     <ClInclude Include="src\Glen\Scene\ScriptingSystem.h" />
     <ClInclude Include="src\Glen\Scene\Transform.h" />
     <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h" />
+    <ClInclude Include="src\Glen\Utils\HaltonSequence.h" />
     <ClInclude Include="src\Glen\Utils\TypeName.h" />
   </ItemGroup>
   <ItemGroup>

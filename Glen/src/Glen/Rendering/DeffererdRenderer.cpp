@@ -4,6 +4,7 @@
 #include "examples/imgui_impl_opengl3.h"
 #include "examples/imgui_impl_glfw.h"
 #include "Glen/Core/Window.h"
+#include "Glen/Utils/HaltonSequence.h"
 
 DefferedRenderer::DefferedRenderer() : csm(0.3, 150.0f, 3, 4096), 
 	perFrameUbo(sizeof(PerFrameUniforms), 0, BufferType::UBO), 
@@ -61,38 +62,38 @@ void DefferedRenderer::setupGBuffer()
 {
 	gBuffer.bind();
 
-	gBufferNormalTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_NORMAL_TEXTURE_NAME, TextureType::RENDERTEXTURE,
+	gBufferTextures[2] = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_NORMAL_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
-	gBufferNormalTexture->bind();
-	gBufferNormalTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
-	gBuffer.attachRenderTarget(gBufferNormalTexture, 0, 0);
+	gBufferTextures[2]->bind();
+	gBufferTextures[2]->setMinMagFilter(GL_NEAREST, GL_NEAREST);
+	gBuffer.attachRenderTarget(gBufferTextures[2], 0, 0);
 
-	gBufferColorTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_COLOR_TEXTURE_NAME, TextureType::RENDERTEXTURE,
+	gBufferTextures[1] = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_COLOR_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
-	gBufferColorTexture->bind();
-	gBufferColorTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
-	gBuffer.attachRenderTarget(gBufferColorTexture, 0, 1);
+	gBufferTextures[1]->bind();
+	gBufferTextures[1]->setMinMagFilter(GL_NEAREST, GL_NEAREST);
+	gBuffer.attachRenderTarget(gBufferTextures[1], 0, 1);
 
-	gBufferPBRInfoTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::RENDERTEXTURE,
+	gBufferTextures[0] = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_POSITION_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 	SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA, GL_FLOAT);
-	gBufferPBRInfoTexture->bind();
-	gBufferPBRInfoTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
-	gBuffer.attachRenderTarget(gBufferPBRInfoTexture, 0, 2);
+	gBufferTextures[0]->bind();
+	gBufferTextures[0]->setMinMagFilter(GL_NEAREST, GL_NEAREST);
+	gBuffer.attachRenderTarget(gBufferTextures[0], 0, 2);
 
-	gBUfferDepthTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_DEPTH_TEXTURE_NAME, TextureType::DEPTH, SCREEN_WIDTH, SCREEN_HEIGHT,
+	gBufferTextures[3] = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_DEPTH_TEXTURE_NAME, TextureType::DEPTH, SCREEN_WIDTH, SCREEN_HEIGHT,
 		GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
-	gBUfferDepthTexture->bind();
-	gBUfferDepthTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
-	gBUfferDepthTexture->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	gBufferTextures[3]->bind();
+	gBufferTextures[3]->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	gBufferTextures[3]->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 
-	gBufferVelocityTexture = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_VELOCITY_TEXTURE_NAME, TextureType::RENDERTEXTURE,
+	gBufferTextures[4] = EngineContext::get()->resourceManager->generateTexture(G_BUFFER_VELOCITY_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RG, GL_RG16F, GL_FLOAT);
-	gBufferVelocityTexture->bind();
-	gBufferVelocityTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
-	gBufferVelocityTexture->setWrapping(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
-	gBuffer.attachRenderTarget(gBufferVelocityTexture, 0, 3);
+	gBufferTextures[4]->bind();
+	gBufferTextures[4]->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	gBufferTextures[4]->setWrapping(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
+	gBuffer.attachRenderTarget(gBufferTextures[4], 0, 3);
 
-	gBuffer.attachDepthTarget(gBUfferDepthTexture, 0);
+	gBuffer.attachDepthTarget(gBufferTextures[3], 0);
 	gBuffer.checkStatus();
 	gBuffer.unBind();
 }
@@ -104,7 +105,8 @@ void DefferedRenderer::setupHDRBuffer()
 	HDRBUfferTexture = EngineContext::get()->resourceManager->generateTexture(HDR_BUFFER_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
 	HDRBUfferTexture->bind();
-	HDRBUfferTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
+	HDRBUfferTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	HDRBUfferTexture->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	HDRBBuffer.attachRenderTarget(HDRBUfferTexture, 0, 0);
 	HDRBBuffer.checkStatus();
 	HDRBBuffer.unBind();
@@ -130,6 +132,7 @@ void DefferedRenderer::startup()
 	basicToneMappingShader = EngineContext::get()->resourceManager->getShader("basicToneMapping");
 	pointLightBuffer = Mem::Allocate<Buffer>(sizeof(PointLight) * MAXPOINTLIGHTS, 5, BufferType::SSBO);
 	textureDebugShader = EngineContext::get()->resourceManager->getShader("TextureDebugShader");
+	TAAPass = EngineContext::get()->resourceManager->getShader("TAA");
 
 	ssr = EngineContext::get()->resourceManager->getShader("ssrPass");
 	std::vector<std::string> facePaths = {
@@ -163,6 +166,11 @@ void DefferedRenderer::startup()
 
 	std::cout << glGetError() << std::endl;
 	scene = EngineContext::get()->sceneManager;
+	
+	// TAA initialization stuff
+	initializeTAAFbo(0);
+	initializeTAAFbo(1);
+	createJitterArray();
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -182,11 +190,11 @@ void DefferedRenderer::runGeometryPass()
 	sceneRenderer.renderScene(scene, gBufferMaterial, true);
 	gBuffer.unBind();
 
-	gBufferNormalTexture->bind(GL_TEXTURE0 + 11);
-	gBufferColorTexture->bind(GL_TEXTURE0 + 12);
-	gBUfferDepthTexture->bind(GL_TEXTURE0 + 13);
-	gBufferPBRInfoTexture->bind(GL_TEXTURE0 + 14);
-	gBufferVelocityTexture->bind(GL_TEXTURE0 + 17);
+	gBufferTextures[2]->bind(GL_TEXTURE0 + 11); //Normal Map
+	gBufferTextures[1]->bind(GL_TEXTURE0 + 12); // diffuse color
+	gBufferTextures[3]->bind(GL_TEXTURE0 + 13); // depth Texture
+	gBufferTextures[0]->bind(GL_TEXTURE0 + 14); // PBR info
+	gBufferTextures[4]->bind(GL_TEXTURE0 + 17); // velocity texture
 
 }
 
@@ -214,7 +222,6 @@ void DefferedRenderer::runPointLightPass()
 	pointLightShader->use();
 
 	glBindVertexArray(pointVolumeMesh->VAO);
-
 	glDrawElementsInstanced(GL_TRIANGLES, pointVolumeMesh->subMeshes[0].indexCount, GL_UNSIGNED_INT, 0, scene->getPointLIghts().size());
 
 	glEnable(GL_DEPTH_TEST);
@@ -236,8 +243,20 @@ void DefferedRenderer::update(float deltaTime)
 		scene->prevViewMatrix = scene->getMainCamera()->getViewMatrix();
 		scene->prevProjectionMatrix = scene->getMainCamera()->getProjectionMatrix();
 	}
+
+	glm::vec2 pixelSize(1 / float(SCREEN_WIDTH), 1 / (SCREEN_HEIGHT));
+	glm::vec2 jitterOffset = jitterArray[jitterIndex] * pixelSize;
+	glm::mat4 jitteredProjectionMat = scene->getMainCamera()->getProjectionMatrix();
+	jitteredProjectionMat[2][0] += jitterOffset.x;
+	jitteredProjectionMat[2][1] += jitterOffset.y;
+	jitterIndex = (jitterIndex + 1) % 16;
+
+	taaUniforms.jitteredProjMatrix = jitteredProjectionMat;
+	taaUniforms.inverseJitteredProjMatrix = glm::inverse(jitteredProjectionMat);
 	taaUniforms.prevViewMatrix = scene->prevViewMatrix;
 	taaUniforms.prevProjectionMatrix = scene->prevProjectionMatrix;
+	taaUniforms.jitter = jitterOffset;
+	taaUniforms.feedback = 0.75;
 	scene->prevViewMatrix = scene->getMainCamera()->getViewMatrix();
 	scene->prevProjectionMatrix = scene->getMainCamera()->getProjectionMatrix();
 
@@ -251,13 +270,22 @@ void DefferedRenderer::update(float deltaTime)
 
 	runGeometryPass();
 
+	int activeFBO = flip  ? 0 : 1;
 	HDRBBuffer.bind();
 	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, attachments);
 	runDirectionalLightPass();
 	runPointLightPass();
 	HDRBBuffer.unBind();
+	HDRBUfferTexture->bind(GL_TEXTURE0 + 15);
 
+	if (EngineContext::get()->stats.isFirstFame) {
+		EngineContext::get()->stats.isFirstFame = false;
+		return;
+	}
+
+	runTAAPass(activeFBO);
+	aaRenderTextures[activeFBO]->bind(GL_TEXTURE0 + 18);
 	toneMappingPass();
 
 	gBuffer.bind(GL_READ_FRAMEBUFFER);
@@ -266,10 +294,10 @@ void DefferedRenderer::update(float deltaTime)
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
-	if (EngineContext::get()->stats.isFirstFame)
-		EngineContext::get()->stats.isFirstFame = false;
+	//if (EngineContext::get()->stats.isFirstFame)
+	//	EngineContext::get()->stats.isFirstFame = false;
 
-	// ------------------------  Temp setup to debug textures ---------------------------
+	 //------------------------  Temp setup to debug textures ---------------------------
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -281,7 +309,7 @@ void DefferedRenderer::update(float deltaTime)
 	ImGui::BeginChild("Texture");
 
 	ImVec2 wsize = ImGui::GetWindowSize();
-	ImGui::Image((ImTextureID)gBufferVelocityTexture->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)aaRenderTextures[1 - activeFBO]->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::EndChild();
 	ImGui::End();
 
@@ -300,30 +328,70 @@ void DefferedRenderer::update(float deltaTime)
 		ImGui::RenderPlatformWindowsDefault();
 		glfwMakeContextCurrent(backup_current_context);
 	}
-	// --------------------------------- Ends Here --------------------------------------
-	
-	/*postProcessingTexture->bind(GL_TEXTURE0 + 15);
-	ssr->setInt("finalImageBuffer", 15);
-	postProcessingBuffer->unBind();
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	ssr->use();
-
-	glBindVertexArray(screenQuadVAO);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);*/
-
-	//toneMappingPass();
+	 //--------------------------------- Ends Here --------------------------------------
 }
 
 void DefferedRenderer::shutdown() {}
 
+void DefferedRenderer::createJitterArray()
+{
+	for (int i = 0; i < 16; i++) {
+		jitterArray[i] = glm::vec2(CreateHaltonSequence(i + 1, 2), CreateHaltonSequence(i + 1, 3));
+	}
+}
+
+void DefferedRenderer::initializeTAAFbo(int fboId)
+{
+	aaFbos[fboId].bind();
+
+	aaRenderTextures [fboId] = EngineContext::get()->resourceManager->generateTexture(TAA_COLOR_TEXTURE(id), TextureType::RENDERTEXTURE,
+		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
+	aaRenderTextures[fboId]->bind();
+	aaRenderTextures[fboId]->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	aaRenderTextures[fboId]->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	aaFbos[fboId].attachRenderTarget(aaRenderTextures[fboId], 0, 0);
+
+	aaFbos[fboId].checkStatus();
+	aaFbos[fboId].unBind();
+}
+
+void DefferedRenderer::runTAAPass(int activeFBO)
+{
+	// ------------------- THIS IF CONDITION IS THE ASSHOLE HERE ------------------
+	if (EngineContext::get()->stats.frameCount == 1) {
+		HDRBBuffer.bind(GL_READ_FRAMEBUFFER);
+		aaFbos[activeFBO].bind(GL_DRAW_FRAMEBUFFER);
+
+		glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+			GL_COLOR_BUFFER_BIT, GL_LINEAR);
+		aaFbos[activeFBO].unBind();
+	}
+	else {
+		int otherFBO = 1 - activeFBO;
+		aaRenderTextures[otherFBO]->bind(GL_TEXTURE0 + 19);
+		TAAPass->setInt("currentColorTexture", 15);
+		TAAPass->setInt("currentDepthTexture", 13);
+		TAAPass->setInt("velocityTexture", 17);
+		TAAPass->setInt("colorAntiAliased", 19);
+
+		aaFbos[activeFBO].bind();
+		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
+		glDrawBuffers(1, attachments);
+
+		TAAPass->use();
+		glBindVertexArray(screenQuadVAO);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		aaFbos[activeFBO].unBind();
+	}
+
+
+	flip = !flip;
+}
+
 void DefferedRenderer::toneMappingPass()
 {
-	basicToneMappingShader->setInt("hdrBuffer", 15);
+	basicToneMappingShader->setInt("hdrBuffer", 18);
 	basicToneMappingShader->setFloat("exposure", 0.7f);
-	HDRBUfferTexture->bind(GL_TEXTURE0 + 15);
 	basicToneMappingShader->use();
 	glBindVertexArray(screenQuadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

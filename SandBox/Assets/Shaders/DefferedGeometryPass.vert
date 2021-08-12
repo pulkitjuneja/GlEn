@@ -47,6 +47,10 @@ layout (std140) uniform perFrameUniforms
 layout (std140) uniform taaUniforms {
 	mat4 prevViewMatrix;
 	mat4 prevProjectionMatrix;
+	mat4 jitteredProjMatrix;
+	mat4 inverseJitteredProjMatrix;
+	vec2 jitter;
+	float feedback;
 };
  
 
@@ -60,15 +64,15 @@ void main() {
 	vec3 T = normalize(vec3(modelMatrix * vec4(tangent.xyz,1.0)));
 	vec3 N = normalize(normalMatrix * normal);
 	vsOut.vertNormal = N;
-	// re-orthogonalize T with respect to N
-//	T = normalize(T - dot(T, N) * N);
 	vec3 B = cross(N,T) * tangent.w;
 	vsOut.TBN = mat3(T, B, N);
 	FragPos = (modelMatrix*homogenousVertexPosition);
-	gl_Position = projectionMatrix * viewMatrix * modelMatrix * homogenousVertexPosition;
+
+	// TODO maske this configurable
+	gl_Position = jitteredProjMatrix * viewMatrix * FragPos;
 
 	// velocity calculation
-	vsOut.clipPosition = gl_Position;
+	vsOut.clipPosition = projectionMatrix * viewMatrix * FragPos;
 	vsOut.previousClipPostion = (prevProjectionMatrix* prevViewMatrix * prevModelMatrix * homogenousVertexPosition);
 	vsOut.prevPos = prevModelMatrix * homogenousVertexPosition;
 }
