@@ -1,6 +1,7 @@
 #version 330 core
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 DebugColor;
 
 uniform sampler2D currentColorTexture;
 uniform sampler2D currentDepthTexture;
@@ -187,6 +188,7 @@ void main () {
 	 float clipBlendFactor = FragColor.a;
 	//Blend between history color and clipped color. Q: why not use feedback uniform directly
 	vec3 colorHistoryClippedBlended = mix(colorHistory.rgb, colorHistoryClipped, clamp(clipBlendFactor, 0.f, 1.f));
-	FragColor.rgb = texture(colorAntiAliased, uvCurrent).rgb;//mix(colorHistoryClippedBlended, colourCURRENT.rgb, feedback);
+	FragColor.rgb = mix(colorHistoryClippedBlended, colourCURRENT.rgb, feedback);
+	DebugColor = colorHistory;
 
 }

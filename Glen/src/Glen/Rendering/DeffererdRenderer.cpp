@@ -309,7 +309,7 @@ void DefferedRenderer::update(float deltaTime)
 	ImGui::BeginChild("Texture");
 
 	ImVec2 wsize = ImGui::GetWindowSize();
-	ImGui::Image((ImTextureID)aaRenderTextures[1 - activeFBO]->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)aaTempTextures[activeFBO]->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::EndChild();
 	ImGui::End();
 
@@ -351,6 +351,13 @@ void DefferedRenderer::initializeTAAFbo(int fboId)
 	aaRenderTextures[fboId]->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	aaFbos[fboId].attachRenderTarget(aaRenderTextures[fboId], 0, 0);
 
+	aaTempTextures[fboId] = EngineContext::get()->resourceManager->generateTexture("TAA_DEBUG_TEX_" + std::to_string(fboId), TextureType::RENDERTEXTURE,
+		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
+	aaTempTextures[fboId]->bind();
+	aaTempTextures[fboId]->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	aaTempTextures[fboId]->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	aaFbos[fboId].attachRenderTarget(aaTempTextures[fboId], 0, 1);
+
 	aaFbos[fboId].checkStatus();
 	aaFbos[fboId].unBind();
 }
@@ -375,8 +382,8 @@ void DefferedRenderer::runTAAPass(int activeFBO)
 		TAAPass->setInt("colorAntiAliased", 19);
 
 		aaFbos[activeFBO].bind();
-		unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
-		glDrawBuffers(1, attachments);
+		unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(2, attachments);
 
 		TAAPass->use();
 		glBindVertexArray(screenQuadVAO);

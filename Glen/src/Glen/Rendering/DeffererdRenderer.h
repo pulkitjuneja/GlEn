@@ -67,6 +67,7 @@ class DefferedRenderer : public ISystem {
 	int jitterIndex = 0;
 	std::array<FrameBuffer, 2> aaFbos;
 	std::array<Texture2D*, 2> aaRenderTextures;
+	std::array<Texture2D*, 2> aaTempTextures;
 	bool flip = true; 
 
 	void createUVSphere();
@@ -87,7 +88,7 @@ public:
 	// TAA methods
 	void createJitterArray();
 	void initializeTAAFbo(int fboId);
-	void runTAAPass(int activeFBO /*, int velocityBuffBindPoint */);
+	void runTAAPass(int activeFBO);
 
 };
 
