@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include "Glen/Core/Core.h"
 #include "Glen/Globals.h"
+#include "Shader.h"
 
 enum class TextureType {
 	DIFFUSE,
@@ -70,6 +71,10 @@ public:
 	void setFaceData(int faceIndex, void* data, GLenum format,
 	GLenum internalFormat, GLenum dataType, bool bind = false);
 	void setWrapping(GLenum s, GLenum t, GLenum r, bool bind = false);
+
+	void setDataFromHDRIMap(Texture2D* hdriMap);
+	CubeMap* createConvolutionMap(const std::string& identifier);
+	void renderCubeToFrameBuffer(Shader* shader, uint32_t w, uint32_t h);
 };
 
 #endif

@@ -128,7 +128,8 @@ void DefferedRenderer::startup()
 			"back.jpg"
 	};
 
-	skybox = EngineContext::get()->resourceManager->loadHdriMap("Arches_E_PineTree_3k.hdr", "Assets/Textures/Arches_E_PineTree");
+	CubeMap* hdriMap  = EngineContext::get()->resourceManager->loadHdriMap("Arches_E_PineTree_3k.hdr", "Assets/Textures/Arches_E_PineTree");
+	skybox = hdriMap->createConvolutionMap("SKYBOX_IRRADIANCE");
 	
 	directionalLightShader->setInt("normalTexture", 11);
 	directionalLightShader->setInt("albedoTexture", 12);

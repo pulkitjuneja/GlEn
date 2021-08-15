@@ -81,9 +81,9 @@ public:
 		scene->createPointLight(glm::vec4(300, 10, 5, 1.0), glm::vec4(0, 2	, 0, 1.0), 0.8f);
 		scene->createPointLight(glm::vec4(-300, 10, -10, 1.0), glm::vec4(0, 0, 2, 1.0), 0.8f);
 		scene->createPointLight(glm::vec4(-300, 10, 10, 1.0), glm::vec4(2, 0, 0, 1.0), 0.8f);
-		for (int i = 0; i < 8000; i++) {
-			scene->createPointLight(glm::vec4((std::rand() - RAND_MAX/2) % 400, std::rand()% 300 + 10, (std::rand() - RAND_MAX / 2) %200, 1.0), glm::vec4((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX, 1.0), 1.0f);
-		}
+		//for (int i = 0; i < 8000; i++) {
+		//	scene->createPointLight(glm::vec4((std::rand() - RAND_MAX/2) % 400, std::rand()% 300 + 10, (std::rand() - RAND_MAX / 2) %200, 1.0), glm::vec4((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX, 1.0), 1.0f);
+		//}
 		scene->createDirectionalLight(glm::vec4(0.5f, -1.0f, 0, 1.0),  glm::vec4(3.8f, 3.8f, 3.8f, 1.0f), 1.1f);
 		Entity& cameraControllerParent = scene->createEntity("cameraController");
 		cameraControllerParent.AddScript<CameraController>();

@@ -65,10 +65,14 @@ public:
 
 	Texture2D* loadTexture(const std::string& texturePath, const std::string& directory, TextureType textureType);
 	CubeMap* loadCubeMap(std::vector<std::string> paths, const std::string& directory);
+
+	//TODO: combine them intoa  single templated function
 	Texture3D* generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
 		const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType, int arraySize);
 	Texture2D* generateTexture(const std::string& identifier, TextureType textureType, const uint32_t& w,
 		const uint32_t& h, GLenum format, GLenum internalFormat, GLenum dataType);
+	CubeMap* generateCubeMap(const std::string& identifier, const uint32_t& w, const uint32_t& h);
+
 	CubeMap* loadHdriMap(const std::string& texturePath, const std::string& directory);
 	Texture* getTexture(const std::string& textureName);
 
