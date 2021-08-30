@@ -55,7 +55,7 @@ public:
 		mat.setShader(EngineContext::get()->resourceManager->getShader("texturedMeshPBR"));
 
 		Entity& crysisEntity = scene->createEntity("Crysis Entity", EngineContext::get()->resourceManager->loadMesh(crysisMeshLocation));
-		Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
+		//Entity& sponzaEntity = scene->createEntity("Sponza Entity", EngineContext::get()->resourceManager->loadMesh(sponzaMeshLocation));
 		Time testTime = timer.restart();
 		Logger::logInfo("Resource load time" + std::to_string(testTime.getAsMilliSeconds()));
 
@@ -63,7 +63,7 @@ public:
 		groundPLaneEntity.attachBoxCollider(glm::vec3(100, 1, 100));
 		groundPLaneEntity.attachRigidBody(RigidBodyType::Static);
 
-		sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
+		//sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
 		crysisEntity.transfrom.setScale(glm::vec3(2, 2, 2));
 		crysisEntity.attachCollider(ColliderType::Box);
 		crysisEntity.transfrom.setPosition(glm::vec3(0, 80, 0));
@@ -74,13 +74,13 @@ public:
 		//pbrSphere.attachCollider(ColliderType::Box);
 
 		scene->setMainCamera(glm::vec3(-4.31142f, 55.923f, 191.538f), glm::vec3(-16.8f, -89.1506f, 0), 90.0f, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 8.0f, 1000.0f);
-		scene->createPointLight(glm::vec4(-20, 10, 5, 1.0), glm::vec4(2, 0, 0, 1.0), 1.0f);
-		scene->createPointLight(glm::vec4(20, 10, 5, 1.0), glm::vec4(0, 2, 0, 1.0), 1.0f);
+		scene->createPointLight(glm::vec4(-20, 10, 5, 1.0), glm::vec4(1, 1, 1, 1.0), 1.0f);
+		scene->createPointLight(glm::vec4(20, 10, 5, 1.0), glm::vec4(1, 1, 1, 1.0), 1.0f);
 		//scene->createPointLight(glm::vec4(-10, 10, 80, 1.0), glm::vec4(0.01, 0.5f, 0.01, 1.0), glm::vec4(2, 2, 2, 1.0), glm::vec4(0.1, 0.1, 0.1, 1.0));
-		scene->createPointLight(glm::vec4(-10, 10, -80, 1.0), glm::vec4(0, 2, 0, 1.0), 0.8f);
-		scene->createPointLight(glm::vec4(300, 10, 5, 1.0), glm::vec4(0, 2	, 0, 1.0), 0.8f);
-		scene->createPointLight(glm::vec4(-300, 10, -10, 1.0), glm::vec4(0, 0, 2, 1.0), 0.8f);
-		scene->createPointLight(glm::vec4(-300, 10, 10, 1.0), glm::vec4(2, 0, 0, 1.0), 0.8f);
+		scene->createPointLight(glm::vec4(-10, 10, -80, 1.0), glm::vec4(1, 1, 1, 1.0), 0.8f);
+		scene->createPointLight(glm::vec4(300, 10, 5, 1.0), glm::vec4(1, 1	, 1, 1.0), 0.8f);
+		scene->createPointLight(glm::vec4(-300, 10, -10, 1.0), glm::vec4(1, 1, 1, 1.0), 0.8f);
+		scene->createPointLight(glm::vec4(-300, 10, 10, 1.0), glm::vec4(1, 1, 1, 1.0), 0.8f);
 		//for (int i = 0; i < 8000; i++) {
 		//	scene->createPointLight(glm::vec4((std::rand() - RAND_MAX/2) % 400, std::rand()% 300 + 10, (std::rand() - RAND_MAX / 2) %200, 1.0), glm::vec4((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX, 1.0), 1.0f);
 		//}

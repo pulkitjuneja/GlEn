@@ -128,19 +128,25 @@ void DefferedRenderer::startup()
 			"back.jpg"
 	};
 
-	CubeMap* hdriMap  = EngineContext::get()->resourceManager->loadHdriMap("Arches_E_PineTree_3k.hdr", "Assets/Textures/Arches_E_PineTree");
-	skybox = hdriMap->createConvolutionMap("SKYBOX_IRRADIANCE");
+	skybox  = EngineContext::get()->resourceManager->loadHdriMap("Arches_E_PineTree_3k.hdr", "Assets/Textures/Arches_E_PineTree");
+	irradianceMap = skybox->createConvolutionMap("SKYBOX_IRRADIANCE");
 	
 	directionalLightShader->setInt("normalTexture", 11);
 	directionalLightShader->setInt("albedoTexture", 12);
 	directionalLightShader->setInt("depthTexture", 13);
 	directionalLightShader->setInt("shadowMap", 10);
 	directionalLightShader->setInt("PBRInfoTexture", 14);
+	directionalLightShader->setInt("skybox", 16);
+	directionalLightShader->setInt("irradianceMap", 19);
 
 	pointLightShader->setInt("normalTexture", 11);
 	pointLightShader->setInt("albedoTexture", 12);
 	pointLightShader->setInt("depthTexture", 13);
 	pointLightShader->setInt("PBRInfoTexture", 14);
+	pointLightShader->setInt("irradianceMap", 19);
+
+	skybox->bind(GL_TEXTURE0 + 16);
+	irradianceMap->bind(GL_TEXTURE0 + 19);
 
 	ssr->setInt("normalTexture", 11);
 	ssr->setInt("albedoTexture", 12);
@@ -181,9 +187,6 @@ void DefferedRenderer::runDirectionalLightPass()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	skybox->bind(GL_TEXTURE0 + 16);
-	directionalLightShader->setInt("skybox", 16);
 
 	directionalLightShader->use();
 

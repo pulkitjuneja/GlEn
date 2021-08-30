@@ -29,6 +29,7 @@ class DefferedRenderer : public ISystem {
 	Texture2D* HDRBUfferTexture;
 	Texture2D* postProcessingTexture;
 	CubeMap* skybox;
+	CubeMap* irradianceMap;
 
 	FrameBuffer HDRBBuffer;
 	FrameBuffer postProcessingBuffer;

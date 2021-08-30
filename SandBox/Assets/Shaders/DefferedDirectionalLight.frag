@@ -8,6 +8,7 @@ uniform sampler2D depthTexture;
 uniform sampler2D PBRInfoTexture;
 
 uniform samplerCube skybox;
+uniform samplerCube irradianceMap;
 
 uniform sampler2DArrayShadow shadowMap;
 
@@ -138,6 +139,11 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }  
 
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+}  
+
 
 void main()
 {   
@@ -186,7 +192,14 @@ void main()
 		float NdotL = max(dot(worldNormal, lightDir), 0.0);
 		vec3 radiance = directionalLight.diffuse.xyz * directionalLight.intensity;
 		vec3 color = (kD * diffuseColor / 3.1415 + specular) * radiance * NdotL;
-		result = color + vec3(0.03) * diffuseColor * PBRInfo.z;	
+
+		// ambient term calculation based on irradiance map
+		kS = fresnelSchlickRoughness(max(dot(worldNormal, viewDir), 0.0), F0, PBRInfo.y);
+		kD = 1.0 - kS;
+		vec3 irradiance = texture(irradianceMap, worldNormal).rgb;
+		vec3 diffuse = irradiance * diffuseColor;
+		vec3 ambient = kD * diffuse * PBRInfo.z;
+		result = color + ambient;	
 	} else {
 		
 		float Ka = 0.04f;
