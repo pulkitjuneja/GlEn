@@ -90,14 +90,15 @@ void CubeMap::setDataFromHDRIMap(Texture2D* hdriMap)
 		setFaceData(i, nullptr, GL_RGB, GL_RGB16F, GL_FLOAT);
 	}
 	setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-	setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	setMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
 	Shader* EqToCm = EngineContext::get()->resourceManager->getShader("EqToCm");
 	EqToCm->setInt("equirectangularMap", 0);
 	hdriMap->bind();
 	renderCubeToFrameBuffer(EqToCm, w, h);
 	hdriMap->Unbind();
-
+	
+	generateMipMaps(true);
 	Unbind();
 }
 
@@ -120,7 +121,30 @@ CubeMap* CubeMap::createConvolutionMap(const std::string& identifier)
 	return convolutionMap;
 }
 
-void CubeMap::renderCubeToFrameBuffer(Shader* shader, uint32_t w, uint32_t h)
+CubeMap* CubeMap::createPrefilteredEnvMap(const std::string& identifier)
+{
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	CubeMap* preFilteredMap = EngineContext::get()->resourceManager->generateCubeMap(identifier, 128, 128);
+	preFilteredMap->bind();
+	for (int i = 0; i < 6; i++) {
+		preFilteredMap->setFaceData(i, nullptr, GL_RGB, GL_RGB16F, GL_FLOAT);
+	}
+	preFilteredMap->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+	preFilteredMap->setMinMagFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+	preFilteredMap->generateMipMaps();
+
+	Shader* PreFilterShader = EngineContext::get()->resourceManager->getShader("PreFilteredMapGenerator");
+	PreFilterShader->setInt("environmentMap", 0);
+	PreFilterShader->setFloat("envMapResolution", this->w);
+	bind(GL_TEXTURE0);
+	preFilteredMap->renderCubeToFrameBuffer(PreFilterShader, 128, 128, 5);
+	Unbind();
+
+	return preFilteredMap;
+
+}
+
+void CubeMap::renderCubeToFrameBuffer(Shader* shader, uint32_t w, uint32_t h, int mipLevels)
 {
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
@@ -137,23 +161,37 @@ void CubeMap::renderCubeToFrameBuffer(Shader* shader, uint32_t w, uint32_t h)
 
 	FrameBuffer captureFBO;
 	captureFBO.bind();
-	captureFBO.attachRenderBuffer(GL_DEPTH_COMPONENT24, GL_DEPTH_ATTACHMENT, w, h);
+	int rbo = captureFBO.attachRenderBuffer(GL_DEPTH_COMPONENT24, GL_DEPTH_ATTACHMENT, w, h);
 	captureFBO.unBind();
 
 	shader->use();
 
-	glViewport(0, 0, w, h);
 	captureFBO.bind();
 	Mesh* cubeMesh = EngineContext::get()->resourceManager->getMesh("CUBE");
+	
+	for (int mip = 0; mip < mipLevels; mip++) {
 
-	for (int i = 0; i < 6; i++) {
-		shader->setMat4("view", captureViews[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, textureId, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glBindVertexArray(cubeMesh->VAO);
-		SubMesh submesh = cubeMesh->subMeshes[0];
-		glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
+		unsigned int mipWidth = w * std::pow(0.5, mip);
+		unsigned int mipHeight = h * std::pow(0.5, mip);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
+
+		glViewport(0, 0, mipWidth, mipWidth);
+
+		if (mipLevels > 1) {
+			float roughness = (float)mip / (float)(mipLevels - 1);
+			shader->setFloat("roughness", roughness);
+		}
+
+		for (int i = 0; i < 6; i++) {
+			shader->setMat4("view", captureViews[i]);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, textureId, mip);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glBindVertexArray(cubeMesh->VAO);
+			SubMesh submesh = cubeMesh->subMeshes[0];
+			glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * submesh.baseIndex), submesh.baseVertex);
+		}
 	}
 
 	std::cout << glGetError() << std::endl;

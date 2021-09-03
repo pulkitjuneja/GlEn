@@ -75,6 +75,7 @@ void Engine::loadDefaultShaders()
     EngineContext::get()->resourceManager->loadComputeShader("Assets/Shaders/LightCulling.comp", "LightCullingCompute");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/LightCullingDebug.frag", "lightDebugShader");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/Irradiance.frag", "IrradianceGenerator");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/PreFilterMap.frag", "PreFilteredMapGenerator");
 }
 
 bool Engine::setupWindow() {

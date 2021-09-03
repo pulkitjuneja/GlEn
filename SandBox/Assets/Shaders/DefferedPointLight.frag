@@ -9,6 +9,7 @@ uniform sampler2D albedoTexture;
 uniform sampler2D depthTexture;
 uniform sampler2D PBRInfoTexture;
 
+
 struct PointLight {
 	vec4 position;
 	vec4 diffuse;

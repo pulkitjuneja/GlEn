@@ -74,7 +74,8 @@ public:
 
 	void setDataFromHDRIMap(Texture2D* hdriMap);
 	CubeMap* createConvolutionMap(const std::string& identifier);
-	void renderCubeToFrameBuffer(Shader* shader, uint32_t w, uint32_t h);
+	CubeMap* createPrefilteredEnvMap(const std::string& identifier);
+	void renderCubeToFrameBuffer(Shader* shader, uint32_t w, uint32_t h, int mipLevels = 1);
 };
 
 #endif

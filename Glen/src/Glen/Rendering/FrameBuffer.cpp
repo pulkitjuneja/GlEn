@@ -52,7 +52,7 @@ void FrameBuffer::attachRenderTarget(Texture* texture, uint32_t mipLevel, int at
 	}
 }
 
-void FrameBuffer::attachRenderBuffer(GLenum internalFormat, GLenum attachment, const uint32_t& w, const uint32_t& h, bool shouldBind)
+int FrameBuffer::attachRenderBuffer(GLenum internalFormat, GLenum attachment, const uint32_t& w, const uint32_t& h, bool shouldBind)
 {
 	if (shouldBind) {
 		bind();
@@ -62,6 +62,7 @@ void FrameBuffer::attachRenderBuffer(GLenum internalFormat, GLenum attachment, c
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, w, h);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo);
+	return rbo;
 	if (shouldBind) {
 		unBind();
 	}

@@ -9,6 +9,10 @@ uniform sampler2D PBRInfoTexture;
 
 uniform samplerCube skybox;
 uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+
+
+uniform bool skyBoxCheck;
 
 uniform sampler2DArrayShadow shadowMap;
 
@@ -217,7 +221,11 @@ void main()
 	}
 
 	vec3 cameraRelativePostion = worldPos.xyz - cameraPosition.xyz;
-	result = mix(result, texture(skybox, cameraRelativePostion).rgb, step(1.0, depth));
+	if(skyBoxCheck) {
+		result = mix(result, texture(skybox, cameraRelativePostion).rgb, step(1.0, depth));
+	} else {
+		result = mix(result, textureLod(prefilterMap, cameraRelativePostion, 0.9).rgb, step(1.0, depth));
+	}
 	
     FragColor = vec4(result, 1.0);
 }  

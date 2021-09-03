@@ -30,6 +30,7 @@ class DefferedRenderer : public ISystem {
 	Texture2D* postProcessingTexture;
 	CubeMap* skybox;
 	CubeMap* irradianceMap;
+	CubeMap* preFilterMap;
 
 	FrameBuffer HDRBBuffer;
 	FrameBuffer postProcessingBuffer;
@@ -54,6 +55,8 @@ class DefferedRenderer : public ISystem {
 	Shader* pointLightShader;
 	Shader* basicToneMappingShader;
 	Shader* ssr;
+
+	bool skyboxCheck = true;
 
 	void createUVSphere();
 	void setupGBuffer();
