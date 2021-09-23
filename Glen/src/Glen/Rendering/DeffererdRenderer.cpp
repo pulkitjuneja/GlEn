@@ -140,6 +140,7 @@ void DefferedRenderer::startup()
 	directionalLightShader->setInt("skybox", 16);
 	directionalLightShader->setInt("irradianceMap", 19);
 	directionalLightShader->setInt("prefilterMap", 20);
+	directionalLightShader->setInt("brdfLut", 21);
 
 	pointLightShader->setInt("normalTexture", 11);
 	pointLightShader->setInt("albedoTexture", 12);
@@ -147,6 +148,7 @@ void DefferedRenderer::startup()
 	pointLightShader->setInt("PBRInfoTexture", 14);
 	pointLightShader->setInt("irradianceMap", 19);
 	pointLightShader->setInt("prefilterMap", 20);
+	pointLightShader->setInt("brdfLut", 21);
 
 	skybox->bind(GL_TEXTURE0 + 16);
 	irradianceMap->bind(GL_TEXTURE0 + 19);
@@ -238,6 +240,10 @@ void DefferedRenderer::update(float deltaTime)
 	HDRBBuffer.bind();
 	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, attachments);
+
+	Texture* t = EngineContext::get()->resourceManager->getTexture("brdf_lut.png");
+	t->bind(GL_TEXTURE0 + 21);
+
 	runDirectionalLightPass();
 	runPointLightPass();
 	HDRBBuffer.unBind();
