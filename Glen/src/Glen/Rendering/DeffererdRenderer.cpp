@@ -5,6 +5,8 @@
 #include "examples/imgui_impl_glfw.h"
 #include "Glen/Core/Window.h"
 #include "Glen/Utils/HaltonSequence.h"
+#include "Glen/Core/Input.h"
+
 
 DefferedRenderer::DefferedRenderer() : csm(0.3, 150.0f, 3, 4096), 
 	perFrameUbo(sizeof(PerFrameUniforms), 0, BufferType::UBO), 
@@ -144,18 +146,31 @@ void DefferedRenderer::startup()
 			"back.jpg"
 	};
 
-	skybox = EngineContext::get()->resourceManager->loadHdriMap("Arches_E_PineTree_3k.hdr", "Assets/Textures/Arches_E_PineTree");
+	skybox  = EngineContext::get()->resourceManager->loadHdriMap("Arches_E_PineTree_3k.hdr", "Assets/Textures/Arches_E_PineTree");
+	irradianceMap = skybox->createConvolutionMap("SKYBOX_IRRADIANCE");
+	preFilterMap = skybox->createPrefilteredEnvMap("SKYBOX_PFM");
 	
 	directionalLightShader->setInt("normalTexture", 11);
 	directionalLightShader->setInt("albedoTexture", 12);
 	directionalLightShader->setInt("depthTexture", 13);
 	directionalLightShader->setInt("shadowMap", 10);
 	directionalLightShader->setInt("PBRInfoTexture", 14);
+	directionalLightShader->setInt("skybox", 16);
+	directionalLightShader->setInt("irradianceMap", 19);
+	directionalLightShader->setInt("prefilterMap", 20);
+	directionalLightShader->setInt("brdfLut", 21);
 
 	pointLightShader->setInt("normalTexture", 11);
 	pointLightShader->setInt("albedoTexture", 12);
 	pointLightShader->setInt("depthTexture", 13);
 	pointLightShader->setInt("PBRInfoTexture", 14);
+	pointLightShader->setInt("irradianceMap", 19);
+	pointLightShader->setInt("prefilterMap", 20);
+	pointLightShader->setInt("brdfLut", 21);
+
+	skybox->bind(GL_TEXTURE0 + 16);
+	irradianceMap->bind(GL_TEXTURE0 + 19);
+	preFilterMap->bind(GL_TEXTURE0 + 20);
 
 	ssr->setInt("normalTexture", 11);
 	ssr->setInt("albedoTexture", 12);
@@ -203,11 +218,8 @@ void DefferedRenderer::runDirectionalLightPass()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	skybox->bind(GL_TEXTURE0 + 16);
-	directionalLightShader->setInt("skybox", 16);
-
 	directionalLightShader->use();
-
+	directionalLightShader->setBool("skyBoxCheck", skyboxCheck);
 	//render simple quad
 	glBindVertexArray(screenQuadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -274,6 +286,10 @@ void DefferedRenderer::update(float deltaTime)
 	HDRBBuffer.bind();
 	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, attachments);
+
+	Texture* t = EngineContext::get()->resourceManager->getTexture("brdf_lut.png");
+	t->bind(GL_TEXTURE0 + 21);
+
 	runDirectionalLightPass();
 	runPointLightPass();
 	HDRBBuffer.unBind();
@@ -293,6 +309,14 @@ void DefferedRenderer::update(float deltaTime)
 
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+	InputStatus* st = EngineContext::get()->inputStatus;
+	if (st->isKeyPressed(Keys::X)) {
+		skyboxCheck = !skyboxCheck;
+	}
+	/*postProcessingTexture->bind(GL_TEXTURE0 + 15);
+	ssr->setInt("finalImageBuffer", 15);
+	postProcessingBuffer->unBind(); */
 
 	//if (EngineContext::get()->stats.isFirstFame)
 	//	EngineContext::get()->stats.isFirstFame = false;

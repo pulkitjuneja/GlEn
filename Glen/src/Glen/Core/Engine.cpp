@@ -20,6 +20,7 @@ void Engine::start() {
     EngineContext::get()->physicsContext = Mem::Allocate<PhysicsContext>();
 
     loadDefaultShaders();
+    loadCommonTextures();
     EngineContext::get()->resourceManager->loadPrimitives();
 
 
@@ -77,6 +78,13 @@ void Engine::loadDefaultShaders()
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/LightCullingDebug.frag", "lightDebugShader");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/TextureDebug.frag", "TextureDebugShader");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/TAA.frag", "TAA");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/Irradiance.frag", "IrradianceGenerator");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/PreFilterMap.frag", "PreFilteredMapGenerator");
+}
+
+void Engine::loadCommonTextures()
+{
+    EngineContext::get()->resourceManager->loadTexture("brdf_lut.png", "Assets/Textures", TextureType::DIFFUSE);
 }
 
 bool Engine::setupWindow() {

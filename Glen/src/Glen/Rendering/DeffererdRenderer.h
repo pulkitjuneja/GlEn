@@ -33,6 +33,8 @@ class DefferedRenderer : public ISystem {
 	Texture2D* HDRBUfferTexture;
 	Texture2D* postProcessingTexture;
 	CubeMap* skybox;
+	CubeMap* irradianceMap;
+	CubeMap* preFilterMap;
 
 	FrameBuffer HDRBBuffer;
 	FrameBuffer postProcessingBuffer;
@@ -69,6 +71,8 @@ class DefferedRenderer : public ISystem {
 	std::array<Texture2D*, 2> aaRenderTextures;
 	std::array<Texture2D*, 2> aaTempTextures;
 	bool flip = true; 
+
+	bool skyboxCheck = true;
 
 	void createUVSphere();
 	void setupGBuffer();
