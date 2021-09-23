@@ -9,6 +9,7 @@ uniform sampler2D albedoTexture;
 uniform sampler2D depthTexture;
 uniform sampler2D PBRInfoTexture;
 
+
 struct PointLight {
 	vec4 position;
 	vec4 diffuse;
@@ -21,6 +22,8 @@ struct DirectionalLight {
 	vec4 diffuse;
 	float intensity;
 };
+
+uniform samplerCube irradianceMap;
 
 layout (std140) uniform perFrameUniforms
 {
@@ -82,6 +85,12 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }  
 
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+}  
+
+
 
 void main () {
 	vec2 texSize = textureSize(normalTexture, 0).xy;
@@ -136,7 +145,14 @@ void main () {
 		float NdotL = max(dot(worldNormal, lightDir), 0.0);
 		vec3 radiance = lightDiffuse.xyz * attenuation * point_lights[lightIndex].intensity;
 		vec3 color = (kD * diffuseColor / 3.1415 + specular) * radiance * NdotL;
-		result = color + vec3(0.03) * diffuseColor * PBRInfo.z;	
+
+		kS = fresnelSchlickRoughness(max(dot(worldNormal, viewDir), 0.0), F0, PBRInfo.y);
+		kD = 1.0 - kS;
+		vec3 irradiance = texture(irradianceMap, worldNormal).rgb;
+		vec3 diffuse = irradiance * diffuseColor;
+		vec3 ambient = kD * diffuse * PBRInfo.z;
+
+		result = color;
 		result *= ztest;
 	
 	} else {

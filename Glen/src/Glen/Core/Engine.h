@@ -33,6 +33,7 @@
         ~Engine();
         static Time deltaTime;
         void loadDefaultShaders();
+        void loadCommonTextures();
         virtual bool init() = 0;
         void onWindowEvent(Event& event);
         void start();

@@ -8,6 +8,12 @@ uniform sampler2D depthTexture;
 uniform sampler2D PBRInfoTexture;
 
 uniform samplerCube skybox;
+uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfLut;
+
+
+uniform bool skyBoxCheck;
 
 uniform sampler2DArrayShadow shadowMap;
 
@@ -138,6 +144,11 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }  
 
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+}  
+
 
 void main()
 {   
@@ -156,6 +167,7 @@ void main()
 	vec4 worldPos = inverseViewMatrix * vec4(viewPosition.xyz, 1.0f);
 	vec3 worldNormal = texture(normalTexture, texCoord).xyz;
 	vec3 viewDir = normalize(vec3(cameraPosition) - worldPos.xyz);
+	vec3 reflection = reflect(-viewDir, worldNormal);
 	float fragDepth = projectedPos.z * 0.5 + 0.5;
 	vec4 colorData = texture(albedoTexture,texCoord); 
 	vec3 diffuseColor = colorData.xyz;
@@ -186,7 +198,22 @@ void main()
 		float NdotL = max(dot(worldNormal, lightDir), 0.0);
 		vec3 radiance = directionalLight.diffuse.xyz * directionalLight.intensity;
 		vec3 color = (kD * diffuseColor / 3.1415 + specular) * radiance * NdotL;
-		result = color + vec3(0.03) * diffuseColor * PBRInfo.z;	
+
+		// ambient term calculation based on irradiance map
+		F = fresnelSchlickRoughness(max(dot(worldNormal, viewDir), 0.0), F0, PBRInfo.y);
+		kS = F;
+		kD = 1.0 - kS;
+		kD *= 1.0 - PBRInfo.x;
+		vec3 irradiance = texture(irradianceMap, worldNormal).rgb;
+		vec3 diffuse = irradiance * diffuseColor;
+
+		const float MAX_REFLECTION_LOD = 4.0;
+		vec3 prefilteredColor = textureLod(prefilterMap, reflection,  PBRInfo.y * MAX_REFLECTION_LOD).rgb;
+		vec2 brdf  = texture(brdfLut, vec2(max(dot(worldNormal, viewDir), 0.0), PBRInfo.y)).rg;
+		vec3 specularComp = prefilteredColor * (F * brdf.x + brdf.y);
+
+		vec3 ambient = (kD * diffuse + specularComp) * PBRInfo.z;
+		result = color + ambient;	
 	} else {
 		
 		float Ka = 0.04f;
@@ -204,7 +231,11 @@ void main()
 	}
 
 	vec3 cameraRelativePostion = worldPos.xyz - cameraPosition.xyz;
-	result = mix(result, texture(skybox, cameraRelativePostion).rgb, step(1.0, depth));
+	if(skyBoxCheck) {
+		result = mix(result, textureLod(prefilterMap, cameraRelativePostion, 1.2).rgb, step(1.0, depth));
+	} else {
+		result = mix(result, texture(brdfLut, texCoord).rgb, step(1.0, depth));
+	}
 	
-    FragColor = vec4(0,0,0, 1.0);
+    FragColor = vec4(result, 1.0);
 }  
