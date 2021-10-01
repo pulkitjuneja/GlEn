@@ -232,7 +232,7 @@ void main()
 
 	vec3 cameraRelativePostion = worldPos.xyz - cameraPosition.xyz;
 	if(skyBoxCheck) {
-		result = mix(result, textureLod(prefilterMap, cameraRelativePostion, 1.2).rgb, step(1.0, depth));
+		result = mix(result, texture(skybox, cameraRelativePostion).rgb, step(1.0, depth));
 	} else {
 		result = mix(result, texture(brdfLut, texCoord).rgb, step(1.0, depth));
 	}

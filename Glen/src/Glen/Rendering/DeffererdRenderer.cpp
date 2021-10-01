@@ -280,7 +280,7 @@ void DefferedRenderer::shutdown() {}
 void DefferedRenderer::toneMappingPass()
 {
 	basicToneMappingShader->setInt("hdrBuffer", 15);
-	basicToneMappingShader->setFloat("exposure", 0.7f);
+	basicToneMappingShader->setFloat("exposure", 0.9f);
 	HDRBUfferTexture->bind(GL_TEXTURE0 + 15);
 	basicToneMappingShader->use();
 	glBindVertexArray(screenQuadVAO);
