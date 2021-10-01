@@ -18,9 +18,9 @@ Glen is an OpenGL C++ based game engine with a focus on modern real-time renderi
 * Input (KeyBoard, Mouse based on GlFW)
 * Imgui integration for UI panels
 
-
-![screenshot1](https://raw.githubusercontent.com/pulkitjuneja/GlCore/master/Assets/Screenshots/scr4.png)
-![screenshot1](https://raw.githubusercontent.com/pulkitjuneja/GlCore/master/Assets/Screenshots/scr3.png)
+![screenshot1](https://raw.githubusercontent.com/pulkitjuneja/GlEn/master/SandBox/Assets/Screenshots/Screenshot%202021-10-01%20175642.png)
+![screenshot1](https://raw.githubusercontent.com/pulkitjuneja/GlEn/master/SandBox/Assets/Screenshots/Screenshot%202021-10-01%20180223.png)
+![screenshot1](https://raw.githubusercontent.com/pulkitjuneja/GlEn/master/SandBox/Assets/Screenshots/Screenshot%202021-10-01%20183433.png)
 
 ## Dependencies
 * [glm](https://github.com/g-truc/glm) 
