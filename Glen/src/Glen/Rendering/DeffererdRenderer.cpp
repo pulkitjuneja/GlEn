@@ -107,7 +107,7 @@ void DefferedRenderer::setupHDRBuffer()
 	HDRBUfferTexture = EngineContext::get()->resourceManager->generateTexture(HDR_BUFFER_TEXTURE_NAME, TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
 	HDRBUfferTexture->bind();
-	HDRBUfferTexture->setMinMagFilter(GL_LINEAR, GL_LINEAR);
+	HDRBUfferTexture->setMinMagFilter(GL_NEAREST, GL_NEAREST);
 	HDRBUfferTexture->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	HDRBBuffer.attachRenderTarget(HDRBUfferTexture, 0, 0);
 	HDRBBuffer.checkStatus();
@@ -215,6 +215,9 @@ void DefferedRenderer::runGeometryPass()
 
 void DefferedRenderer::runDirectionalLightPass()
 {
+	Texture* t = EngineContext::get()->resourceManager->getTexture("brdf_lut.png");
+	t->bind(GL_TEXTURE0 + 21);
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -252,25 +255,28 @@ void DefferedRenderer::update(float deltaTime)
 	sceneRenderer.setGlobalUniforms(perFrameUniforms, scene);
 
 	if (EngineContext::get()->stats.isFirstFame) {
-		scene->prevViewMatrix = scene->getMainCamera()->getViewMatrix();
-		scene->prevProjectionMatrix = scene->getMainCamera()->getProjectionMatrix();
+		scene->VPPrevNoJitter = scene->getMainCamera()->getProjectionMatrix() * scene->getMainCamera()->getViewMatrix();
+		//scene->prevProjectionMatrix = 
 	}
 
 	glm::vec2 pixelSize(1 / float(SCREEN_WIDTH), 1 / (SCREEN_HEIGHT));
 	glm::vec2 jitterOffset = jitterArray[jitterIndex] * pixelSize;
 	glm::mat4 jitteredProjectionMat = scene->getMainCamera()->getProjectionMatrix();
-	jitteredProjectionMat[2][0] += jitterOffset.x;
-	jitteredProjectionMat[2][1] += jitterOffset.y;
-	jitterIndex = (jitterIndex + 1) % 16;
+	jitteredProjectionMat[2][0] = jitterOffset.x;
+	jitteredProjectionMat[2][1] = jitterOffset.y;
+	//if (EngineContext::get()->stats.frameCount % 200 == 0) {
+		jitterIndex = (jitterIndex + 1) % 16;
+	//}
 
-	taaUniforms.jitteredProjMatrix = jitteredProjectionMat;
-	taaUniforms.inverseJitteredProjMatrix = glm::inverse(jitteredProjectionMat);
-	taaUniforms.prevViewMatrix = scene->prevViewMatrix;
-	taaUniforms.prevProjectionMatrix = scene->prevProjectionMatrix;
+	//taaUniforms.jitteredProjMatrix = jitteredProjectionMat;
+	taaUniforms.VPPrevNoJitter = scene->VPPrevNoJitter;
+	taaUniforms.VPPrevJittered = scene->VPPrevJittered;
+	taaUniforms.VPCurrentJittered = jitteredProjectionMat * scene->getMainCamera()->getViewMatrix();
+	taaUniforms.VPCurrentJitteredInverse = glm::inverse(taaUniforms.VPCurrentJittered);
 	taaUniforms.jitter = jitterOffset;
 	taaUniforms.feedback = 0.75;
-	scene->prevViewMatrix = scene->getMainCamera()->getViewMatrix();
-	scene->prevProjectionMatrix = scene->getMainCamera()->getProjectionMatrix();
+	scene->VPPrevNoJitter = scene->getMainCamera()->getProjectionMatrix() * scene->getMainCamera()->getViewMatrix();
+	scene->VPPrevJittered = jitteredProjectionMat * scene->getMainCamera()->getViewMatrix();
 
 	pointLightBuffer->setData(&scene->getPointLIghts()[0], sizeof(PointLight) * scene->getPointLIghts().size(), true);
 	perFrameUbo.setData(&perFrameUniforms, sizeof(perFrameUniforms), true);
@@ -286,9 +292,6 @@ void DefferedRenderer::update(float deltaTime)
 	HDRBBuffer.bind();
 	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, attachments);
-
-	Texture* t = EngineContext::get()->resourceManager->getTexture("brdf_lut.png");
-	t->bind(GL_TEXTURE0 + 21);
 
 	runDirectionalLightPass();
 	runPointLightPass();
@@ -329,11 +332,12 @@ void DefferedRenderer::update(float deltaTime)
 	// Add UI panels here
 	static bool show = true;
 
-	ImGui::Begin("Velocity buffer");
+	ImGui::Begin("History buffer");
 	ImGui::BeginChild("Texture");
 
 	ImVec2 wsize = ImGui::GetWindowSize();
-	ImGui::Image((ImTextureID)aaTempTextures[activeFBO]->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)gBufferTextures[4]->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
+	//ImGui::Image((ImTextureID)gBuff[1 - activeFBO]->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::EndChild();
 	ImGui::End();
 
@@ -368,7 +372,7 @@ void DefferedRenderer::initializeTAAFbo(int fboId)
 {
 	aaFbos[fboId].bind();
 
-	aaRenderTextures [fboId] = EngineContext::get()->resourceManager->generateTexture(TAA_COLOR_TEXTURE(id), TextureType::RENDERTEXTURE,
+	aaRenderTextures [fboId] = EngineContext::get()->resourceManager->generateTexture("TAA_color_" + std::to_string(fboId), TextureType::RENDERTEXTURE,
 		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
 	aaRenderTextures[fboId]->bind();
 	aaRenderTextures[fboId]->setMinMagFilter(GL_LINEAR, GL_LINEAR);
@@ -389,6 +393,7 @@ void DefferedRenderer::initializeTAAFbo(int fboId)
 void DefferedRenderer::runTAAPass(int activeFBO)
 {
 	// ------------------- THIS IF CONDITION IS THE ASSHOLE HERE ------------------
+	int frameCount = EngineContext::get()->stats.frameCount;
 	if (EngineContext::get()->stats.frameCount == 1) {
 		HDRBBuffer.bind(GL_READ_FRAMEBUFFER);
 		aaFbos[activeFBO].bind(GL_DRAW_FRAMEBUFFER);
@@ -421,7 +426,14 @@ void DefferedRenderer::runTAAPass(int activeFBO)
 
 void DefferedRenderer::toneMappingPass()
 {
-	basicToneMappingShader->setInt("hdrBuffer", 18);
+	InputStatus* input = EngineContext::get()->inputStatus;
+	if (input->isKeyPressed(Keys::T)) {
+		taaOn = true;
+	}
+	if (input->isKeyPressed(Keys::Y)) {
+		taaOn = false;
+	}
+	basicToneMappingShader->setInt("hdrBuffer", taaOn ? 18 : 15);
 	basicToneMappingShader->setFloat("exposure", 0.7f);
 	basicToneMappingShader->use();
 	glBindVertexArray(screenQuadVAO);

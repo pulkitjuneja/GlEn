@@ -455,6 +455,7 @@ Texture2D* ResourceManager::generateTexture(const std::string& identifier, Textu
 
 	Texture2D* tex = Mem::Allocate<Texture2D>(resourceAllocator, textureType, w, h, format, dataType, internalFormat);
 	textures.emplace(make_pair(identifier, tex));
+	Logger::logInfo("Generated new Texture" + identifier);
 	return tex;
 }
 

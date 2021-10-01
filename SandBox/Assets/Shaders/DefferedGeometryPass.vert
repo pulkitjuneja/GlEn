@@ -22,7 +22,7 @@ struct DirectionalLight {
 
 out VS_OUT {
     vec4 worldPos;
-	vec4 prevPos;
+	vec2 screenSpaceVel;
     vec3 vertNormal;
     vec2 texCoords;
 	vec4 previousClipPostion;
@@ -45,10 +45,10 @@ layout (std140) uniform perFrameUniforms
 };
 
 layout (std140) uniform taaUniforms {
-	mat4 prevViewMatrix;
-	mat4 prevProjectionMatrix;
-	mat4 jitteredProjMatrix;
-	mat4 inverseJitteredProjMatrix;
+	mat4 VPPrevNoJitter;
+	mat4 VPPrevJittered;
+	mat4 VPCurrentJittered;
+	mat4 VPCurrentJitteredInverse;
 	vec2 jitter;
 	float feedback;
 };
@@ -69,10 +69,10 @@ void main() {
 	FragPos = (modelMatrix*homogenousVertexPosition);
 
 	// TODO maske this configurable
-	gl_Position = jitteredProjMatrix * viewMatrix * FragPos;
+	gl_Position = VPCurrentJittered * FragPos;
 
 	// velocity calculation
 	vsOut.clipPosition = projectionMatrix * viewMatrix * FragPos;
-	vsOut.previousClipPostion = (prevProjectionMatrix* prevViewMatrix * prevModelMatrix * homogenousVertexPosition);
-	vsOut.prevPos = prevModelMatrix * homogenousVertexPosition;
+	vsOut.previousClipPostion = VPPrevNoJitter * prevModelMatrix * homogenousVertexPosition;
+	vsOut.screenSpaceVel = (vsOut.previousClipPostion - vsOut.clipPosition).xy;
 }

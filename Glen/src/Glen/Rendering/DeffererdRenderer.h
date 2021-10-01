@@ -72,6 +72,7 @@ class DefferedRenderer : public ISystem {
 	std::array<Texture2D*, 2> aaTempTextures;
 	bool flip = true; 
 
+	bool taaOn;
 	bool skyboxCheck = true;
 
 	void createUVSphere();

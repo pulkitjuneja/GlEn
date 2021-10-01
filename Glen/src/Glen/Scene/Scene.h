@@ -24,8 +24,8 @@ public:
 
 	//TODO: remove this implmenet uniform buffers to fix uniform assignement;
 	glm::mat4 directionalLightSpaceMatrix;
-	glm::mat4 prevViewMatrix;
-	glm::mat4 prevProjectionMatrix;
+	glm::mat4 VPPrevNoJitter;
+	glm::mat4 VPPrevJittered;
 
 	Entity& createEntity(std::string name, Mesh* mesh = nullptr, Material* overrideMat = nullptr);
 	PointLight& createPointLight(glm::vec4 position, glm::vec4 diffuse, float intensity);

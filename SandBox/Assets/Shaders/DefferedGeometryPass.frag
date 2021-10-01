@@ -43,17 +43,17 @@ layout (std140) uniform perFrameUniforms
 };
 
 layout (std140) uniform taaUniforms {
-	mat4 prevViewMatrix;
-	mat4 prevProjectionMatrix;
-	mat4 jitteredProjMatrix;
-	mat4 inverseJitteredProjMatrix;
+	mat4 VPPrevNoJitter;
+	mat4 VPPrevJittered;
+	mat4 VPCurrentJittered;
+	mat4 VPCurrentJitteredInverse;
 	vec2 jitter;
 	float feedback;
 };
 
 in VS_OUT {
     vec4 worldPos;
-	vec4 prevPos;
+	vec2 screenSpaceVel;
     vec3 vertNormal;
     vec2 texCoords;
 	vec4 previousClipPostion;
@@ -91,6 +91,6 @@ void main()
 	vec2 a = (vsOut.clipPosition.xy / vsOut.clipPosition.w) * 0.5f + 0.5f;
     vec2 b = (vsOut.previousClipPostion.xy / vsOut.previousClipPostion.w) * 0.5f + 0.5f;
 
-	vec2 velocity = b - a;
+	vec2 velocity = (b - a);
 	gVelocity = velocity;
 }

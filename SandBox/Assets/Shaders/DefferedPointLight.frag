@@ -38,10 +38,10 @@ layout (std140) uniform perFrameUniforms
 };
 
 layout (std140) uniform taaUniforms {
-	mat4 prevViewMatrix;
-	mat4 prevProjectionMatrix;
-	mat4 jitteredProjMatrix;
-	mat4 inverseJitteredProjMatrix;
+	mat4 VPPrevNoJitter;
+	mat4 VPPrevJittered;
+	mat4 VPCurrentJittered;
+	mat4 VPCurrentJitteredInverse;
 	vec2 jitter;
 	float feedback;
 };
@@ -112,9 +112,8 @@ void main () {
     float y = texCoord.y * 2 - 1;
 	vec4 projectedPos = vec4(x, y, z, 1.0f);
 
-	vec4 viewPosition =	inverseJitteredProjMatrix * projectedPos;
-	viewPosition.xyz /= viewPosition.w;
-	vec4 worldPos = inverseViewMatrix * vec4(viewPosition.xyz, 1.0f);
+	vec4 worldPos = VPCurrentJitteredInverse * projectedPos;
+	worldPos /= worldPos.w;
 
 	vec3 worldNormal = texture(normalTexture, texCoord).xyz;
 	vec3 diffuseColor = colorData.xyz;
