@@ -57,15 +57,18 @@ int FrameBuffer::attachRenderBuffer(GLenum internalFormat, GLenum attachment, co
 	if (shouldBind) {
 		bind();
 	}
+	
 	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, w, h);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo);
-	return rbo;
+	
 	if (shouldBind) {
 		unBind();
 	}
+
+	return rbo;
 }
 
 void FrameBuffer::checkStatus(bool shouldBind)

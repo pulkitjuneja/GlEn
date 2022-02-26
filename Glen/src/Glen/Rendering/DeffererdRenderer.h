@@ -11,10 +11,6 @@
 #define HDR_BUFFER_TEXTURE_NAME "hdr_buffer_texture"
 #define PP_BUFFER_TEXTURE_NAME "pp_buffer_texture"
 
-#define TAA_COLOR_TEXTURE(id) "TAA_color_"#id
-#define TAA_DEPTH_TEXTURE(id) "TAA_depth_"#id
-
-
 #include "Texture.h"
 #include "FrameBuffer.h"
 #include "Glen/ResourceManagement/ResourceManager.h"
@@ -24,6 +20,7 @@
 #include "Csm.h"
 #include <array>
 #include "Glen/Core/System.h"
+#include "TAA.h"
 
 // TODO: Split TAA functionality intoa different class
 class DefferedRenderer : public ISystem {
@@ -48,9 +45,11 @@ class DefferedRenderer : public ISystem {
 	Buffer perFrameUbo;
 	Buffer CsmUbo;
 	Buffer* pointLightBuffer;
+	Buffer TAAUbo;
 
 	SceneRenderer sceneRenderer;
 	Csm csm;
+	TAA taa;
 
 	GLuint screenQuadVAO;
 	Mesh* pointVolumeMesh;
@@ -59,20 +58,8 @@ class DefferedRenderer : public ISystem {
 	Shader* pointLightShader;
 	Shader* basicToneMappingShader;
 	Shader* ssr;
-	Shader* TAAPass;
 	Shader* textureDebugShader;
 
-	//TAA adata
-	std::array<glm::vec2, 16> jitterArray;
-	Buffer TAAUbo;
-	TAAUniforms taaUniforms;
-	int jitterIndex = 0;
-	std::array<FrameBuffer, 2> aaFbos;
-	std::array<Texture2D*, 2> aaRenderTextures;
-	std::array<Texture2D*, 2> aaTempTextures;
-	bool flip = true; 
-
-	bool taaOn;
 	bool skyboxCheck = true;
 
 	void createUVSphere();
@@ -89,12 +76,6 @@ public:
 	virtual void startup() override;
 	virtual void update(float deltaTimer) override;
 	virtual void shutdown() override;
-
-	// TAA methods
-	void createJitterArray();
-	void initializeTAAFbo(int fboId);
-	void runTAAPass(int activeFBO);
-
 };
 
 #endif

@@ -4,7 +4,6 @@
 #include "examples/imgui_impl_opengl3.h"
 #include "examples/imgui_impl_glfw.h"
 #include "Glen/Core/Window.h"
-#include "Glen/Utils/HaltonSequence.h"
 #include "Glen/Core/Input.h"
 
 
@@ -134,7 +133,6 @@ void DefferedRenderer::startup()
 	basicToneMappingShader = EngineContext::get()->resourceManager->getShader("basicToneMapping");
 	pointLightBuffer = Mem::Allocate<Buffer>(sizeof(PointLight) * MAXPOINTLIGHTS, 5, BufferType::SSBO);
 	textureDebugShader = EngineContext::get()->resourceManager->getShader("TextureDebugShader");
-	TAAPass = EngineContext::get()->resourceManager->getShader("TAA");
 
 	ssr = EngineContext::get()->resourceManager->getShader("ssrPass");
 	std::vector<std::string> facePaths = {
@@ -183,9 +181,7 @@ void DefferedRenderer::startup()
 	scene = EngineContext::get()->sceneManager;
 	
 	// TAA initialization stuff
-	initializeTAAFbo(0);
-	initializeTAAFbo(1);
-	createJitterArray();
+	taa.Initialize();
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -259,36 +255,17 @@ void DefferedRenderer::update(float deltaTime)
 		//scene->prevProjectionMatrix = 
 	}
 
-	glm::vec2 pixelSize(1 / float(SCREEN_WIDTH), 1 / (SCREEN_HEIGHT));
-	glm::vec2 jitterOffset = jitterArray[jitterIndex] * pixelSize;
-	glm::mat4 jitteredProjectionMat = scene->getMainCamera()->getProjectionMatrix();
-	jitteredProjectionMat[2][0] = jitterOffset.x;
-	jitteredProjectionMat[2][1] = jitterOffset.y;
-	//if (EngineContext::get()->stats.frameCount % 200 == 0) {
-		jitterIndex = (jitterIndex + 1) % 16;
-	//}
-
-	//taaUniforms.jitteredProjMatrix = jitteredProjectionMat;
-	taaUniforms.VPPrevNoJitter = scene->VPPrevNoJitter;
-	taaUniforms.VPPrevJittered = scene->VPPrevJittered;
-	taaUniforms.VPCurrentJittered = jitteredProjectionMat * scene->getMainCamera()->getViewMatrix();
-	taaUniforms.VPCurrentJitteredInverse = glm::inverse(taaUniforms.VPCurrentJittered);
-	taaUniforms.jitter = jitterOffset;
-	taaUniforms.feedback = 0.75;
-	scene->VPPrevNoJitter = scene->getMainCamera()->getProjectionMatrix() * scene->getMainCamera()->getViewMatrix();
-	scene->VPPrevJittered = jitteredProjectionMat * scene->getMainCamera()->getViewMatrix();
+	taa.updateUniforms(TAAUbo);
 
 	pointLightBuffer->setData(&scene->getPointLIghts()[0], sizeof(PointLight) * scene->getPointLIghts().size(), true);
 	perFrameUbo.setData(&perFrameUniforms, sizeof(perFrameUniforms), true);
 	CsmUbo.setData(&csmUniforms, sizeof(csmUniforms), true);
-	TAAUbo.setData(&taaUniforms, sizeof(taaUniforms), true);
 
 	csm.render(scene);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	runGeometryPass();
 
-	int activeFBO = flip  ? 0 : 1;
 	HDRBBuffer.bind();
 	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, attachments);
@@ -303,8 +280,8 @@ void DefferedRenderer::update(float deltaTime)
 		return;
 	}
 
-	runTAAPass(activeFBO);
-	aaRenderTextures[activeFBO]->bind(GL_TEXTURE0 + 18);
+	taa.runTAAPass(HDRBBuffer);
+	taa.getActiveFBOTexture()->bind(GL_TEXTURE0 + 18);
 	toneMappingPass();
 
 	gBuffer.bind(GL_READ_FRAMEBUFFER);
@@ -336,7 +313,7 @@ void DefferedRenderer::update(float deltaTime)
 	ImGui::BeginChild("Texture");
 
 	ImVec2 wsize = ImGui::GetWindowSize();
-	ImGui::Image((ImTextureID)gBufferTextures[4]->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)taa.getOtherFBOTexture()->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
 	//ImGui::Image((ImTextureID)gBuff[1 - activeFBO]->textureId, wsize, ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::EndChild();
 	ImGui::End();
@@ -361,79 +338,16 @@ void DefferedRenderer::update(float deltaTime)
 
 void DefferedRenderer::shutdown() {}
 
-void DefferedRenderer::createJitterArray()
-{
-	for (int i = 0; i < 16; i++) {
-		jitterArray[i] = glm::vec2(CreateHaltonSequence(i + 1, 2), CreateHaltonSequence(i + 1, 3));
-	}
-}
-
-void DefferedRenderer::initializeTAAFbo(int fboId)
-{
-	aaFbos[fboId].bind();
-
-	aaRenderTextures [fboId] = EngineContext::get()->resourceManager->generateTexture("TAA_color_" + std::to_string(fboId), TextureType::RENDERTEXTURE,
-		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
-	aaRenderTextures[fboId]->bind();
-	aaRenderTextures[fboId]->setMinMagFilter(GL_LINEAR, GL_LINEAR);
-	aaRenderTextures[fboId]->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-	aaFbos[fboId].attachRenderTarget(aaRenderTextures[fboId], 0, 0);
-
-	aaTempTextures[fboId] = EngineContext::get()->resourceManager->generateTexture("TAA_DEBUG_TEX_" + std::to_string(fboId), TextureType::RENDERTEXTURE,
-		SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_RGBA16F, GL_FLOAT);
-	aaTempTextures[fboId]->bind();
-	aaTempTextures[fboId]->setMinMagFilter(GL_LINEAR, GL_LINEAR);
-	aaTempTextures[fboId]->setWrapping(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-	aaFbos[fboId].attachRenderTarget(aaTempTextures[fboId], 0, 1);
-
-	aaFbos[fboId].checkStatus();
-	aaFbos[fboId].unBind();
-}
-
-void DefferedRenderer::runTAAPass(int activeFBO)
-{
-	// ------------------- THIS IF CONDITION IS THE ASSHOLE HERE ------------------
-	int frameCount = EngineContext::get()->stats.frameCount;
-	if (EngineContext::get()->stats.frameCount == 1) {
-		HDRBBuffer.bind(GL_READ_FRAMEBUFFER);
-		aaFbos[activeFBO].bind(GL_DRAW_FRAMEBUFFER);
-
-		glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-			GL_COLOR_BUFFER_BIT, GL_LINEAR);
-		aaFbos[activeFBO].unBind();
-	}
-	else {
-		int otherFBO = 1 - activeFBO;
-		aaRenderTextures[otherFBO]->bind(GL_TEXTURE0 + 19);
-		TAAPass->setInt("currentColorTexture", 15);
-		TAAPass->setInt("currentDepthTexture", 13);
-		TAAPass->setInt("velocityTexture", 17);
-		TAAPass->setInt("colorAntiAliased", 19);
-
-		aaFbos[activeFBO].bind();
-		unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-		glDrawBuffers(2, attachments);
-
-		TAAPass->use();
-		glBindVertexArray(screenQuadVAO);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		aaFbos[activeFBO].unBind();
-	}
-
-
-	flip = !flip;
-}
-
 void DefferedRenderer::toneMappingPass()
 {
 	InputStatus* input = EngineContext::get()->inputStatus;
 	if (input->isKeyPressed(Keys::T)) {
-		taaOn = true;
+		taa.taaOn = true;
 	}
 	if (input->isKeyPressed(Keys::Y)) {
-		taaOn = false;
+		taa.taaOn = false;
 	}
-	basicToneMappingShader->setInt("hdrBuffer", taaOn ? 18 : 15);
+	basicToneMappingShader->setInt("hdrBuffer", taa.taaOn ? 18 : 15);
 	basicToneMappingShader->setFloat("exposure", 0.7f);
 	basicToneMappingShader->use();
 	glBindVertexArray(screenQuadVAO);

@@ -179,7 +179,7 @@ void main()
 	float fragDepth = projectedPos.z * 0.5 + 0.5;
 	vec4 colorData = texture(albedoTexture,texCoord); 
 	vec3 diffuseColor = colorData.xyz;
-	float specularStrength = colorData.w;\
+	float specularStrength = colorData.w;
 	vec4 PBRInfo = texture(PBRInfoTexture, texCoord);
 
 	vec3 lightDir = normalize(-directionalLight.direction.xyz);
@@ -240,7 +240,7 @@ void main()
 
 	vec3 cameraRelativePostion = worldPos.xyz - cameraPosition.xyz;
 	if(skyBoxCheck) {
-		result = mix(result, textureLod(prefilterMap, cameraRelativePostion, 1.2).rgb, step(1.0, depth));
+		result = mix(result, texture(skybox, cameraRelativePostion).rgb, step(1.0, depth));
 	} else {
 		result = mix(result, texture(brdfLut, texCoord).rgb, step(1.0, depth));
 	}

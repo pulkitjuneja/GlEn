@@ -63,6 +63,15 @@ vec3 sampleRenderYCoCg(vec2 uv)
   return YCoCg(texture(currentColorTexture, uv).rgb);
 }
 
+vec3 tonemap(vec3 x)
+{
+	return x / (x + 1); // Reinhard tonemap
+}
+vec3 inverseTonemap(vec3 x)
+{
+	return x / (1 - x);
+}
+
 //bool clipped = true;
 
 vec2 pixelSize = vec2(1/1920, 1/1080);
@@ -119,7 +128,6 @@ vec2 frontMostNeigbourCoord(vec2 coord) {
 //	  }
 //	  else {return RGB(YCoCgSample);}
 //}
-
 
 vec3 clip_aabb(vec3 aabb_min, vec3 aabb_max, vec3 p, vec3 q) {
 		vec3 r = q - p;
@@ -178,9 +186,9 @@ void main () {
 	vec2 closestDepthPixelPosition = vec2(0, 0);
 
 	// Sample neighbours using a 9-tap filter
-	for (int x = -2; x <= 2; x++)
+	for (int x = -1; x <= 1; x++)
 	{
-	 for (int y = -2; y <= 2; y++)
+	 for (int y = -1; y <= 1; y++)
 		 {
 			vec2 location = uvCurrent + vec2(x,y) * pixelSize;
 			vec3 neighbour = max(vec3(0,0,0),texture(currentColorTexture, location).rgb);
@@ -197,7 +205,7 @@ void main () {
 			m2 += neighbour * neighbour;
 
 			float currentDepth = texture(currentDepthTexture, location).r;
-			if (currentDepth > closestDepth)
+			if (currentDepth < closestDepth)
 			{
 				closestDepth = currentDepth;
 				closestDepthPixelPosition = vec2(x,y);
@@ -217,7 +225,7 @@ void main () {
 	}
 	else {
 		historySample = texture(colorAntiAliased,historyCood).rgb;
-		result = mix(sourceSample, historySample, 0.75);
+		//result = mix(sourceSample, historySample, 0.75);
 	}
 
 	float oneDividedBySampleCount = 1.0 / 9.0;
@@ -228,21 +236,111 @@ void main () {
 	vec3 maxc = mu + gamma * sigma;
 
 	historySample = clip_aabb(minc, maxc, clamp(historySample, neighborhoodMin, neighborhoodMax), historySample);
-//	float sourceWeight = 0.05;
-//	float historyWeight = 1.0 - sourceWeight;
-//
-//	vec3 compressedSource = sourceSample * 1/(max(max(sourceSample.r, sourceSample.g), sourceSample.b) + 1.0);
-//	vec3 compressedHistory = historySample * 1/(max(max(historySample.r, historySample.g), historySample.b) + 1.0);
-//	float luminanceSource = Luminance(compressedSource);
-//	float luminanceHistory = Luminance(compressedHistory); 
-//
-//	sourceWeight *= 1.0 / (1.0 + luminanceSource);
-//	historyWeight *= 1.0 / (1.0 + luminanceHistory);
-// 
-//	result = (sourceSample * sourceWeight + historySample * historyWeight) / max(sourceWeight + historyWeight, 0.00001);
+	float sourceWeight = 0.05;
+	float historyWeight = 1.0 - sourceWeight;
 
-	float belndWeight = 0.05;
-	result = mix(sourceSample, historySample, belndWeight);
+	vec3 compressedSource = sourceSample * 1/(max(max(sourceSample.r, sourceSample.g), sourceSample.b) + 1.0);
+	vec3 compressedHistory = historySample * 1/(max(max(historySample.r, historySample.g), historySample.b) + 1.0);
+	float luminanceSource = Luminance(compressedSource);
+	float luminanceHistory = Luminance(compressedHistory); 
+
+	sourceWeight *= 1.0 / (1.0 + luminanceSource);
+	historyWeight *= 1.0 / (1.0 + luminanceHistory);
+ 
+	result = (compressedSource * sourceWeight + compressedHistory * historyWeight) / max(sourceWeight + historyWeight, 0.00001);
+//
+//	float belndWeight = 0.8;
+//	result = mix(sourceSample, historySample, vec3(belndWeight));
 
 	FragColor = vec4(result, 1);
 }
+
+//void main () {
+//	vec2 texCoordOffset = pixelSize.xy;
+//	vec2 uvCurrent = gl_FragCoord.xy / textureSize(velocityTexture, 0).xy;
+//
+//	float R_fxaaReduceMin = 1.0/128.0;
+//	float R_fxaaReduceMul = 1.0/8.0;
+//	
+//	vec3 luma = vec3(0.299, 0.587, 0.114);	
+//	float lumaTL = dot(luma, texture2D(currentColorTexture, uvCurrent + (vec2(-1.0, -1.0) * texCoordOffset)).xyz);
+//	float lumaTR = dot(luma, texture2D(currentColorTexture, uvCurrent + (vec2(1.0, -1.0) * texCoordOffset)).xyz);
+//	float lumaBL = dot(luma, texture2D(currentColorTexture, uvCurrent + (vec2(-1.0, 1.0) * texCoordOffset)).xyz);
+//	float lumaBR = dot(luma, texture2D(currentColorTexture, uvCurrent + (vec2(1.0, 1.0) * texCoordOffset)).xyz);
+//	float lumaM  = dot(luma, texture2D(currentColorTexture, uvCurrent).xyz);
+//
+//	vec2 dir;
+//	dir.x = -((lumaTL + lumaTR) - (lumaBL + lumaBR));
+//	dir.y = ((lumaTL + lumaBL) - (lumaTR + lumaBR));
+//	
+//	float dirReduce = max((lumaTL + lumaTR + lumaBL + lumaBR) * (R_fxaaReduceMul * 0.25), R_fxaaReduceMin);
+//	float inverseDirAdjustment = 1.0/(min(abs(dir.x), abs(dir.y)) + dirReduce);
+//	
+//	dir = min(vec2(8.0f, 8.0f), 
+//		max(vec2(-8.0f, -8.0f), dir * inverseDirAdjustment)) * texCoordOffset;
+//
+//	vec3 result1 = (1.0/2.0) * (
+//		texture2D(currentColorTexture,uvCurrent + (dir * vec2(1.0/3.0 - 0.5))).xyz +
+//		texture2D(currentColorTexture,uvCurrent + (dir * vec2(2.0/3.0 - 0.5))).xyz);
+//
+//	vec3 result2 = result1 * (1.0/2.0) + (1.0/4.0) * (
+//		texture2D(currentColorTexture,uvCurrent + (dir * vec2(0.0/3.0 - 0.5))).xyz +
+//		texture2D(currentColorTexture,uvCurrent + (dir * vec2(3.0/3.0 - 0.5))).xyz);
+//
+//	float lumaMin = min(lumaM, min(min(lumaTL, lumaTR), min(lumaBL, lumaBR)));
+//	float lumaMax = max(lumaM, max(max(lumaTL, lumaTR), max(lumaBL, lumaBR)));
+//	float lumaResult2 = dot(luma, result2);
+//	
+//	if(lumaResult2 < lumaMin || lumaResult2 > lumaMax)
+//		FragColor = vec4(result1, 1.0);
+//	else
+//		FragColor = vec4(result2, 1.0);
+//}
+
+//void main () {
+//	vec2 uvCurrent = gl_FragCoord.xy / textureSize(velocityTexture, 0).xy;
+//	vec3 neighborhoodMin = vec3(100000);
+//	vec3 neighborhoodMax = vec3(-100000);
+//	vec3 current = texture(currentColorTexture, uvCurrent).rgb;
+//	float bestDepth = 1;
+//
+//	vec2 bestPixel = vec2(0, 0);
+//	for (int x = -1; x <= 1; ++x)
+//	{
+//		for (int y = -1; y <= 1; ++y)
+//		{
+//			vec2 curPixel = uvCurrent + vec2(x,y) * pixelSize;
+//
+//			vec3 neighbor = texture(currentColorTexture, curPixel - jitter).rgb;
+//			neighborhoodMin = min(neighborhoodMin, neighbor);
+//			neighborhoodMax = max(neighborhoodMax, neighbor);
+//
+//			float depth = texture(currentDepthTexture, curPixel).r;
+//			if (depth < bestDepth)
+//			{
+//				bestDepth = depth;
+//				bestPixel = curPixel;
+//			}
+//		}
+//	}
+//
+//	vec2 velocity = texture(velocityTexture, bestPixel).rg;
+//	vec2 prevUV = uvCurrent + velocity;
+//	vec3 historySample = textureLod(colorAntiAliased,prevUV - jitter, 0).rgb;
+//	historySample = clamp(historySample, neighborhoodMin, neighborhoodMax);
+//
+//	float subpixelCorrection = fract(max(abs(velocity.x) * 1920.0f, abs(velocity.y) * 1080.0f)) * 0.5f;
+//	float bf = clamp(mix(0.05f, 0.8f, subpixelCorrection),0,1);
+//
+//	if(prevUV.x < 0 || prevUV.x > 1 || prevUV.y < 0 || prevUV.y > 1) {
+//		bf = 1.0f;
+//	}
+//
+//	current = tonemap(current);
+//	historySample = tonemap(historySample);
+//
+//	vec3 result = (historySample + current) / 2;
+////	result = inverseTonemap(result);
+//
+//	FragColor = vec4(result, 1.0f);
+//}
