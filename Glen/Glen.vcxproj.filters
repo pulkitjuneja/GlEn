@@ -172,6 +172,8 @@
     <ClInclude Include="src\Glen\Core\Allocator.h" />
     <ClInclude Include="src\Glen\Physics\PhysicsEventCallbacks.h" />
     <ClInclude Include="src\Glen\Editor\Panel.h" />
+    <ClInclude Include="src\Glen\Utils\HaltonSequence.h" />
+    <ClInclude Include="src\Glen\Rendering\TAA.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ext\ImGui\examples\imgui_impl_glfw.cpp">
@@ -273,5 +275,6 @@
     <ClCompile Include="src\Glen\Core\System.cpp" />
     <ClCompile Include="src\Glen\Physics\Collider.cpp" />
     <ClCompile Include="src\Glen\Physics\PhysicsEventCallbacks.cpp" />
+    <ClCompile Include="src\Glen\Rendering\TAA.cpp" />
   </ItemGroup>
 </Project>

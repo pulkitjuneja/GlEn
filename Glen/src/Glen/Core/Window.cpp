@@ -13,10 +13,12 @@ Window::Window(int width, int height, std::string title)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 8);
 
     printf("GLFW version: %s\n", glfwGetVersionString());
 
     window = glfwCreateWindow(data.width, data.height, data.title, NULL, NULL);
+    glEnable(GL_MULTISAMPLE);
 
     if (window == NULL)
     {

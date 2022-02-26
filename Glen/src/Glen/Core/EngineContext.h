@@ -16,6 +16,8 @@ class IPanel;
 
 struct engineStats {
 	float lastFrameTime;
+	bool isFirstFame = true;
+	long int frameCount = 0;
 };
 
 

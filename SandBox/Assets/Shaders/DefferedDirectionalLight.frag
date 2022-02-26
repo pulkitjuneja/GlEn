@@ -49,6 +49,15 @@ layout (std140) uniform csmUniforms
 	float farBounds[8];
 };
 
+layout (std140) uniform taaUniforms {
+	mat4 VPPrevNoJitter;
+	mat4 VPPrevJittered;
+	mat4 VPCurrentJittered;
+	mat4 VPCurrentJitteredInverse;
+	vec2 jitter;
+	float feedback;
+};
+
 in vec2 fragTexcoords;
 in vec4 fragPos;
 
@@ -161,17 +170,16 @@ void main()
     float y = texCoord.y * 2 - 1;
 	vec4 projectedPos = vec4(x, y, z, 1.0f);
 
-	vec4 viewPosition =	inverseProjectionMatrix * projectedPos;
-	viewPosition.xyz /= viewPosition.w;
+	vec4 worldPos = VPCurrentJitteredInverse * projectedPos;
+	worldPos /= worldPos.w;
 	
-	vec4 worldPos = inverseViewMatrix * vec4(viewPosition.xyz, 1.0f);
 	vec3 worldNormal = texture(normalTexture, texCoord).xyz;
 	vec3 viewDir = normalize(vec3(cameraPosition) - worldPos.xyz);
 	vec3 reflection = reflect(-viewDir, worldNormal);
 	float fragDepth = projectedPos.z * 0.5 + 0.5;
 	vec4 colorData = texture(albedoTexture,texCoord); 
 	vec3 diffuseColor = colorData.xyz;
-	float specularStrength = colorData.w;\
+	float specularStrength = colorData.w;
 	vec4 PBRInfo = texture(PBRInfoTexture, texCoord);
 
 	vec3 lightDir = normalize(-directionalLight.direction.xyz);

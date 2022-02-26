@@ -2,6 +2,7 @@
 layout (location = 0) out vec4 gNormal;
 layout (location = 1) out vec4 gAlbedoSpec;
 layout (location = 2) out vec4 gPBRInfo;
+layout (location = 3) out vec2 gVelocity;
 
 struct Material {
 	sampler2D texture_diffuse;
@@ -41,14 +42,27 @@ layout (std140) uniform perFrameUniforms
 	int pointLightCount;
 };
 
+layout (std140) uniform taaUniforms {
+	mat4 VPPrevNoJitter;
+	mat4 VPPrevJittered;
+	mat4 VPCurrentJittered;
+	mat4 VPCurrentJitteredInverse;
+	vec2 jitter;
+	float feedback;
+};
+
 in VS_OUT {
-    vec3 worldPos;
+    vec4 worldPos;
+	vec2 screenSpaceVel;
     vec3 vertNormal;
     vec2 texCoords;
+	vec4 previousClipPostion;
+	vec4 clipPosition;
 	mat3 TBN;
 } vsOut;
 
-in vec3 FragPos;
+
+in vec4 FragPos;
 
 uniform Material material;
 
@@ -73,4 +87,10 @@ void main()
 	gAlbedoSpec.xyz = diffuseColor.xyz;
 	gAlbedoSpec.w = mix(0.1f, specularIntensity, step(1.0f, material.hasSpecularMap));
 	gPBRInfo = vec4(metallic, roughness, oclussion, material.usePBRWorkflow);
+
+	vec2 a = (vsOut.clipPosition.xy / vsOut.clipPosition.w) * 0.5f + 0.5f;
+    vec2 b = (vsOut.previousClipPostion.xy / vsOut.previousClipPostion.w) * 0.5f + 0.5f;
+
+	vec2 velocity = (b - a);
+	gVelocity = velocity;
 }

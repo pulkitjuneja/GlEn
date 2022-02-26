@@ -43,6 +43,7 @@ void Engine::start() {
         EngineContext::get()->stats.lastFrameTime = deltaTime.getAsMilliSeconds();
         systemManager.update(deltaTime.getAsSeconds());
         window->Display();
+        EngineContext::get()->stats.frameCount++;
     }
 }
 
@@ -75,6 +76,8 @@ void Engine::loadDefaultShaders()
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/EquirectangularToCubeMap.frag", "EqToCm");
     EngineContext::get()->resourceManager->loadComputeShader("Assets/Shaders/LightCulling.comp", "LightCullingCompute");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/LightCullingDebug.frag", "lightDebugShader");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/TextureDebug.frag", "TextureDebugShader");
+    EngineContext::get()->resourceManager->loadShader("Assets/Shaders/DefferedDirectionalLight.vert", "Assets/Shaders/TAA.frag", "TAA");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/Irradiance.frag", "IrradianceGenerator");
     EngineContext::get()->resourceManager->loadShader("Assets/Shaders/EquirectangularToCubeMap.vert", "Assets/Shaders/PreFilterMap.frag", "PreFilteredMapGenerator");
 }

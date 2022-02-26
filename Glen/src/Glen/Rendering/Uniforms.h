@@ -32,4 +32,13 @@ struct CSMUniforms {
 
 };
 
+struct TAAUniforms {
+	ALIGNED(16) glm::mat4 VPPrevNoJitter;
+	ALIGNED(16) glm::mat4 VPPrevJittered;
+	ALIGNED(16) glm::mat4 VPCurrentJittered;
+	ALIGNED(16) glm::mat4 VPCurrentJitteredInverse;
+	ALIGNED(16) glm::vec2 jitter;
+	ALIGNED(16) float feedback;
+};
+
 #endif

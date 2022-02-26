@@ -12,5 +12,5 @@ void main()
 	vec3 mapped = vec3(1.0) - exp(-hdrColor * exposure);
     // gamma correction 
 	 mapped = pow(mapped, vec3(1.0 / 1.2));
-    FragColor = vec4(mapped,1.0f);
+    FragColor = vec4(texture(hdrBuffer, fragTexcoords).rgb,1.0f);
 }   

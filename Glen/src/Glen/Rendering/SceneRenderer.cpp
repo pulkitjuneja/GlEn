@@ -15,10 +15,9 @@ void SceneRenderer::setGlobalUniforms(PerFrameUniforms& perFrameUniforms, SceneM
 
 	// set pointlight(s) into shader
 	auto pointLights = scene->getPointLIghts();
-	//for (int i = 0; i < pointLights.size(); i++) {
-	//	perFrameUniforms.pointLights[i] = pointLights[i];
-	//}
 	perFrameUniforms.pointLightCount = pointLights.size();
+
+
 }
 
 void SceneRenderer::bindGlobalMaps()
@@ -47,6 +46,8 @@ void SceneRenderer::renderScene(SceneManager* scene, Material* overrideMaterial,
 
 		glm::mat4 modelMatrix = ent.getTransform()->getTransformationMatrix();
 
+		glm::mat4 prevModelMatrix = ent.prevModelMatrix;
+
 		Shader* currentShader = nullptr;
 
 		for (int i = 0; i < currentMesh->subMeshes.size(); i++) {
@@ -63,6 +64,7 @@ void SceneRenderer::renderScene(SceneManager* scene, Material* overrideMaterial,
 
 			currentShader->use();
 			currentShader->setMat4("modelMatrix", modelMatrix);;
+			currentShader->setMat4("prevModelMatrix", prevModelMatrix);;
 
 			unsigned int hasSpecularMap = 0;
 			unsigned int hasNormalMap = 0;

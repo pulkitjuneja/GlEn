@@ -92,8 +92,6 @@ void PhysicsSystem::updateTransforms()
 			double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
 			double yaw = std::atan2(siny_cosp, cosy_cosp);
 
-			// Hacky fix to attach rigidbody at the center of the mesh
-
 			ent.transfrom.setPosition(position);
 			ent.transfrom.setRotation(glm::vec3(roll, pitch, yaw));
 		}

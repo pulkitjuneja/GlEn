@@ -137,6 +137,7 @@
     <ClInclude Include="src\Glen\Rendering\Mesh.h" />
     <ClInclude Include="src\Glen\Rendering\SceneRenderer.h" />
     <ClInclude Include="src\Glen\Rendering\Shader.h" />
+    <ClInclude Include="src\Glen\Rendering\TAA.h" />
     <ClInclude Include="src\Glen\Rendering\Texture.h" />
     <ClInclude Include="src\Glen\Rendering\Buffer.h" />
     <ClInclude Include="src\Glen\Rendering\Uniforms.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="src\Glen\Scene\ScriptingSystem.h" />
     <ClInclude Include="src\Glen\Scene\Transform.h" />
     <ClInclude Include="src\Glen\Utils\FixedSizeQueue.h" />
+    <ClInclude Include="src\Glen\Utils\HaltonSequence.h" />
     <ClInclude Include="src\Glen\Utils\TypeName.h" />
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +181,7 @@
     <ClCompile Include="src\Glen\Rendering\Mesh.cpp" />
     <ClCompile Include="src\Glen\Rendering\SceneRenderer.cpp" />
     <ClCompile Include="src\Glen\Rendering\Shader.cpp" />
+    <ClCompile Include="src\Glen\Rendering\TAA.cpp" />
     <ClCompile Include="src\Glen\Rendering\Texture.cpp" />
     <ClCompile Include="src\Glen\Rendering\Buffer.cpp" />
     <ClCompile Include="src\Glen\ResourceManagement\ResourceManager.cpp" />

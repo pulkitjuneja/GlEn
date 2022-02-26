@@ -7,6 +7,7 @@
 #define G_BUFFER_NORMAL_TEXTURE_NAME "gb_normal_texture"
 #define G_BUFFER_COLOR_TEXTURE_NAME "gb_color_texture"
 #define G_BUFFER_DEPTH_TEXTURE_NAME "gb_depth_texture"
+#define G_BUFFER_VELOCITY_TEXTURE_NAME "gb_velocity_texture"
 #define HDR_BUFFER_TEXTURE_NAME "hdr_buffer_texture"
 #define PP_BUFFER_TEXTURE_NAME "pp_buffer_texture"
 
@@ -17,15 +18,15 @@
 #include "SceneRenderer.h"
 #include "Buffer.h"
 #include "Csm.h"
+#include <array>
 #include "Glen/Core/System.h"
+#include "TAA.h"
 
+// TODO: Split TAA functionality intoa different class
 class DefferedRenderer : public ISystem {
 	SceneManager* scene;
 
-	Texture2D* gBufferPBRInfoTexture;
-	Texture2D* gBufferColorTexture;
-	Texture2D* gBufferNormalTexture;
-	Texture2D* gBUfferDepthTexture;
+	std::array<Texture2D*, 5> gBufferTextures;
 	Texture2D* HDRBUfferTexture;
 	Texture2D* postProcessingTexture;
 	CubeMap* skybox;
@@ -44,9 +45,11 @@ class DefferedRenderer : public ISystem {
 	Buffer perFrameUbo;
 	Buffer CsmUbo;
 	Buffer* pointLightBuffer;
+	Buffer TAAUbo;
 
 	SceneRenderer sceneRenderer;
 	Csm csm;
+	TAA taa;
 
 	GLuint screenQuadVAO;
 	Mesh* pointVolumeMesh;
@@ -55,6 +58,7 @@ class DefferedRenderer : public ISystem {
 	Shader* pointLightShader;
 	Shader* basicToneMappingShader;
 	Shader* ssr;
+	Shader* textureDebugShader;
 
 	bool skyboxCheck = true;
 
@@ -62,6 +66,7 @@ class DefferedRenderer : public ISystem {
 	void setupGBuffer();
 	void setupHDRBuffer();
 public:
+
 	DefferedRenderer();
 	void toneMappingPass();
 	void runGeometryPass();

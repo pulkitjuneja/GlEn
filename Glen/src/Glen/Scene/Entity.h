@@ -12,6 +12,7 @@
 #include "Glen/Physics/Collider.h"
 #include "Glen/Physics/RigidBody.h"
 #include "Glen/Core/Logger.h"
+#include <limits>
 
 enum DebugMeshTypes {
 	CUBE,
@@ -29,11 +30,11 @@ public:
 	Material* overrideMaterial;
 	Collider* collider;
 	RigidBody rigidBody;
+	std::vector<Script*> scripts;
+	glm::mat4 prevModelMatrix;
 
 	// TODO: temporary remove
 	glm::vec3 color;
-
-	std::vector<Script*> scripts;
 
 	Entity(std::string name);
 	Entity(std::string name, Mesh* mesh, Material* mat);

@@ -235,6 +235,7 @@ void ResourceManager::loadShader(const std::string& vertexShaderPath, const std:
 	Shader* newShader = Mem::Allocate<Shader>(resourceAllocator, shaderProgram, shaderName, uniformCount);
 	newShader->setUniformBlockBinding("perFrameUniforms", 0);
 	newShader->setUniformBlockBinding("csmUniforms", 1);
+	newShader->setUniformBlockBinding("taaUniforms", 2);
 
 	Logger::logInfo("Shader loaded : " + shaderName + " id : " + std::to_string(newShader->getShaderID()));
 	loadedShaders.insert(make_pair(shaderName, newShader));
@@ -454,6 +455,7 @@ Texture2D* ResourceManager::generateTexture(const std::string& identifier, Textu
 
 	Texture2D* tex = Mem::Allocate<Texture2D>(resourceAllocator, textureType, w, h, format, dataType, internalFormat);
 	textures.emplace(make_pair(identifier, tex));
+	Logger::logInfo("Generated new Texture" + identifier);
 	return tex;
 }
 
