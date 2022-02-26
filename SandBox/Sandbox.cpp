@@ -74,9 +74,9 @@ public:
 		Time testTime = timer.restart();
 		Logger::logInfo("Resource load time" + std::to_string(testTime.getAsMilliSeconds()));
 
-		//Entity& groundPLaneEntity = scene->createEntity("Ground Plane");
-		//groundPLaneEntity.attachBoxCollider(glm::vec3(100, 1, 100));
-		//groundPLaneEntity.attachRigidBody(RigidBodyType::Static);
+		Entity& groundPLaneEntity = scene->createEntity("Ground Plane");
+		groundPLaneEntity.attachBoxCollider(glm::vec3(100, 1, 100));
+		groundPLaneEntity.attachRigidBody(RigidBodyType::Static);
 
 		sponzaEntity.transfrom.setScale(glm::vec3(0.3, 0.3, 0.3));
 		//crysisEntity.transfrom.setScale(glm::vec3(2, 2, 2));
@@ -106,7 +106,7 @@ public:
 		scene->createDirectionalLight(glm::vec4(0.5f, -1.0f, 0, 1.0),  glm::vec4(3.8f, 3.8f, 3.8f, 1.0f), 1.1f);
 		Entity& cameraControllerParent = scene->createEntity("cameraController");
 		cameraControllerParent.AddScript<CameraController>();
-		//crysisEntity.AddScript<Bouncer>();
+		/crysisEntity.AddScript<Bouncer>();
 		pbrSphereGold.AddScript<ObjectRotator>();
 
 		return true;
